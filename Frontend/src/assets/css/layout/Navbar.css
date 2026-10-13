@@ -1,0 +1,269 @@
+.admin-navbar {
+  position: sticky;
+  top: 0;
+  z-index: 1020;
+  min-height: 72px;
+  border-bottom: 1px solid var(--admin-border);
+  box-shadow: var(--admin-shadow-sm);
+}
+
+.admin-navbar.bg-white {
+  background-color: rgba(255, 255, 255, 0.94) !important;
+  backdrop-filter: blur(14px);
+}
+
+.sidebar-toggle {
+  width: 42px;
+  height: 42px;
+  display: inline-grid;
+  place-items: center;
+  gap: 4px;
+  padding: 9px;
+  border: 1px solid var(--admin-border);
+  border-radius: 8px;
+  background: #ffffff;
+  box-shadow: 0 8px 18px rgba(15, 23, 42, 0.05);
+  transition: border-color 0.16s ease, background 0.16s ease, box-shadow 0.16s ease;
+}
+
+.sidebar-toggle:hover,
+.sidebar-toggle:focus {
+  border-color: #bfdbfe;
+  background: #f8fbff;
+  box-shadow: var(--admin-ring);
+}
+
+.sidebar-toggle span {
+  width: 18px;
+  height: 2px;
+  display: block;
+  background: var(--admin-text);
+  border-radius: 999px;
+}
+
+.navbar-center {
+  position: absolute;
+  right: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10rem;
+  text-align: center;
+}
+
+.header-logo {
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  background: #ffffff;
+  border: 2px solid #dbe3ee;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.header-logo img {
+  width: 88%;
+  height: 88%;
+  object-fit: contain;
+}
+
+.navbar-title {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin-left: 4px;
+}
+
+.project-name {
+  font-family: "Segoe UI", Arial, sans-serif;
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 1.25;
+  letter-spacing: 0.2px;
+  color: #edf1f2;
+}
+
+.designation {
+  margin-top: 4px;
+  font-family: "Segoe UI", Arial, sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: 0.2px;
+  color: #9aa8bd;
+}
+
+.navbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.icon-button,
+.profile-button {
+  border: 1px solid var(--admin-border);
+  background: #ffffff;
+  color: var(--admin-text);
+  box-shadow: 0 8px 18px rgba(15, 23, 42, 0.05);
+  transition: border-color 0.16s ease, box-shadow 0.16s ease, transform 0.16s ease;
+}
+
+.icon-button:hover,
+.icon-button:focus,
+.profile-button:hover,
+.profile-button:focus {
+  border-color: #bfdbfe;
+  box-shadow: var(--admin-ring);
+}
+
+.icon-button {
+  position: relative;
+  width: 42px;
+  height: 42px;
+  border-radius: 8px;
+  font-weight: 800;
+}
+
+.notification-dot {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: var(--admin-danger);
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+}
+
+.notification-menu {
+  width: min(320px, calc(100vw - 2rem));
+  border: 1px solid var(--admin-border);
+  border-radius: 8px;
+  box-shadow: var(--admin-shadow);
+}
+
+.notification-menu .dropdown-item {
+  display: grid;
+  gap: 0.2rem;
+  padding-block: 0.7rem;
+}
+
+.notification-title {
+  font-weight: 700;
+}
+
+.notification-time {
+  color: var(--admin-muted);
+  font-size: 0.82rem;
+}
+
+.profile-button {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  min-height: 42px;
+  padding: 0.35rem 0.65rem;
+  border-radius: 8px;
+  font-weight: 700;
+}
+
+.profile-avatar {
+  display: inline-grid;
+  place-items: center;
+  flex: 0 0 auto;
+  font-weight: 800;
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  background: #e0ecff;
+  color: var(--admin-primary-dark);
+  font-size: 0.76rem;
+}
+
+.avatar-img {
+  display: block;
+  flex: 0 0 auto;
+  object-fit: cover;
+  object-position: center;
+}
+
+.avatar-sm {
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+}
+
+.avatar-md {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+}
+
+.avatar-xl {
+  width: 78px;
+  height: 78px;
+  border-radius: 50%;
+}
+
+.profile-button .avatar-sm {
+  border: 2px solid #52e7b8;
+  box-shadow: 0 0 0 2px rgba(15, 23, 42, 0.08);
+}
+
+.admin-navbar.bg-white,
+.sidebar-toggle,
+.icon-button,
+.profile-button {
+  background-color: var(--admin-surface) !important;
+  color: var(--admin-text);
+}
+
+html[data-theme="dark"] .profile-button .avatar-sm {
+  border-color: #54f0be;
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.08);
+}
+
+html[data-theme="dark"] .admin-navbar.bg-white {
+  background-color: rgba(24, 34, 53, 0.92) !important;
+}
+
+html[data-theme="dark"] .profile-avatar {
+  background: #1e3a5f;
+  color: #bfdbfe;
+}
+
+.theme-toggle i {
+  font-size: 1rem;
+}
+
+@media (max-width: 767.98px) {
+  .navbar-actions {
+    gap: 0.5rem;
+  }
+
+  .icon-button,
+  .profile-button,
+  .sidebar-toggle {
+    width: 40px;
+    height: 40px;
+  }
+
+  .profile-button {
+    padding: 0.3rem;
+  }
+}
+
+@media (max-width: 575.98px) {
+  .avatar-sm {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+  }
+
+  .avatar-xl {
+    width: 70px;
+    height: 70px;
+  }
+}

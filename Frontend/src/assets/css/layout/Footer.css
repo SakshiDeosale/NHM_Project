@@ -1,0 +1,19 @@
+.admin-footer {
+  padding: 1.1rem 0 1.35rem;
+  color: var(--admin-muted);
+  font-size: 0.9rem;
+}
+
+.admin-footer .container-fluid {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+@media (max-width: 575.98px) {
+  .admin-footer .container-fluid {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}

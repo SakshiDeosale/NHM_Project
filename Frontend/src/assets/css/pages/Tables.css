@@ -1,0 +1,70 @@
+.table {
+  --bs-table-bg: transparent;
+  --bs-table-color: var(--admin-text);
+  --bs-table-border-color: var(--admin-border);
+  color: var(--admin-text);
+}
+
+.table thead th {
+  color: var(--admin-muted);
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.table tbody td {
+  min-width: 120px;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+}
+
+.table tbody tr {
+  transition: background 0.16s ease;
+}
+
+.table tbody tr:hover {
+  background: #f8fbff;
+}
+
+.badge {
+  border-radius: 8px;
+  padding: 0.45rem 0.65rem;
+}
+
+.table-search {
+  width: min(260px, 100%);
+  border-color: var(--admin-border);
+  border-radius: 8px;
+}
+
+.table-media {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+}
+
+.product-thumb {
+  width: 42px;
+  height: 42px;
+  border-radius: 8px;
+  object-fit: cover;
+  flex: 0 0 auto;
+  border: 1px solid var(--admin-border);
+}
+
+html[data-theme="dark"] .table tbody tr:hover {
+  background: #111827;
+}
+
+@media (max-width: 767.98px) {
+  .table-search {
+    width: 100%;
+  }
+}
+
+@media (max-width: 575.98px) {
+  .product-thumb {
+    width: 36px;
+    height: 36px;
+  }
+}

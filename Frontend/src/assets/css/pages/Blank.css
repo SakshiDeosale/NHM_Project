@@ -1,0 +1,19 @@
+.blank-panel {
+  min-height: 440px;
+  display: grid;
+  place-items: center;
+  text-align: center;
+}
+
+.blank-state {
+  max-width: 440px;
+  display: grid;
+  justify-items: center;
+}
+
+.blank-visual {
+  width: 88px;
+  height: 88px;
+  object-fit: contain;
+  margin-bottom: 0.9rem;
+}

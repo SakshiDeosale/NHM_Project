@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Test Photo Upload</title>
+</head>
+
+<body>
+    <h2>Test Photo Upload</h2>
+
+    <form id="photoForm">
+        <input type="file" id="photo" accept="image/jpeg,image/png,image/webp" required />
+        <button type="submit">Upload Photo</button>
+    </form>
+
+    <p id="message"></p>
+
+    <script>
+        const form = document.getElementById("photoForm");
+        const message = document.getElementById("message");
+
+        form.addEventListener("submit", async (event) => {
+            event.preventDefault();
+
+            const photo = document.getElementById("photo").files[0];
+
+            if (!photo) {
+                message.textContent = "Please select a photo.";
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append("photo", photo);
+
+            try {
+                const response = await fetch(
+                    "http://localhost:5000/api/users/upload-test",
+                    {
+                        method: "POST",
+                        body: formData
+                    }
+                );
+
+                const responseText = await response.text();
+
+                console.log("HTTP status:", response.status);
+                console.log("Server response:", responseText);
+
+                message.style.whiteSpace = "pre-wrap";
+                message.textContent =
+                    `HTTP Status: ${response.status}\n${responseText}`;
+
+            } catch (error) {
+                console.error("Photo upload error:", error);
+                message.textContent = "Upload failed: " + error.message;
+            }
+        });
+    </script>
+
+
+</body>
+
+</html>
