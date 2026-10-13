@@ -2,6 +2,7 @@
 import express from "express";
 import multer from "multer";
 import bcrypt from "bcrypt";
+import { randomUUID } from "node:crypto";
 import { getPool, sql } from "../config/db.js";
 
 const router = express.Router();
@@ -24,125 +25,223 @@ const upload = multer({
     },
 });
 
-// GET: Display users in the table
+// Generate username: Designation + CircleName + UserID
+function generateUsername(designation, circleName, userID) {
+    const designationCode = designation.replace(/[^a-zA-Z0-9]/g, "");
+    const circleCode = circleName.replace(/[^a-zA-Z0-9]/g, "");
+
+    return `${designationCode}${circleCode}${userID}`;
+}
+
+// Validate user fields
+function validateUser({
+    surname,
+    firstName,
+    middleName,
+    mobile,
+    email,
+    designation,
+    circle,
+    district,
+}) {
+    if (
+        !surname?.trim() ||
+        !firstName?.trim() ||
+        !middleName?.trim() ||
+        !mobile ||
+        !email?.trim() ||
+        !designation?.trim() ||
+        !circle?.trim() ||
+        !district?.trim()
+    ) {
+        return "Please fill in all required fields.";
+    }
+
+    if (!/^[6-9][0-9]{9}$/.test(mobile)) {
+        return "Enter a valid 10-digit mobile number.";
+    }
+
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) {
+        return "Enter a valid email address.";
+    }
+
+    return null;
+}
+
+// GET: Display active users
 router.get("/", async (req, res) => {
     try {
         const pool = await getPool();
 
         const result = await pool.request().query(`
-            SELECT
-                UserID, Surname, FirstName, MiddleName,
-                Mobile, Email, Designation, Office, Username,
-                IsActive,
-                CASE WHEN PhotoData IS NOT NULL
-                     THEN 1 ELSE 0 END AS HasPhoto,
-                CreatedAt
-            FROM dbo.Users
-            WHERE IsActive = 1
-            ORDER BY UserID DESC;
-        `);
+      SELECT
+        UserID,
+        Surname,
+        FirstName,
+        MiddleName,
+        Mobile,
+        Email,
+        Designation,
+        Circle,
+        District,
+        Username,
+        IsActive,
+        CASE
+          WHEN PhotoData IS NOT NULL THEN 1
+          ELSE 0
+        END AS HasPhoto,
+        CreatedAt
+      FROM dbo.Users
+      WHERE IsActive = 1
+      ORDER BY UserID DESC;
+    `);
 
+        // Never return PasswordHash to the frontend.
         res.json(result.recordset);
     } catch (error) {
         console.error("Fetch users error:", error.message);
         res.status(500).json({
-            message: "Unable to fetch users."
+            message: "Unable to fetch users.",
         });
     }
 });
 
-// Temporary photo upload test
-router.post("/upload-test", upload.single("photo"), (req, res) => {
-    if (!req.file) {
-        return res.status(400).json({
-            message: "Please upload a photo."
-        });
-    }
-
-    res.json({
-        status: "success",
-        message: "Photo received successfully!",
-        originalName: req.file.originalname,
-        size: req.file.size,
-        bufferReceived: Buffer.isBuffer(req.file.buffer),
-    });
-});
-
-// POST: Add user and save photo
+// POST: Add a user
 router.post("/", upload.single("photo"), async (req, res) => {
+    let transaction;
+
     try {
         const {
-            surname, firstName, middleName, mobile,
-            email, designation, office, username, password
+            surname,
+            firstName,
+            middleName,
+            mobile,
+            email,
+            designation,
+            circle,
+            district,
         } = req.body;
 
-        if (
-            !surname?.trim() || !firstName?.trim() ||
-            !middleName?.trim() || !mobile ||
-            !email?.trim() || !designation?.trim() ||
-            !office?.trim() || !username?.trim() || !password
-        ) {
+        const validationError = validateUser({
+            surname,
+            firstName,
+            middleName,
+            mobile,
+            email,
+            designation,
+            circle,
+            district,
+        });
+
+        if (validationError) {
             return res.status(400).json({
-                message: "Please fill in all required fields."
+                message: validationError,
             });
         }
 
-        if (!/^[6-9][0-9]{9}$/.test(mobile)) {
-            return res.status(400).json({
-                message: "Enter a valid 10-digit mobile number."
-            });
-        }
+        // The mobile number is the initial password.
+        // Store only its bcrypt hash.
+        const passwordHash = mobile;
 
-        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) {
-            return res.status(400).json({
-                message: "Enter a valid email address."
-            });
-        }
-
-        const passwordHash = await bcrypt.hash(password, 12);
         const pool = await getPool();
+        transaction = new sql.Transaction(pool);
+        await transaction.begin();
 
-        const result = await pool.request()
+        // Use a temporary unique username because UserID is
+        // generated by SQL Server during insertion.
+        const temporaryUsername = `TEMP_${randomUUID()}`;
+
+        const insertResult = await new sql.Request(transaction)
             .input("Surname", sql.NVarChar(100), surname.trim())
             .input("FirstName", sql.NVarChar(100), firstName.trim())
             .input("MiddleName", sql.NVarChar(100), middleName.trim())
             .input("Mobile", sql.NVarChar(10), mobile)
             .input("Email", sql.NVarChar(255), email.trim())
             .input("Designation", sql.NVarChar(100), designation.trim())
-            .input("Office", sql.NVarChar(100), office.trim())
-            .input("Username", sql.NVarChar(100), username.trim())
+            .input("Circle", sql.NVarChar(100), circle.trim())
+            .input("District", sql.NVarChar(100), district.trim())
+            .input("Username", sql.NVarChar(100), temporaryUsername)
             .input("PasswordHash", sql.NVarChar(255), passwordHash)
-            .input("PhotoData", sql.VarBinary(sql.MAX),
-                req.file ? req.file.buffer : null)
+            .input(
+                "PhotoData",
+                sql.VarBinary(sql.MAX),
+                req.file ? req.file.buffer : null
+            )
             .query(`
-                INSERT INTO dbo.Users (
-                    Surname, FirstName, MiddleName, Mobile,
-                    Email, Designation, Office, Username,
-                    PasswordHash, PhotoData
-                )
-                OUTPUT INSERTED.UserID
-                VALUES (
-                    @Surname, @FirstName, @MiddleName, @Mobile,
-                    @Email, @Designation, @Office, @Username,
-                    @PasswordHash, @PhotoData
-                );
-            `);
+        INSERT INTO dbo.Users (
+          Surname,
+          FirstName,
+          MiddleName,
+          Mobile,
+          Email,
+          Designation,
+          Circle,
+          District,
+          Username,
+          PasswordHash,
+          PhotoData
+        )
+        OUTPUT INSERTED.UserID
+        VALUES (
+          @Surname,
+          @FirstName,
+          @MiddleName,
+          @Mobile,
+          @Email,
+          @Designation,
+          @Circle,
+          @District,
+          @Username,
+          @PasswordHash,
+          @PhotoData
+        );
+      `);
+
+        const userID = insertResult.recordset[0].UserID;
+
+        // Generate the final username using the actual database UserID.
+        const username = generateUsername(
+            designation.trim(),
+            circle.trim(),
+            userID
+        );
+
+        await new sql.Request(transaction)
+            .input("UserID", sql.Int, userID)
+            .input("Username", sql.NVarChar(100), username)
+            .query(`
+        UPDATE dbo.Users
+        SET Username = @Username
+        WHERE UserID = @UserID;
+      `);
+
+        await transaction.commit();
+        transaction = null;
 
         res.status(201).json({
             message: "User added successfully.",
-            userID: result.recordset[0].UserID
+            userID,
+            username,
         });
     } catch (error) {
+        if (transaction) {
+            try {
+                await transaction.rollback();
+            } catch (rollbackError) {
+                console.error("Transaction rollback error:", rollbackError.message);
+            }
+        }
+
         console.error("Create user error:", error.message);
 
         if (error.number === 2627 || error.number === 2601) {
             return res.status(409).json({
-                message: "Mobile, email, or username already exists."
+                message: "A mobile number, email, or username already exists.",
             });
         }
 
         res.status(500).json({
-            message: "Unable to add user."
+            message: "Unable to add user.",
         });
     }
 });
@@ -153,38 +252,48 @@ router.put("/:id", upload.single("photo"), async (req, res) => {
         const userID = Number(req.params.id);
 
         if (!Number.isInteger(userID) || userID <= 0) {
-            return res.status(400).json({ message: "Invalid user ID." });
+            return res.status(400).json({
+                message: "Invalid user ID.",
+            });
         }
 
         const {
-            surname, firstName, middleName, mobile,
-            email, designation, office, username, password
+            surname,
+            firstName,
+            middleName,
+            mobile,
+            email,
+            designation,
+            circle,
+            district,
         } = req.body;
 
-        if (
-            !surname?.trim() || !firstName?.trim() ||
-            !middleName?.trim() || !mobile ||
-            !email?.trim() || !designation?.trim() ||
-            !office?.trim() || !username?.trim()
-        ) {
-            return res.status(400).json({
-                message: "Please fill in all required fields."
-            });
-        }
+        const validationError = validateUser({
+            surname,
+            firstName,
+            middleName,
+            mobile,
+            email,
+            designation,
+            circle,
+            district,
+        });
 
-        if (!/^[6-9][0-9]{9}$/.test(mobile)) {
+        if (validationError) {
             return res.status(400).json({
-                message: "Enter a valid 10-digit mobile number."
-            });
-        }
-
-        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) {
-            return res.status(400).json({
-                message: "Enter a valid email address."
+                message: validationError,
             });
         }
 
         const pool = await getPool();
+
+        // Keep the same UserID suffix when editing.
+        const username = generateUsername(
+            designation.trim(),
+            circle.trim(),
+            userID
+        );
+
         const request = pool.request()
             .input("UserID", sql.Int, userID)
             .input("Surname", sql.NVarChar(100), surname.trim())
@@ -193,13 +302,9 @@ router.put("/:id", upload.single("photo"), async (req, res) => {
             .input("Mobile", sql.NVarChar(10), mobile)
             .input("Email", sql.NVarChar(255), email.trim())
             .input("Designation", sql.NVarChar(100), designation.trim())
-            .input("Office", sql.NVarChar(100), office.trim())
-            .input("Username", sql.NVarChar(100), username.trim())
-            .input(
-                "PasswordHash",
-                sql.NVarChar(255),
-                password ? await bcrypt.hash(password, 12) : null
-            )
+            .input("Circle", sql.NVarChar(100), circle.trim())
+            .input("District", sql.NVarChar(100), district.trim())
+            .input("Username", sql.NVarChar(100), username)
             .input(
                 "PhotoData",
                 sql.VarBinary(sql.MAX),
@@ -207,42 +312,50 @@ router.put("/:id", upload.single("photo"), async (req, res) => {
             );
 
         const result = await request.query(`
-            UPDATE dbo.Users
-            SET
-                Surname = @Surname,
-                FirstName = @FirstName,
-                MiddleName = @MiddleName,
-                Mobile = @Mobile,
-                Email = @Email,
-                Designation = @Designation,
-                Office = @Office,
-                Username = @Username,
-                PasswordHash = COALESCE(@PasswordHash, PasswordHash),
-                PhotoData = COALESCE(@PhotoData, PhotoData)
-            WHERE UserID = @UserID AND IsActive = 1;
+      UPDATE dbo.Users
+      SET
+        Surname = @Surname,
+        FirstName = @FirstName,
+        MiddleName = @MiddleName,
+        Mobile = @Mobile,
+        Email = @Email,
+        Designation = @Designation,
+        Circle = @Circle,
+        District = @District,
+        Username = @Username,
+        PhotoData = COALESCE(@PhotoData, PhotoData)
+      WHERE UserID = @UserID
+        AND IsActive = 1;
 
-            SELECT @@ROWCOUNT AS RowsAffected;
-        `);
+      SELECT @@ROWCOUNT AS RowsAffected;
+    `);
 
         if (result.recordset[0].RowsAffected === 0) {
-            return res.status(404).json({ message: "User not found." });
+            return res.status(404).json({
+                message: "User not found.",
+            });
         }
 
-        res.json({ message: "User updated successfully." });
+        res.json({
+            message: "User updated successfully.",
+            username,
+        });
     } catch (error) {
         console.error("Update user error:", error.message);
 
         if (error.number === 2627 || error.number === 2601) {
             return res.status(409).json({
-                message: "Mobile, email, or username already exists."
+                message: "A mobile number, email, or username already exists.",
             });
         }
 
-        res.status(500).json({ message: "Unable to update user." });
+        res.status(500).json({
+            message: "Unable to update user.",
+        });
     }
 });
 
-
+// GET: Retrieve a user's photo
 router.get("/:id/photo", async (req, res) => {
     try {
         const userID = Number(req.params.id);
@@ -256,11 +369,11 @@ router.get("/:id/photo", async (req, res) => {
         const result = await pool.request()
             .input("UserID", sql.Int, userID)
             .query(`
-                SELECT PhotoData
-                FROM dbo.Users
-                WHERE UserID = @UserID
-                  AND IsActive = 1;
-            `);
+        SELECT PhotoData
+        FROM dbo.Users
+        WHERE UserID = @UserID
+          AND IsActive = 1;
+      `);
 
         if (
             result.recordset.length === 0 ||
@@ -269,6 +382,8 @@ router.get("/:id/photo", async (req, res) => {
             return res.status(404).send("Photo not found.");
         }
 
+        // This matches JPEG uploads. PNG/WebP need their content
+        // type stored separately to be served with the correct type.
         res.set("Content-Type", "image/jpeg");
         res.set("Cache-Control", "no-store");
         res.send(result.recordset[0].PhotoData);
@@ -278,37 +393,45 @@ router.get("/:id/photo", async (req, res) => {
     }
 });
 
+// DELETE: Soft-delete a user
+// router.delete("/:id", async (req, res) => {
+//     try {
+//         const userID = Number(req.params.id);
 
-// DELETE: Soft-delete a user (preserves database history)
-router.delete("/:id", async (req, res) => {
-    try {
-        const userID = Number(req.params.id);
+//         if (!Number.isInteger(userID) || userID <= 0) {
+//             return res.status(400).json({
+//                 message: "Invalid user ID.",
+//             });
+//         }
 
-        if (!Number.isInteger(userID) || userID <= 0) {
-            return res.status(400).json({ message: "Invalid user ID." });
-        }
+//         const pool = await getPool();
 
-        const pool = await getPool();
+//         const result = await pool.request()
+//             .input("UserID", sql.Int, userID)
+//             .query(`
+//         UPDATE dbo.Users
+//         SET IsActive = 0
+//         WHERE UserID = @UserID
+//           AND IsActive = 1;
 
-        const result = await pool.request()
-            .input("UserID", sql.Int, userID)
-            .query(`
-                UPDATE dbo.Users
-                SET IsActive = 0
-                WHERE UserID = @UserID AND IsActive = 1;
+//         SELECT @@ROWCOUNT AS RowsAffected;
+//       `);
 
-                SELECT @@ROWCOUNT AS RowsAffected;
-            `);
+//         if (result.recordset[0].RowsAffected === 0) {
+//             return res.status(404).json({
+//                 message: "User not found.",
+//             });
+//         }
 
-        if (result.recordset[0].RowsAffected === 0) {
-            return res.status(404).json({ message: "User not found." });
-        }
-
-        res.json({ message: "User deleted successfully." });
-    } catch (error) {
-        console.error("Delete user error:", error.message);
-        res.status(500).json({ message: "Unable to delete user." });
-    }
-});
+//         res.json({
+//             message: "User deleted successfully.",
+//         });
+//     } catch (error) {
+//         console.error("Delete user error:", error.message);
+//         res.status(500).json({
+//             message: "Unable to delete user.",
+//         });
+//     }
+// });
 
 export default router;
