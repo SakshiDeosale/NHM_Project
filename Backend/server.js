@@ -9,6 +9,9 @@ import schemeRoutes from './routes/schemeRoutes.js';
 import contractorRoutes from './routes/contractorRoutes.js';
 import mlampRoutes from './routes/mlampRoutes.js';
 import userRoutes from "./routes/userRoutes.js";
+import authRoutes from "./routes/authRoutes.js";
+import reportRoutes from './routes/reportRoutes.js';
+
 
 dotenv.config();
 
@@ -25,6 +28,8 @@ app.use('/api/schemes', schemeRoutes);
 app.use('/api/contractors', contractorRoutes);
 app.use('/api/mlamps', mlampRoutes);
 app.use("/api/users", userRoutes);
+app.use("/api/auth", authRoutes);
+app.use('/api/reports', reportRoutes);
 
 app.post("/api/test-route", (req, res) => {
     res.json({

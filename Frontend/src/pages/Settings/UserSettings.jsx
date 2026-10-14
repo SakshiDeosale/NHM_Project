@@ -10,6 +10,8 @@ const designations = [
     "Deputy Engineer",
     "Junior Engineer",
     "Assistant Engineer",
+    "Amdar",
+    "Khasdar",
     "Clerk",
     "Sectional Engineer",
     "Assistant Engineer Class-1",

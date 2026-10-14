@@ -8,7 +8,6 @@ import AuthLayout from './components/layout/AuthLayout';
 
 import Dashboard from './pages/Dashboard';
 import Users from './pages/Users';
-import AddUser from './pages/AddUser';
 import UserDetails from './pages/UserDetails';
 import CreateAgent from './pages/CreateAgent';
 import Profile from './pages/Profile';
@@ -46,7 +45,7 @@ export default function App() {
             <Route path="/" element={<AdminLayout />}>
               <Route index element={<Dashboard />} />
               <Route path="users" element={<Users />} />
-              <Route path="add-user" element={<AddUser />} />
+             
               <Route path="user-details" element={<UserDetails />} />
               <Route path="create-agent" element={<CreateAgent />} />
               <Route path="profile" element={<Profile />} />

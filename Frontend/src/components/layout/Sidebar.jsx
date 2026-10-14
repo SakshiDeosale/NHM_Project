@@ -8,7 +8,7 @@ export default function Sidebar() {
   const navItems = [
     { to: '/', label: 'Dashboard', icon: 'bi-speedometer2' },
     { to: '/users', label: 'Users', icon: 'bi-people' },
-    { to: '/add-user', label: 'Add Admin', icon: 'bi-person-plus' },
+    // { to: '/add-user', label: 'Add Admin', icon: 'bi-person-plus' },
     { to: '/profile', label: 'Profile', icon: 'bi-person-badge' },
     { to: '/charts', label: 'Charts', icon: 'bi-bar-chart-line' },
     { to: '/report', label: 'Report', icon: 'bi-file-earmark-text' },

@@ -90,23 +90,15 @@ export default function ReportSchemes() {
 
                 <div className="scheme-grid">
 
+                    
                     {schemes.map((scheme) => (
-
                         <NavLink
                             key={scheme.name}
-                            to={
-                                scheme.name === 'NHM'
-                                    ? `/report/${category}/nhm`
-                                    : '#'
-                            }
+                            to={`/report/${category}/${scheme.name
+                                .toLowerCase()
+                                .replace(/\s+/g, '-')}`}
                             className="scheme-card"
-                            onClick={(e) => {
-                                if (scheme.name !== 'NHM') {
-                                    e.preventDefault();
-                                }
-                            }}
                         >
-
                             <span className="scheme-icon">
                                 <i
                                     className={`bi ${scheme.icon}`}
@@ -119,12 +111,11 @@ export default function ReportSchemes() {
                             </span>
 
                             <span className="scheme-arrow">
-                                <i className="bi bi-arrow-right" />
+                                <i className="bi bi-arrow-right" aria-hidden="true" />
                             </span>
-
                         </NavLink>
-
                     ))}
+                
 
                 </div>
 

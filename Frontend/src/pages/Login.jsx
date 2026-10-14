@@ -1,64 +1,171 @@
+
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 export default function Login() {
-  const [email, setEmail] = useState('');
+  const [designation, setDesignation] = useState('');
+  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [rememberMe, setRememberMe] = useState(true);
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  const handleLogin = (e) => {
+
+
+  const handleLogin = async (e) => {
     e.preventDefault();
-    navigate('/');
+    setError('');
+    setLoading(true);
+
+    try {
+      const response = await fetch(
+        'http://localhost:5000/api/auth/login',
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ username, password }),
+        }
+      );
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        setError(data.message || 'Login failed.');
+        return;
+      }
+
+      // Store the token according to Remember Me.
+      if (rememberMe) {
+        localStorage.setItem('token', data.token);
+        localStorage.setItem('user', JSON.stringify(data.user));
+        sessionStorage.removeItem('token');
+        sessionStorage.removeItem('user');
+      } else {
+        sessionStorage.setItem('token', data.token);
+        sessionStorage.setItem('user', JSON.stringify(data.user));
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+      }
+
+      // Redirect using the designation returned by the database.
+      const role = data.user.designation;
+
+      const roleRoutes = {
+        'Superintending Engineer': '/superintending-engineer',
+        'Executive Engineer': '/executive-engineer',
+        'Deputy Engineer': '/deputy-engineer',
+        'Junior Engineer': '/junior-engineer',
+        MLA: '/mla',
+        MP: '/mp',
+        Contractor: '/contractor',
+      };
+
+      navigate(roleRoutes[role] || '/unauthorized', {
+        replace: true,
+      });
+    } catch (err) {
+      setError('Unable to connect to the server. Please try again.');
+    } finally {
+      setLoading(false);
+    }
   };
+
 
   return (
     <div className="card shadow-lg border-0 rounded-4 p-4">
       <div className="text-center mb-4">
-        <div className="brand-icon mx-auto mb-2" style={{ width: '48px', height: '48px', fontSize: '1.25rem' }}>
-          <i className="bi bi-grid-1x2-fill" />
-        </div>
-        <h3 className="fw-bold mb-1">Welcome back</h3>
-        <p className="text-muted small">Sign in to your adminHMD workspace</p>
+        <img
+          src="/assets/images/NHM.jpg"
+          alt="National Health Mission Logo"
+          className="mb-3"
+          style={{
+            width: '65px',
+            height: '65px',
+            objectFit: 'contain',
+          }}
+        />
+
+        <h3 className="fw-bold mb-1">
+          Welcome to
+        </h3>
+
+        <h4 className="fw-bold mb-2">
+          National Health Mission
+        </h4>
+
+        <p className="text-muted small">
+          Sign in to your NHM Admin Dashboard
+        </p>
       </div>
 
       <form onSubmit={handleLogin}>
+       
         <div className="mb-3">
-          <label className="form-label fw-semibold">Email Address</label>
+          <label htmlFor="username" className="form-label fw-semibold">
+            Username
+          </label>
+
           <input
-            type="email"
+            id="username"
+            type="text"
             className="form-control"
-            placeholder="admin@example.com"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            placeholder="Enter your username"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            autoComplete="username"
             required
           />
         </div>
 
         <div className="mb-3">
-          <div className="d-flex justify-content-between">
-            <label className="form-label fw-semibold">Password</label>
-            <Link to="/forgot-password" className="small text-primary text-decoration-none">Forgot password?</Link>
-          </div>
+          <label htmlFor="password" className="form-label fw-semibold">
+            Password
+          </label>
+
           <input
+            id="password"
             type="password"
             className="form-control"
-            placeholder="••••••••"
+            placeholder="Enter your password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            autoComplete="current-password"
             required
           />
         </div>
 
         <div className="form-check mb-3">
-          <input className="form-check-input" type="checkbox" id="remember" defaultChecked />
-          <label className="form-check-label small" htmlFor="remember">Remember me on this browser</label>
+          <input
+            className="form-check-input"
+            type="checkbox"
+            id="remember"
+            checked={rememberMe}
+            onChange={(e) => setRememberMe(e.target.checked)}
+          />
+
+          <label
+            className="form-check-label small"
+            htmlFor="remember"
+          >
+            Remember me on this browser
+          </label>
         </div>
 
-        <button type="submit" className="btn btn-primary w-100 py-2 fw-semibold mb-3">Sign In</button>
-
-        <div className="text-center small text-muted">
-          Don't have an account? <Link to="/register" className="text-primary fw-semibold text-decoration-none">Sign Up</Link>
-        </div>
+        {error && (
+          <div className="alert alert-danger py-2" role="alert">
+            {error}
+          </div>
+        )}
+        <button
+          type="submit"
+          className="btn btn-primary w-100 py-2 fw-semibold"
+          disabled={loading}
+        >
+          {loading ? 'Signing in...' : 'Sign In'}
+        </button>
       </form>
     </div>
   );

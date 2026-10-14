@@ -1,106 +1,148 @@
-import React, { useState } from 'react';
+
+import React from 'react';
 
 export default function Profile() {
-  const [profile, setProfile] = useState({
-    name: 'Admin Hasan',
-    email: 'admin@example.com',
-    bio: 'Focused on clean admin workflows, reusable UI systems, and reliable operations.',
-  });
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    alert('Profile Saved!');
+  // Static sample profile data
+  const profile = {
+    userID: 1,
+    firstName: 'Rahul',
+    middleName: 'Mahesh',
+    surname: 'Patil',
+    username: 'ExecutiveEngineerPune1',
+    mobile: '9876543210',
+    email: 'rahul.patil@example.com',
+    designation: 'Executive Engineer',
+    circle: 'Pune Circle',
+    district: 'Pune',
+    status: 'Active',
   };
+
+  const fullName = [
+    profile.firstName,
+    profile.middleName,
+    profile.surname,
+  ].join(' ');
 
   return (
     <>
+      {/* Page Heading */}
       <div className="page-heading">
         <div className="page-heading-copy">
-          <span className="page-icon"><i className="bi bi-person-badge" aria-hidden="true" /></span>
+          <span className="page-icon">
+            <i className="bi bi-person-circle" aria-hidden="true" />
+          </span>
+
           <div>
-            <p className="eyebrow mb-1">Account</p>
-            <h1 className="h3 mb-1">Profile</h1>
-            <p className="text-muted mb-0">Manage your personal details, bio, and contact preferences.</p>
+            <h1 className="h3 mb-1">My Profile</h1>
+            <p className="text-muted mb-0">
+              View your personal and account information.
+            </p>
           </div>
         </div>
       </div>
 
-      <section className="row g-3">
-        <div className="col-12 col-xl-4">
-          <div className="panel h-100 text-center profile-card">
-            <div className="profile-cover">
-              <img src="/assets/images/png/dasher-ui-bootstrap-5.jpg" alt="adminHMD dashboard preview" />
-            </div>
-            <img className="avatar-img avatar-xl profile-photo" src="/assets/images/avatar/avatar.jpg" alt="Admin Hasan" />
-            <h2 className="h5 mt-3 mb-1">{profile.name}</h2>
-            <p className="text-muted mb-3">Product Administrator</p>
-            <div className="d-flex justify-content-center gap-2">
-              <span className="badge text-bg-primary">Admin</span>
-              <span className="badge text-bg-success">Verified</span>
-            </div>
-            <div className="info-list mt-4 text-start">
-              <div><span>Email</span><strong>{profile.email}</strong></div>
-              <div><span>Department</span><strong>Product Ops</strong></div>
-              <div><span>Time Zone</span><strong>Asia/Dhaka</strong></div>
-            </div>
-          </div>
+      {/* Profile Information */}
+      <section className="panel mt-3">
+        <div className="panel-header">
+          <h2 className="h5 mb-0 section-title">
+            <i className="bi bi-person-vcard me-2" aria-hidden="true" />
+            Profile Information
+          </h2>
         </div>
 
-        <div className="col-12 col-xl-8">
-          <form className="panel needs-validation" onSubmit={handleSubmit}>
-            <div className="panel-header">
-              <div>
-                <h2 className="h5 mb-1 section-title">
-                  <i className="bi bi-person-gear me-2" aria-hidden="true" />
-                  <span>Profile Settings</span>
-                </h2>
-                <p className="text-muted mb-0">Update your account profile and contact details.</p>
-              </div>
+        <div className="p-4">
+          {/* Profile Header */}
+          <div className="d-flex align-items-center gap-3 mb-4">
+            <div
+              className="rounded-circle bg-light d-flex align-items-center justify-content-center"
+              style={{
+                width: '80px',
+                height: '80px',
+                minWidth: '80px',
+                border: '2px solid #dee2e6',
+              }}
+            >
+              <i className="bi bi-person-fill fs-1 text-secondary" />
             </div>
 
-            <div className="row g-3">
-              <div className="col-md-6">
-                <label className="form-label" htmlFor="profileName">Name</label>
-                <input
-                  className="form-control"
-                  id="profileName"
-                  type="text"
-                  required
-                  value={profile.name}
-                  onChange={(e) => setProfile({ ...profile, name: e.target.value })}
-                />
-              </div>
+            <div>
+              <h3 className="h5 mb-1">{fullName}</h3>
+              <p className="text-muted mb-2">
+                {profile.designation}
+              </p>
+              <span className="badge text-bg-success">
+                {profile.status}
+              </span>
+            </div>
+          </div>
 
-              <div className="col-md-6">
-                <label className="form-label" htmlFor="profileEmail">Email</label>
-                <input
-                  className="form-control"
-                  id="profileEmail"
-                  type="email"
-                  required
-                  value={profile.email}
-                  onChange={(e) => setProfile({ ...profile, email: e.target.value })}
-                />
-              </div>
+          <hr />
 
-              <div className="col-12">
-                <label className="form-label" htmlFor="profileBio">Bio</label>
-                <textarea
-                  className="form-control"
-                  id="profileBio"
-                  rows="5"
-                  value={profile.bio}
-                  onChange={(e) => setProfile({ ...profile, bio: e.target.value })}
-                />
-              </div>
+          {/* Important Details */}
+          <div className="row g-4 mt-1">
+            <div className="col-12 col-md-6">
+              <label className="text-muted small mb-1">
+                User ID
+              </label>
+              <p className="fw-semibold mb-0">
+                {profile.userID}
+              </p>
             </div>
 
-            <div className="d-flex justify-content-end mt-4">
-              <button className="btn btn-primary" type="submit">
-                <i className="bi bi-check2-circle me-1" aria-hidden="true" /> Save Profile
-              </button>
+            <div className="col-12 col-md-6">
+              <label className="text-muted small mb-1">
+                Username
+              </label>
+              <p className="fw-semibold mb-0">
+                {profile.username}
+              </p>
             </div>
-          </form>
+
+            <div className="col-12 col-md-6">
+              <label className="text-muted small mb-1">
+                Mobile Number
+              </label>
+              <p className="fw-semibold mb-0">
+                {profile.mobile}
+              </p>
+            </div>
+
+            <div className="col-12 col-md-6">
+              <label className="text-muted small mb-1">
+                Email Address
+              </label>
+              <p className="fw-semibold mb-0">
+                {profile.email}
+              </p>
+            </div>
+
+            <div className="col-12 col-md-6">
+              <label className="text-muted small mb-1">
+                Designation
+              </label>
+              <p className="fw-semibold mb-0">
+                {profile.designation}
+              </p>
+            </div>
+
+            <div className="col-12 col-md-6">
+              <label className="text-muted small mb-1">
+                Circle
+              </label>
+              <p className="fw-semibold mb-0">
+                {profile.circle}
+              </p>
+            </div>
+
+            <div className="col-12 col-md-6">
+              <label className="text-muted small mb-1">
+                District
+              </label>
+              <p className="fw-semibold mb-0">
+                {profile.district}
+              </p>
+            </div>
+          </div>
         </div>
       </section>
     </>
