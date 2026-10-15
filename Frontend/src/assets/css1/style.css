@@ -2531,3 +2531,40 @@ html[data-theme="dark"] .report-filter-control .form-control::placeholder {
       height: 32px;
     }
 }
+
+
+
+/* NHM report table */
+.nhm-report-table {
+  border-collapse: separate;
+  border-spacing: 0;
+  width: max-content;
+  min-width: 100%;
+  margin-bottom: 0;
+}
+
+/* Blue heading matching the Apply All Filters button */
+.nhm-report-table thead th {
+  background-color: #0d6efd;
+  color: #ffffff;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  white-space: nowrap;
+  padding: 12px 10px;
+  border: 1px solid #dee2e6;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+/* Keep existing table lines and borders */
+.nhm-report-table th,
+.nhm-report-table td {
+  border: 1px solid #dee2e6;
+}
+
+/* Table data */
+.nhm-report-table tbody td {
+  white-space: nowrap;
+  padding: 10px;
+}

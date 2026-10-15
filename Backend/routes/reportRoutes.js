@@ -1,5 +1,3 @@
-
-
 import express from 'express';
 import { getPool, sql } from '../config/db.js';
 
@@ -72,7 +70,8 @@ router.get('/options', async (req, res) => {
     }
 });
 
-// GET: filter project records
+
+// GET: filter project records and return all NHM columns
 router.get('/filter', async (req, res) => {
     try {
         const pool = await getPool();
@@ -87,37 +86,42 @@ router.get('/filter', async (req, res) => {
                 typeof rawValue === 'string' &&
                 rawValue.trim() !== ''
             ) {
-                const parameter = `value${index++}`;
+                const parameter = `value${ index++ } `;
 
-                conditions.push(
-                    `[${column}] LIKE @${parameter}`
-                );
+                conditions.push(`[${ column }] LIKE @${ parameter } `);
 
                 request.input(
                     parameter,
                     sql.NVarChar,
-                    `%${rawValue.trim()}%`
+                    `% ${ rawValue.trim() }% `
                 );
             }
         }
 
+        // Add WHERE only when filters are selected
+        const whereClause = conditions.length
+            ? `WHERE ${ conditions.join(' AND ') } `
+            : '';
+
+        // Retrieve every column from dbo.NHM
         const query = `
-      SELECT *
-      FROM dbo.NHM
-      ${conditions.length
-                ? `WHERE ${conditions.join(' AND ')}`
-                : ''}
-      ORDER BY ProjectID DESC;
-    `;
+SELECT *
+    FROM dbo.NHM
+            ${ whereClause }
+            ORDER BY ProjectID DESC;
+`;
 
         const result = await request.query(query);
+
         res.json(result.recordset);
     } catch (error) {
         console.error('Report filtering error:', error);
+
         res.status(500).json({
             message: 'Failed to retrieve filtered reports.'
         });
     }
 });
+
 
 export default router;
