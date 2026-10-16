@@ -22,9 +22,9 @@ import Charts from './pages/Charts';
 import Report from './pages/Report';
 import ReportSchemes from './pages/ReportSchemes';
 import SchemeReports from './pages/SchemeReports';
-import Forms from './pages/Forms';
+import Forms from "./pages/Master_Form/Forms.jsx";
+import NHMForm from "./pages/Master_Form/NHMForm.jsx";
 // import ComponentsPage from './pages/ComponentsPage';
-
 import Help from './pages/Help';
 import PrivacyPolicy from './pages/PrivacyPolicy';
 import TermsConditions from './pages/TermsConditions'; 
@@ -34,6 +34,7 @@ import Register from './pages/Register';
 import ForgotPassword from './pages/ForgotPassword';
 import NotFound from './pages/NotFound';
 import ServerError from './pages/ServerError';
+import OrganizationStructure from "./pages/OrganizationStructure.jsx";
 
 export default function App() {
   return (
@@ -80,6 +81,11 @@ export default function App() {
                 element={<SchemeReports />}
               />
               <Route path="forms" element={<Forms />} />
+              <Route path="forms/nhm" element={<NHMForm />} />
+              <Route
+                path="organization-structure"
+                element={<OrganizationStructure />}
+              />
               <Route path="help" element={<Help />} />
               <Route path="privacy-policy" element={<PrivacyPolicy />} />
               <Route path="terms-conditions" element={<TermsConditions />} />

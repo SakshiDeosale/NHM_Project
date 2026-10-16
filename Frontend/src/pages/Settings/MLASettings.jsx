@@ -1,5 +1,4 @@
-
-import React, { useState, useEffect } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 
 const API_URL = 'http://localhost:5000/api/mlamps';
 
@@ -8,10 +7,17 @@ const categoryOptions = {
     Khasdar: ['Lok Sabha MP', 'Rajya Sabha MP'],
 };
 
+const emptyForm = {
+    type: '',
+    category: '',
+    name: '',
+    constituency: '',
+    party: '',
+    state: 'Maharashtra',
+};
+
 export default function MLASettings() {
-    const [type, setType] = useState('');
-    const [category, setCategory] = useState('');
-    const [name, setName] = useState('');
+    const [form, setForm] = useState({ ...emptyForm });
     const [members, setMembers] = useState([]);
     const [editingId, setEditingId] = useState(null);
     const [loading, setLoading] = useState(true);
@@ -19,36 +25,48 @@ export default function MLASettings() {
     const [error, setError] = useState('');
     const [message, setMessage] = useState('');
 
-    // Fetch records from SQL Server
-    const fetchMembers = async () => {
+    const fetchMembers = useCallback(async () => {
         try {
+            setError('');
             const response = await fetch(API_URL);
+            const data = await response.json();
 
             if (!response.ok) {
-                throw new Error('Failed to fetch MLA/MP records.');
+                throw new Error(data.message || 'Failed to fetch MLA/MP records.');
             }
 
-            setMembers(await response.json());
+            setMembers(Array.isArray(data) ? data : []);
         } catch (err) {
             setError(err.message || 'Unable to load records. Check the backend.');
         } finally {
             setLoading(false);
         }
-    };
+    }, []);
 
     useEffect(() => {
         fetchMembers();
-    }, []);
+    }, [fetchMembers]);
 
-    const handleTypeChange = (e) => {
-        setType(e.target.value);
-        setCategory('');
+    const updateField = (key, value) => {
+        setForm((current) => ({
+            ...current,
+            [key]: value,
+            ...(key === 'type' ? { category: '' } : {}),
+        }));
+        setError('');
+        setMessage('');
     };
 
-    // Add or update a record
-    const handleSave = async () => {
-        if (!type || !category || !name.trim()) {
-            setError('Please select the type and category and enter a name.');
+    const resetForm = () => {
+        setForm({ ...emptyForm });
+        setEditingId(null);
+    };
+
+    const handleSave = async (event) => {
+        event.preventDefault();
+
+        if (!form.type || !form.category || !form.name.trim() || !form.state.trim()) {
+            setError('Please complete all required fields.');
             return;
         }
 
@@ -58,18 +76,18 @@ export default function MLASettings() {
             setMessage('');
 
             const isEditing = editingId !== null;
-
             const response = await fetch(
                 isEditing ? `${API_URL}/${editingId}` : API_URL,
                 {
                     method: isEditing ? 'PUT' : 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
+                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
-                        type,
-                        category,
-                        name: name.trim(),
+                        type: form.type,
+                        category: form.category,
+                        name: form.name.trim(),
+                        constituency: form.constituency.trim(),
+                        party: form.party.trim(),
+                        state: form.state.trim(),
                     }),
                 }
             );
@@ -91,19 +109,18 @@ export default function MLASettings() {
     };
 
     const handleEdit = (item) => {
-        setType(item.MemberType);
-        setCategory(item.Category);
-        setName(item.MemberName);
-        setEditingId(item.MLAMPID);
+        setForm({
+            type: item.MemberType || '',
+            category: item.Category || '',
+            name: item.MemberName || '',
+            constituency: item.Constituency || '',
+            party: item.Party || '',
+            state: item.State || 'Maharashtra',
+        });
+        setEditingId(item.ID);
         setError('');
         setMessage('');
-    };
-
-    const resetForm = () => {
-        setType('');
-        setCategory('');
-        setName('');
-        setEditingId(null);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
     };
 
     const handleCancel = () => {
@@ -112,10 +129,9 @@ export default function MLASettings() {
         setMessage('');
     };
 
-    // Delete a record
     const handleDelete = async (item) => {
         const confirmed = window.confirm(
-            `Are you sure you want to delete "${item.MemberName}"?`
+            `Deactivate "${item.MemberName}"? This hides the record from active lists but retains it in the database.`
         );
 
         if (!confirmed) return;
@@ -124,25 +140,24 @@ export default function MLASettings() {
             setError('');
             setMessage('');
 
-            const response = await fetch(`${API_URL}/${item.MLAMPID}`, {
+            const response = await fetch(`${API_URL}/${item.ID}`, {
                 method: 'DELETE',
             });
-
             const data = await response.json();
 
             if (!response.ok) {
-                throw new Error(data.message || 'Unable to delete record.');
+                throw new Error(data.message || 'Unable to deactivate record.');
             }
 
-            setMessage(data.message || 'Record deleted successfully.');
+            setMessage(data.message || 'Record deactivated successfully.');
 
-            if (editingId === item.MLAMPID) {
+            if (editingId === item.ID) {
                 resetForm();
             }
 
             await fetchMembers();
         } catch (err) {
-            setError(err.message || 'Unable to delete record.');
+            setError(err.message || 'Unable to deactivate record.');
         }
     };
 
@@ -151,13 +166,12 @@ export default function MLASettings() {
             <div className="page-heading">
                 <div className="page-heading-copy">
                     <span className="page-icon">
-                        <i className="bi bi-person-vcard" aria-hidden="true"></i>
+                        <i className="bi bi-person-vcard" aria-hidden="true" />
                     </span>
-
                     <div>
                         <h1 className="h3 mb-1">Add MLA / MP</h1>
                         <p className="text-muted mb-0">
-                            Add MLA or MP information.
+                            Add and manage MLA or MP information.
                         </p>
                     </div>
                 </div>
@@ -166,184 +180,224 @@ export default function MLASettings() {
             <section className="panel">
                 <div className="panel-header">
                     <h2 className="h5 mb-1 section-title">
-                        <i className="bi bi-person-plus me-2" aria-hidden="true"></i>
+                        <i
+                            className={`bi ${editingId !== null ? 'bi-pencil-square' : 'bi-person-plus'} me-2`}
+                            aria-hidden="true"
+                        />
                         {editingId !== null ? 'Edit MLA / MP' : 'Add MLA / MP'}
                     </h2>
-
                     <p className="text-muted mb-0">
-                        Enter the MLA or MP details.
+                        Fields marked with * are required.
                     </p>
                 </div>
 
-                <div className="report-filter-list">
-                    <div className="report-filter-row">
-                        <label htmlFor="type" className="report-filter-label">
-                            MLA/MP
-                        </label>
-
-                        <div className="report-filter-control">
+                <form className="p-3" onSubmit={handleSave}>
+                    <div className="row g-3">
+                        <div className="col-12 col-md-6 col-xl-4">
+                            <label htmlFor="mla-type" className="form-label">
+                                Member Type *
+                            </label>
                             <select
-                                id="type"
+                                id="mla-type"
                                 className="form-select"
-                                value={type}
-                                onChange={handleTypeChange}
+                                value={form.type}
+                                onChange={(e) => updateField('type', e.target.value)}
+                                required
                             >
-                                <option value="">Select MLA/MP</option>
-                                <option value="Amdar">Amdar</option>
-                                <option value="Khasdar">Khasdar</option>
+                                <option value="">Select Member Type</option>
+                                <option value="Amdar">Amdar (MLA)</option>
+                                <option value="Khasdar">Khasdar (MP)</option>
                             </select>
                         </div>
-                    </div>
 
-                    <div className="report-filter-row">
-                        <label htmlFor="category" className="report-filter-label">
-                            Type
-                        </label>
-
-                        <div className="report-filter-control">
+                        <div className="col-12 col-md-6 col-xl-4">
+                            <label htmlFor="mla-category" className="form-label">
+                                Category *
+                            </label>
                             <select
-                                id="category"
+                                id="mla-category"
                                 className="form-select"
-                                value={category}
-                                onChange={(e) => setCategory(e.target.value)}
-                                disabled={!type}
+                                value={form.category}
+                                onChange={(e) => updateField('category', e.target.value)}
+                                disabled={!form.type}
+                                required
                             >
-                                <option value="">Select Type</option>
-                                {type &&
-                                    categoryOptions[type].map((option) => (
-                                        <option key={option} value={option}>
-                                            {option}
-                                        </option>
-                                    ))}
+                                <option value="">Select Category</option>
+                                {(categoryOptions[form.type] || []).map((option) => (
+                                    <option key={option} value={option}>
+                                        {option}
+                                    </option>
+                                ))}
                             </select>
                         </div>
-                    </div>
 
-                    <div className="report-filter-row">
-                        <label htmlFor="name" className="report-filter-label">
-                            MLA/MP Name
-                        </label>
-
-                        <div className="report-filter-control">
+                        <div className="col-12 col-md-6 col-xl-4">
+                            <label htmlFor="mla-name" className="form-label">
+                                Member Name *
+                            </label>
                             <input
-                                id="name"
+                                id="mla-name"
                                 type="text"
                                 className="form-control"
-                                placeholder="Enter MLA/MP Name"
-                                value={name}
-                                onChange={(e) => setName(e.target.value)}
+                                placeholder="Enter full name"
+                                maxLength={200}
+                                value={form.name}
+                                onChange={(e) => updateField('name', e.target.value)}
+                                required
+                            />
+                        </div>
+
+                        <div className="col-12 col-md-6 col-xl-4">
+                            <label htmlFor="mla-constituency" className="form-label">
+                                Constituency
+                            </label>
+                            <input
+                                id="mla-constituency"
+                                type="text"
+                                className="form-control"
+                                placeholder="Enter constituency"
+                                maxLength={150}
+                                value={form.constituency}
+                                onChange={(e) => updateField('constituency', e.target.value)}
+                            />
+                        </div>
+
+                        <div className="col-12 col-md-6 col-xl-4">
+                            <label htmlFor="mla-party" className="form-label">
+                                Political Party
+                            </label>
+                            <input
+                                id="mla-party"
+                                type="text"
+                                className="form-control"
+                                placeholder="Enter political party"
+                                maxLength={200}
+                                value={form.party}
+                                onChange={(e) => updateField('party', e.target.value)}
+                            />
+                        </div>
+
+                        <div className="col-12 col-md-6 col-xl-4">
+                            <label htmlFor="mla-state" className="form-label">
+                                State *
+                            </label>
+                            <input
+                                id="mla-state"
+                                type="text"
+                                className="form-control"
+                                placeholder="Enter state"
+                                maxLength={100}
+                                value={form.state}
+                                onChange={(e) => updateField('state', e.target.value)}
+                                required
                             />
                         </div>
                     </div>
 
-                    <div className="report-filter-row">
-                        <div></div>
-                        <div className="report-filter-control">
+                    <div className="d-flex flex-wrap gap-2 mt-4">
+                        <button type="submit" className="btn btn-primary" disabled={saving}>
+                            <i
+                                className={`bi ${saving ? 'bi-hourglass-split' : editingId !== null ? 'bi-check-circle' : 'bi-plus-circle'} me-1`}
+                                aria-hidden="true"
+                            />
+                            {saving ? 'Saving...' : editingId !== null ? 'Update Record' : 'Add Record'}
+                        </button>
+
+                        {editingId !== null && (
                             <button
                                 type="button"
-                                className="btn btn-primary me-2"
-                                onClick={handleSave}
+                                className="btn btn-outline-secondary"
+                                onClick={handleCancel}
                                 disabled={saving}
                             >
-                                <i className="bi bi-plus-circle me-1"></i>
-                                {saving
-                                    ? 'Saving...'
-                                    : editingId !== null
-                                        ? 'Update'
-                                        : 'Add'}
+                                Cancel
                             </button>
-
-                            {editingId !== null && (
-                                <button
-                                    type="button"
-                                    className="btn btn-secondary"
-                                    onClick={handleCancel}
-                                    disabled={saving}
-                                >
-                                    Cancel
-                                </button>
-                            )}
-                        </div>
+                        )}
                     </div>
-                </div>
 
-                {message && (
-                    <p className="text-success mt-3 mb-0" role="status">
-                        {message}
-                    </p>
-                )}
-
-                {error && (
-                    <p className="text-danger mt-3 mb-0" role="alert">
-                        {error}
-                    </p>
-                )}
+                    {message && (
+                        <div className="alert alert-success mt-3 mb-0" role="status">
+                            {message}
+                        </div>
+                    )}
+                    {error && (
+                        <div className="alert alert-danger mt-3 mb-0" role="alert">
+                            {error}
+                        </div>
+                    )}
+                </form>
             </section>
 
             <section className="panel mt-4">
                 <div className="panel-header">
                     <h2 className="h5 mb-1 section-title">
-                        <i className="bi bi-list-ul me-2"></i>
+                        <i className="bi bi-list-ul me-2" aria-hidden="true" />
                         MLA / MP List
                     </h2>
                     <p className="text-muted mb-0">
-                        Records saved in the database.
+                        Active records saved in the database.
                     </p>
                 </div>
 
                 {loading ? (
-                    <p className="text-muted">Loading records...</p>
+                    <p className="text-muted p-3 mb-0">Loading records...</p>
                 ) : (
                     <div className="table-responsive">
-                        <table className="table table-hover align-middle mb-0">
+                        <table className="table table-hover table-bordered align-middle mb-0">
                             <thead>
                                 <tr>
                                     <th>ID</th>
-                                    <th>MLA/MP</th>
-                                    <th>Type</th>
-                                    <th>Name</th>
+                                    <th>Member Type</th>
+                                    <th>Category</th>
+                                    <th>Member Name</th>
+                                    <th>Constituency</th>
+                                    <th>Political Party</th>
+                                    <th>State</th>
                                     <th>Status</th>
                                     <th>Actions</th>
                                 </tr>
                             </thead>
-
                             <tbody>
                                 {members.length === 0 ? (
                                     <tr>
-                                        <td colSpan="6" className="text-center">
-                                            No records found.
+                                        <td colSpan={9} className="text-center py-4">
+                                            No active MLA / MP records found.
                                         </td>
                                     </tr>
                                 ) : (
                                     members.map((item) => (
-                                        <tr key={item.MLAMPID}>
-                                            <td>{item.MLAMPID}</td>
+                                        <tr key={item.ID}>
+                                            <td>{item.ID}</td>
                                             <td>{item.MemberType}</td>
                                             <td>{item.Category}</td>
                                             <td>{item.MemberName}</td>
+                                            <td>{item.Constituency || '—'}</td>
+                                            <td>{item.Party || '—'}</td>
+                                            <td>{item.State || '—'}</td>
                                             <td>
-                                                <span className="badge bg-success">
-                                                    Active
+                                                <span className={`badge ${item.IsActive ? 'bg-success' : 'bg-secondary'}`}>
+                                                    {item.IsActive ? 'Active' : 'Inactive'}
                                                 </span>
                                             </td>
-                                            <td>
+                                            <td className="text-nowrap">
                                                 <button
                                                     type="button"
                                                     className="btn btn-sm btn-primary me-2"
                                                     onClick={() => handleEdit(item)}
+                                                    aria-label={`Edit ${item.MemberName}`}
                                                 >
-                                                    <i className="bi bi-pencil-square me-1"></i>
+                                                    <i className="bi bi-pencil-square me-1" aria-hidden="true" />
                                                     Edit
                                                 </button>
-
-                                                <button
+                                                {/* <button
                                                     type="button"
-                                                    className="btn btn-sm btn-danger"
+                                                    className="btn btn-sm btn-outline-danger"
                                                     onClick={() => handleDelete(item)}
+                                                    aria-label={`Deactivate ${item.MemberName}`}
                                                 >
-                                                    <i className="bi bi-trash me-1"></i>
-                                                    Delete
-                                                </button>
+                                                    <i className="bi bi-person-dash me-1" aria-hidden="true" />
+                                                    Deactivate
+                                                </button> */}
                                             </td>
                                         </tr>
                                     ))

@@ -9,17 +9,57 @@ const categoryOptions = {
     Khasdar: ['Lok Sabha MP', 'Rajya Sabha MP'],
 };
 
-// GET: Fetch active MLA/MP records
+const clean = (value) =>
+    typeof value === 'string' ? value.trim() : '';
+
+function validateMember({ type, category, name, constituency, party, state }) {
+    if (
+        !Object.hasOwn(categoryOptions, type) ||
+        !categoryOptions[type].includes(category)
+    ) {
+        return 'Please select a valid MLA/MP type and category.';
+    }
+
+    if (!clean(name) || clean(name).length > 200) {
+        return 'Member name is required and must be 200 characters or fewer.';
+    }
+
+    if (clean(constituency).length > 150) {
+        return 'Constituency must be 150 characters or fewer.';
+    }
+
+    if (clean(party).length > 200) {
+        return 'Party must be 200 characters or fewer.';
+    }
+
+    if (!clean(state) || clean(state).length > 100) {
+        return 'State is required and must be 100 characters or fewer.';
+    }
+
+    return null;
+}
+
+function bindMember(request, body) {
+    return request
+        .input('MemberType', sql.NVarChar(10), clean(body.type))
+        .input('Category', sql.NVarChar(100), clean(body.category))
+        .input('MemberName', sql.NVarChar(200), clean(body.name))
+        .input('Constituency', sql.NVarChar(150), clean(body.constituency) || null)
+        .input('Party', sql.NVarChar(200), clean(body.party) || null)
+        .input('State', sql.NVarChar(100), clean(body.state));
+}
+
+// GET: Fetch active records
 router.get('/', async (req, res) => {
     try {
         const pool = await getPool();
 
         const result = await pool.request().query(`
-            SELECT MLAMPID, MemberType, Category, MemberName,
-                   IsActive, CreatedAt
-            FROM MLAMPs
+            SELECT ID, MemberType, Category, MemberName,
+                   Constituency, Party, State, IsActive, CreatedAt
+            FROM dbo.MaharashtraMLA
             WHERE IsActive = 1
-            ORDER BY MemberName
+            ORDER BY MemberType, MemberName;
         `);
 
         res.json(result.recordset);
@@ -29,99 +69,81 @@ router.get('/', async (req, res) => {
     }
 });
 
-// Validate form fields
-function validateMember(memberType, category, memberName) {
-    return (
-        Object.hasOwn(categoryOptions, memberType) &&
-        categoryOptions[memberType].includes(category) &&
-        typeof memberName === 'string' &&
-        memberName.trim().length > 0 &&
-        memberName.trim().length <= 150
-    );
-}
-
-// POST: Add MLA/MP
+// POST: Add record
 router.post('/', async (req, res) => {
     try {
-        const { type, category, name } = req.body;
+        const body = req.body;
+        const validationError = validateMember(body);
 
-        if (!validateMember(type, category, name)) {
-            return res.status(400).json({
-                message: 'Please provide a valid MLA/MP type, category, and name.',
-            });
+        if (validationError) {
+            return res.status(400).json({ message: validationError });
         }
 
         const pool = await getPool();
-
-        const result = await pool.request()
-            .input('MemberType', sql.NVarChar(20), type)
-            .input('Category', sql.NVarChar(50), category)
-            .input('MemberName', sql.NVarChar(150), name.trim())
-            .query(`
-                INSERT INTO MLAMPs (MemberType, Category, MemberName)
-                OUTPUT
-                    INSERTED.MLAMPID,
-                    INSERTED.MemberType,
-                    INSERTED.Category,
-                    INSERTED.MemberName,
-                    INSERTED.IsActive,
-                    INSERTED.CreatedAt
-                VALUES (@MemberType, @Category, @MemberName)
-            `);
+        const result = await bindMember(pool.request(), body).query(`
+            INSERT INTO dbo.MaharashtraMLA
+                (MemberType, Category, MemberName, Constituency,
+                 Party, State, IsActive, CreatedAt)
+            OUTPUT INSERTED.ID, INSERTED.MemberType, INSERTED.Category,
+                   INSERTED.MemberName, INSERTED.Constituency,
+                   INSERTED.Party, INSERTED.State,
+                   INSERTED.IsActive, INSERTED.CreatedAt
+            VALUES
+                (@MemberType, @Category, @MemberName, @Constituency,
+                 @Party, @State, 1, SYSDATETIME());
+        `);
 
         res.status(201).json({
             message: 'MLA/MP added successfully.',
             member: result.recordset[0],
         });
     } catch (error) {
-        if (error.number === 2627 || error.number === 2601) {
-            return res.status(409).json({
-                message: 'This MLA/MP record already exists.',
-            });
-        }
-
         console.error('Add MLA/MP error:', error.message);
         res.status(500).json({ message: 'Failed to add MLA/MP.' });
     }
 });
 
-// PUT: Update MLA/MP
+// PUT: Update record
 router.put('/:id', async (req, res) => {
     try {
         const id = Number(req.params.id);
-        const { type, category, name } = req.body;
+        const body = req.body;
 
-        if (
-            !Number.isInteger(id) || id <= 0 ||
-            !validateMember(type, category, name)
-        ) {
-            return res.status(400).json({
-                message: 'Please provide a valid ID and MLA/MP details.',
-            });
+        if (!Number.isInteger(id) || id <= 0) {
+            return res.status(400).json({ message: 'Invalid MLA/MP ID.' });
+        }
+
+        const validationError = validateMember(body);
+        if (validationError) {
+            return res.status(400).json({ message: validationError });
         }
 
         const pool = await getPool();
+        const request = bindMember(
+            pool.request().input('ID', sql.Int, id),
+            body
+        );
 
-        const result = await pool.request()
-            .input('MLAMPID', sql.Int, id)
-            .input('MemberType', sql.NVarChar(20), type)
-            .input('Category', sql.NVarChar(50), category)
-            .input('MemberName', sql.NVarChar(150), name.trim())
-            .query(`
-                UPDATE MLAMPs
-                SET MemberType = @MemberType,
-                    Category = @Category,
-                    MemberName = @MemberName
-                WHERE MLAMPID = @MLAMPID;
+        const result = await request.query(`
+            UPDATE dbo.MaharashtraMLA
+            SET MemberType = @MemberType,
+                Category = @Category,
+                MemberName = @MemberName,
+                Constituency = @Constituency,
+                Party = @Party,
+                State = @State
+            WHERE ID = @ID AND IsActive = 1;
 
-                SELECT MLAMPID, MemberType, Category, MemberName,
-                       IsActive, CreatedAt
-                FROM MLAMPs
-                WHERE MLAMPID = @MLAMPID;
-            `);
+            SELECT ID, MemberType, Category, MemberName,
+                   Constituency, Party, State, IsActive, CreatedAt
+            FROM dbo.MaharashtraMLA
+            WHERE ID = @ID AND IsActive = 1;
+        `);
 
         if (result.recordset.length === 0) {
-            return res.status(404).json({ message: 'MLA/MP record not found.' });
+            return res.status(404).json({
+                message: 'Active MLA/MP record not found.',
+            });
         }
 
         res.json({
@@ -129,18 +151,12 @@ router.put('/:id', async (req, res) => {
             member: result.recordset[0],
         });
     } catch (error) {
-        if (error.number === 2627 || error.number === 2601) {
-            return res.status(409).json({
-                message: 'This MLA/MP record already exists.',
-            });
-        }
-
         console.error('Update MLA/MP error:', error.message);
         res.status(500).json({ message: 'Failed to update MLA/MP.' });
     }
 });
 
-// DELETE: Delete MLA/MP
+// DELETE: Soft-delete record
 router.delete('/:id', async (req, res) => {
     try {
         const id = Number(req.params.id);
@@ -150,24 +166,26 @@ router.delete('/:id', async (req, res) => {
         }
 
         const pool = await getPool();
-
         const result = await pool.request()
-            .input('MLAMPID', sql.Int, id)
+            .input('ID', sql.Int, id)
             .query(`
-                DELETE FROM MLAMPs
-                WHERE MLAMPID = @MLAMPID;
+                UPDATE dbo.MaharashtraMLA
+                SET IsActive = 0
+                WHERE ID = @ID AND IsActive = 1;
 
-                SELECT @@ROWCOUNT AS deletedCount;
+                SELECT @@ROWCOUNT AS affectedCount;
             `);
 
-        if (result.recordset[0].deletedCount === 0) {
-            return res.status(404).json({ message: 'MLA/MP record not found.' });
+        if (result.recordset[0].affectedCount === 0) {
+            return res.status(404).json({
+                message: 'Active MLA/MP record not found.',
+            });
         }
 
-        res.json({ message: 'MLA/MP deleted successfully.' });
+        res.json({ message: 'MLA/MP deactivated successfully.' });
     } catch (error) {
-        console.error('Delete MLA/MP error:', error.message);
-        res.status(500).json({ message: 'Failed to delete MLA/MP.' });
+        console.error('Deactivate MLA/MP error:', error.message);
+        res.status(500).json({ message: 'Failed to deactivate MLA/MP.' });
     }
 });
 

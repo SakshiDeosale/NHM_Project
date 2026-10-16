@@ -11,6 +11,7 @@ import mlampRoutes from './routes/mlampRoutes.js';
 import userRoutes from "./routes/userRoutes.js";
 import authRoutes from "./routes/authRoutes.js";
 import reportRoutes from './routes/reportRoutes.js';
+import nhmRoutes from './routes/nhmRoutes.js';
 
 
 dotenv.config();
@@ -30,6 +31,7 @@ app.use('/api/mlamps', mlampRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/auth", authRoutes);
 app.use('/api/reports', reportRoutes);
+app.use('/api/nhm', nhmRoutes);
 
 app.post("/api/test-route", (req, res) => {
     res.json({

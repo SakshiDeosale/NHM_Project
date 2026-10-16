@@ -19,6 +19,7 @@ export default function Sidebar() {
     { to: '/terms-conditions', label: 'Terms & Conditions', icon: 'bi-file-earmark-text' },
 
     { to: '/help', label: 'Help', icon: 'bi-question-circle' },
+    { to: "/organization-structure", label: "Organization Structure", icon: "bi-diagram-3" },
     { to: '/logout', label: 'Logout', icon: 'bi-box-arrow-right' }
   ];
 

@@ -91,7 +91,7 @@ a {
   font-weight: 800;
 }
 
-.brand-icon img{
+.brand-icon img {
   width: 42px;
   height: 42px;
   border-radius: 8px;
@@ -470,7 +470,7 @@ html[data-theme="dark"] .profile-button .avatar-sm {
   min-height: calc(100vh - 132px);
 }
 
-.dashboard-content > .container-fluid {
+.dashboard-content>.container-fluid {
   padding-top: 1.75rem !important;
   padding-bottom: 1.75rem !important;
 }
@@ -543,8 +543,8 @@ html[data-theme="dark"] .profile-button .avatar-sm {
   justify-content: center;
 
   transition: border-color 0.18s ease,
-              box-shadow 0.18s ease,
-              transform 0.18s ease;
+    box-shadow 0.18s ease,
+    transform 0.18s ease;
 }
 
 .metric-card::before {
@@ -1120,6 +1120,7 @@ html[data-theme="dark"] .profile-button .avatar-sm {
 }
 
 @media (max-width: 575.98px) {
+
   .page-heading,
   .panel-header {
     align-items: flex-start;
@@ -1157,6 +1158,7 @@ html[data-theme="dark"] .profile-button .avatar-sm {
 }
 
 @media (prefers-reduced-motion: reduce) {
+
   .sidebar-nav .nav-link,
   .sidebar-toggle,
   .icon-button,
@@ -1535,7 +1537,7 @@ html[data-theme="dark"] .text-bg-danger {
 }
 
 @media (max-width: 991.98px) {
-  .dashboard-content > .container-fluid {
+  .dashboard-content>.container-fluid {
     padding-top: 1.25rem !important;
     padding-bottom: 1.25rem !important;
   }
@@ -1550,7 +1552,7 @@ html[data-theme="dark"] .text-bg-danger {
     align-items: flex-start;
   }
 
-  .panel-header > .d-flex {
+  .panel-header>.d-flex {
     width: 100%;
   }
 
@@ -2508,28 +2510,28 @@ html[data-theme="dark"] .report-filter-control .form-control::placeholder {
     margin-bottom: 1.5rem;
   }
 
-    .help-panel {
-      width: 100%;
-      margin-bottom: 1.5rem;
-    }
-  
-    .help-content {
-      max-width: 100%;
-      padding: 1.1rem;
-    }
-  
-    .help-company-name {
-      font-size: 1.1rem;
-    }
-  
-    .help-item {
-      gap: 0.6rem;
-    }
-  
-    .help-item-icon {
-      width: 32px;
-      height: 32px;
-    }
+  .help-panel {
+    width: 100%;
+    margin-bottom: 1.5rem;
+  }
+
+  .help-content {
+    max-width: 100%;
+    padding: 1.1rem;
+  }
+
+  .help-company-name {
+    font-size: 1.1rem;
+  }
+
+  .help-item {
+    gap: 0.6rem;
+  }
+
+  .help-item-icon {
+    width: 32px;
+    height: 32px;
+  }
 }
 
 
@@ -2568,3 +2570,1565 @@ html[data-theme="dark"] .report-filter-control .form-control::placeholder {
   white-space: nowrap;
   padding: 10px;
 }
+
+
+/* =========================================================
+   MASTER FORM SCHEME SELECTION — isolated from dashboard CSS
+   ========================================================= */
+
+.scheme-page {
+  width: 100%;
+  min-width: 0;
+  padding: clamp(12px, 1.6vw, 24px);
+  box-sizing: border-box;
+  
+}
+
+.scheme-page .scheme-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 22px;
+}
+
+.scheme-page .scheme-intro {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  min-width: 0;
+}
+
+.scheme-page .scheme-grid-icon {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 48px;
+  height: 48px;
+  border-radius: 10px;
+  background: #b2caf0;
+  color: #075bea;
+  font-size: 44px;
+  line-height: 1;
+}
+
+.scheme-page .scheme-intro h1 {
+  margin: 0 0 6px;
+  font-size: clamp(16px, 2.35vw, 27px);
+  font-weight: 800;
+  line-height: 1.3;
+}
+
+.scheme-page .scheme-intro p {
+  margin: 1px 0 0;
+  color: #4f72ad;
+  font-size: clamp(15px, 1.2vw, 15px);
+  font-weight: 700;
+  line-height: 1.7;
+}
+
+.scheme-page
+/* =========================
+   SCHEME GRID
+========================= */
+
+.scheme-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+  width: 100%;
+  min-width: 0;
+  align-items: stretch;
+}
+
+.scheme-page
+/* =========================
+   SCHEME CARDS
+========================= */
+
+.scheme-card {
+  --card-light: #ffffff35;
+
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+
+  width: 100%;
+  height: 150px;
+  min-width: 0;
+  padding: 16px;
+
+  box-sizing: border-box;
+  overflow: hidden;
+  isolation: isolate;
+
+  border: 1px solid #ffffff55;
+  border-radius: 14px;
+  color: #fff;
+  text-align: left;
+  cursor: pointer;
+
+  box-shadow: 0 6px 14px #193c701a;
+  transition: transform 180ms ease, box-shadow 180ms ease;
+}
+
+.scheme-page .scheme-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 22px #193c7030;
+}
+
+.scheme-page .scheme-card:focus-visible {
+  outline: 3px solid #163c80;
+  outline-offset: 3px;
+}
+
+.scheme-page
+/* Scheme colors */
+
+.scheme-card.nhm {
+  background: linear-gradient(120deg, #0757ed, #00b9ed);
+}
+
+.scheme-page .scheme-card.finance {
+  background: linear-gradient(120deg, #ff7100, #ffbd00);
+}
+
+.scheme-page .scheme-card.abhim {
+  background: linear-gradient(120deg, #8500f9, #5900e9);
+}
+
+.scheme-page .scheme-card.pmjvk {
+  background: linear-gradient(120deg, #00bd43, #45d91f);
+}
+
+.scheme-page .scheme-card.ayush {
+  background: linear-gradient(120deg, #00a9bf, #00d2d4);
+}
+
+.scheme-page .scheme-card.adb {
+  background: linear-gradient(120deg, #ed101c, #ff3d36);
+}
+
+.scheme-page .scheme-card.ndb {
+  background: linear-gradient(120deg, #0754ee, #1685f6);
+  grid-column: 1 / span 2;
+}
+
+.scheme-page
+/* =========================
+   LOGOS
+========================= */
+
+.scheme-logo-wrap {
+  /* z-index: 1; */
+  display: grid;
+  place-items: center;
+
+  flex: 0 0 76px;
+  width: 76px;
+  height: 76px;
+  padding: 0px;
+
+  box-sizing: border-box;
+  overflow: hidden;
+
+  border: 3px solid #ffffff40;
+  border-radius: 50%;
+  background: #fff;
+}
+
+.scheme-page .scheme-logo {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  border-radius: 50%;
+}
+
+.scheme-page
+/* =========================
+   CARD TEXT
+========================= */
+
+.scheme-copy {
+  z-index: 1;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 7px;
+  min-width: 0;
+  padding-right: 30px;
+}
+
+.scheme-page .scheme-copy strong {
+  font-size: clamp(17px, 1.4vw, 22px);
+  font-weight: 750;
+  line-height: 1.25;
+  overflow-wrap: anywhere;
+}
+
+.scheme-page .scheme-description {
+  max-width: 260px;
+  font-size: 13px;
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+}
+
+.scheme-page
+/* =========================
+   ARROW
+========================= */
+
+.scheme-arrow {
+  position: absolute;
+  z-index: 2;
+  top: 18%;
+  right: 6%;
+
+  display: grid;
+  place-items: center;
+
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: var(--card-light);
+
+  font-size: 25px;
+  line-height: 1;
+}
+
+.scheme-page
+/* =========================
+   DECORATIVE ICON
+========================= */
+
+.scheme-decoration {
+  position: absolute;
+  z-index: -1;
+  right: 5%;
+  bottom: -28%;
+
+  color: #ffffff38;
+  font-size: 110px;
+  font-weight: 800;
+  line-height: 1;
+  pointer-events: none;
+}
+
+.scheme-page
+/* Empty search result */
+
+.scheme-empty {
+  padding: 30px 12px;
+  color: #60718e;
+  text-align: center;
+}
+
+.scheme-page
+/* =========================
+   TABLET
+========================= */
+
+@media (max-width: 1100px) {
+  .scheme-heading {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .scheme-search {
+    flex-basis: auto;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .scheme-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+  }
+
+  .scheme-card {
+    height: 135px;
+    gap: 12px;
+    padding: 12px;
+  }
+
+  .scheme-card.ndb {
+    grid-column: 1 / -1;
+  }
+
+  .scheme-logo-wrap {
+    flex-basis: 68px;
+    width: 68px;
+    height: 68px;
+  }
+
+  .scheme-copy strong {
+    font-size: 18px;
+  }
+
+  .scheme-description {
+    font-size: 12px;
+  }
+
+  .scheme-arrow {
+    width: 32px;
+    height: 32px;
+    font-size: 22px;
+  }
+}
+
+.scheme-page
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 600px) {
+  .scheme-page {
+    padding: 12px;
+  }
+
+  .scheme-intro {
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .scheme-grid-icon {
+    width: 36px;
+    height: 36px;
+    font-size: 32px;
+  }
+
+  .scheme-grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 12px;
+  }
+
+  .scheme-card {
+    grid-column: 1;
+    height: 120px;
+    gap: 12px;
+    padding: 12px;
+  }
+
+  .scheme-card.ndb {
+    grid-column: 1;
+
+  }
+
+  .scheme-logo-wrap {
+    flex-basis: 62px;
+    width: 62px;
+    height: 62px;
+    padding: 6px;
+  }
+
+  .scheme-copy {
+    padding-right: 28px;
+  }
+
+  .scheme-copy strong {
+    font-size: 17px;
+  }
+
+  .scheme-description {
+    font-size: 12px;
+  }
+
+  .scheme-arrow {
+    top: 12%;
+    right: 4%;
+    width: 28px;
+    height: 28px;
+    font-size: 20px;
+  }
+
+  .scheme-decoration {
+    font-size: 80px;
+  }
+}
+
+.scheme-page
+/* Very small phones */
+
+@media (max-width: 360px) {
+  .scheme-page {
+    padding: 8px;
+  }
+
+  .scheme-card {
+    gap: 9px;
+    padding: 9px;
+  }
+
+  .scheme-logo-wrap {
+    flex-basis: 54px;
+    width: 54px;
+    height: 54px;
+  }
+
+  .scheme-copy strong {
+    font-size: 15px;
+  }
+
+  scheme-card.ndb {
+    grid-column: 1 / span 2;
+  }
+
+  .scheme-description {
+    font-size: 11px;
+  }
+}
+
+.scheme-page
+/* Accessibility */
+
+@media (prefers-reduced-motion: reduce) {
+  .scheme-card {
+    transition: none;
+  }
+}
+
+/* =========================================================
+   NHM FORM CSS — isolated from dashboard CSS
+   ========================================================= */
+
+.nhm-form-theme {
+  min-height: 100vh;
+}
+
+.nhm-form-theme
+
+/* nhmform  2743*/
+.page {
+  padding: 12px 16px 30px;
+  max-width: 1750px;
+  margin: auto;
+}
+
+.nhm-form-theme .breadcrumb {
+  font-size: 11px;
+  color: #61768a;
+  margin-bottom: 8px;
+}
+
+.nhm-form-theme .breadcrumb i {
+  padding: 0 8px;
+  color: #a0adb8;
+}
+
+.nhm-form-theme .pagebar {
+  background: #075b9e;
+  color: white;
+  min-height: 50px;
+  border-radius: 6px 6px 0 0;
+  padding: 8px 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.nhm-form-theme .pagebar h1 {
+  font-size: 16px;
+  margin: 0;
+}
+
+.nhm-form-theme .pagebar small {
+  font-size: 9px;
+  opacity: 0.8;
+}
+
+.nhm-form-theme .actions,
+.nhm-form-theme .bottom {
+  display: flex;
+  gap: 6px;
+}
+
+.nhm-form-theme .actions button,
+.nhm-form-theme .bottom button {
+  border: 0;
+  border-radius: 4px;
+  padding: 8px 13px;
+  color: #fff;
+  font-size: 11px;
+  font-weight: bold;
+}
+
+.nhm-form-theme .save {
+  background: #147de5;
+}
+
+.nhm-form-theme .update {
+  background: #13a55b;
+}
+
+.nhm-form-theme .reset {
+  background: #ed3b3b;
+}
+
+.nhm-form-theme .back {
+  background: #435365;
+}
+
+.nhm-form-theme .message {
+  padding: 8px 10px;
+  background: #e6f7ed;
+  border: 1px solid #b5dfc5;
+  color: #17673a;
+  font-size: 11px;
+}
+
+.nhm-form-theme .section {
+  background: #fff;
+  border: 1px solid #d3dfe8;
+  border-radius: 5px;
+  margin-top: 7px;
+  overflow: hidden;
+}
+
+.nhm-form-theme .section-title {
+  padding: 6px 11px;
+  font-size: 12px;
+  font-weight: bold;
+  border-bottom: 1px solid #d5e0e8;
+}
+
+.nhm-form-theme .blue .section-title {
+  background: #dceeff;
+  color: #0a4779;
+}
+
+.nhm-form-theme .green .section-title {
+  background: #dff6e7;
+  color: #14623b;
+}
+
+.nhm-form-theme .purple .section-title {
+  background: #e9e1ff;
+  color: #503986;
+}
+
+.nhm-form-theme .yellow .section-title {
+  background: #fff0bd;
+  color: #775900;
+}
+
+.nhm-form-theme .pink .section-title {
+  background: #ffe0e9;
+  color: #8d2a50;
+}
+
+.nhm-form-theme .cyan .section-title {
+  background: #d9f4fa;
+  color: #176278;
+}
+
+.nhm-form-theme .section-body {
+  padding: 9px;
+}
+
+.nhm-form-theme .row {
+  display: grid;
+  gap: 8px 13px;
+  margin-bottom: 8px;
+}
+
+.nhm-form-theme .row.three {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.nhm-form-theme .row.four {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.nhm-form-theme .row.six {
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+}
+
+.nhm-form-theme .row.seven {
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+}
+
+.nhm-form-theme .field {
+  min-width: 0;
+}
+
+.nhm-form-theme .field label {
+  display: block;
+  font-size: 9px;
+  font-weight: bold;
+  color: #4b6174;
+  margin-bottom: 3px;
+}
+
+.nhm-form-theme .field em {
+  color: #df2e2e;
+  font-style: normal;
+}
+
+.nhm-form-theme input:focus,
+.nhm-form-theme select:focus,
+.nhm-form-theme textarea:focus {
+  border-color: #4599d8;
+  box-shadow: 0 0 0 2px #4599d81c;
+}
+
+.nhm-form-theme input:disabled {
+  background: #edf2f5;
+}
+
+.nhm-form-theme .tender {
+  display: grid;
+  grid-template-columns: 1fr 65px;
+  gap: 3px;
+}
+
+.nhm-form-theme .auto-box {
+  background: #f5f9fc;
+  border: 1px solid #dfe9f0;
+  border-radius: 4px;
+  padding: 7px;
+}
+
+.nhm-form-theme .readonly {
+  min-height: 30px;
+  padding: 7px;
+  background: #edf3f7;
+  border: 1px solid #c6d3dc;
+  border-radius: 3px;
+  font-size: 11px;
+  font-weight: bold;
+}
+
+.nhm-form-theme .summary {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr 1.2fr 1.25fr;
+  gap: 8px;
+}
+
+.nhm-form-theme .card {
+  border: 1px solid #d4dfe7;
+  border-radius: 4px;
+  background: #fbfdff;
+  overflow: hidden;
+  color: #1d3449;
+}
+
+.nhm-form-theme .card h3 {
+  margin: 0;
+  padding: 6px 8px;
+  background: #edf5fa;
+  border-bottom: 1px solid #d8e3ea;
+  font-size: 11px;
+  font-weight: 600;
+  color: #315a78;
+}
+
+.nhm-form-theme .sum {
+  display: flex;
+  justify-content: space-between;
+  padding: 4px 8px;
+  border-bottom: 1px solid #edf1f4;
+  font-size: 9px;
+}
+
+.nhm-form-theme .sum b {
+  font-size: 9px;
+}
+
+.nhm-form-theme .sum.total {
+  background: #fff2be;
+  font-weight: bold;
+}
+
+.nhm-form-theme .progress-head {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 8px 3px;
+  font-size: 9px;
+}
+
+.nhm-form-theme .progress {
+  height: 8px;
+  background: #e2eaf0;
+  border-radius: 10px;
+  margin: 0 8px 9px;
+  overflow: hidden;
+}
+
+.nhm-form-theme .progress span {
+  height: 100%;
+  display: block;
+  background: #1683dd;
+  border-radius: 10px;
+}
+
+.nhm-form-theme .remarks label {
+  display: block;
+  padding: 7px 8px 3px;
+  font-size: 9px;
+  color: #4b6174;
+  font-weight: bold;
+}
+
+.nhm-form-theme .remarks textarea {
+  width: calc(100% - 16px);
+  margin: 0 8px 8px;
+}
+
+.nhm-form-theme .bottom {
+  justify-content: center;
+  padding-top: 10px;
+}
+
+.nhm-form-theme .bottom button {
+  padding: 8px 16px;
+}
+
+@media (max-width: 1250px) {
+  .nhm-form-theme .row.seven {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  .nhm-form-theme .summary {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 900px) {
+
+  .nhm-form-theme .row.six,
+  .nhm-form-theme .row.four,
+  .nhm-form-theme .row.three {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .nhm-form-theme .page {
+    padding: 8px;
+  }
+
+  .nhm-form-theme .pagebar {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .nhm-form-theme .pagebar>div>h6 {
+    font-size: 9px !important;
+    font-weight: 700 !important;
+    margin: 0 !important;
+  }
+
+  .nhm-form-theme .row.seven,
+  .nhm-form-theme .row.six,
+  .nhm-form-theme .row.four,
+  .nhm-form-theme .row.three,
+  .nhm-form-theme .summary {
+    grid-template-columns: 1fr;
+  }
+
+  .nhm-form-theme .actions {
+    width: 100%;
+    flex-wrap: wrap;
+  }
+
+  .nhm-form-theme .actions button {
+    flex: 1;
+  }
+
+  .nhm-form-theme .bottom {
+    flex-wrap: wrap;
+  }
+
+  .nhm-form-theme .bottom button {
+    flex: 1;
+  }
+}
+
+
+/* =========================================================
+   NHM FORM — isolated styling
+   Uses the dashboard's existing html[data-theme="dark"] switch.
+   ========================================================= */
+.nhm-form-theme {
+  --nhm-bg: #edf3f8;
+  --nhm-surface: #f8fcff;
+  --nhm-card: #ffffff;
+  --nhm-border: #cbd9e5;
+  --nhm-text: #1d3449;
+  --nhm-muted: #60778b;
+  --nhm-input: #ffffff;
+  min-width: 0;
+  color: var(--nhm-text);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+html[data-theme="dark"] .nhm-form-theme {
+  --nhm-bg: #111827;
+  --nhm-surface: #1f2937;
+  --nhm-card: #1f2937;
+  --nhm-border: #374151;
+  --nhm-text: #e5e7eb;
+  --nhm-muted: #aab7c7;
+  --nhm-input: #111827;
+}
+
+.nhm-form-theme,
+.nhm-form-theme * {
+  box-sizing: border-box;
+}
+
+.nhm-form-theme .page {
+  background: var(--nhm-bg);
+  color: var(--nhm-text);
+}
+
+.nhm-form-theme .pagebar,
+.nhm-form-theme .section,
+.nhm-form-theme .card,
+.nhm-form-theme .summary {
+  color: var(--nhm-text);
+}
+
+.nhm-form-theme .pagebar {
+  background: var(--nhm-surface);
+  border-color: var(--nhm-border);
+}
+
+.nhm-form-theme .section {
+  background: var(--nhm-card);
+  border-color: var(--nhm-border);
+}
+
+.nhm-form-theme .section-body {
+  background: var(--nhm-card);
+}
+
+.nhm-form-theme .field label,
+.nhm-form-theme .field em,
+.nhm-form-theme .breadcrumb,
+.nhm-form-theme .pagebar small,
+.nhm-form-theme .progress-head {
+  color: var(--nhm-muted);
+}
+
+.nhm-form-theme input,
+.nhm-form-theme select,
+.nhm-form-theme textarea {
+  color: var(--nhm-text);
+  background-color: var(--nhm-input);
+  border-color: var(--nhm-border);
+}
+
+.nhm-form-theme input::placeholder,
+.nhm-form-theme textarea::placeholder {
+  color: var(--nhm-muted);
+}
+
+.nhm-form-theme input:focus,
+.nhm-form-theme select:focus,
+.nhm-form-theme textarea:focus {
+  outline-color: #60a5fa;
+  border-color: #60a5fa;
+}
+
+.nhm-form-theme input:disabled,
+.nhm-form-theme input[readonly] {
+  color: var(--nhm-muted);
+  background-color: var(--nhm-bg);
+}
+
+.nhm-form-theme .summary .card,
+.nhm-form-theme .card {
+  background: var(--nhm-card);
+  border-color: var(--nhm-border);
+}
+
+.nhm-form-theme .message {
+  color: var(--nhm-text);
+}
+
+html[data-theme="dark"] .nhm-form-theme .success-modal {
+  background: #1f2937;
+  color: #e5e7eb;
+}
+
+html[data-theme="dark"] .nhm-form-theme .success-modal h2 {
+  color: #f9fafb;
+}
+
+html[data-theme="dark"] .nhm-form-theme .success-modal p {
+  color: #cbd5e1;
+}
+
+.nhm-success-theme {
+  color-scheme: light;
+}
+
+html[data-theme="dark"] .nhm-success-theme .success-modal {
+  background: #1f2937;
+  color: #e5e7eb;
+}
+
+html[data-theme="dark"] .nhm-success-theme .success-modal h2 {
+  color: #f9fafb;
+}
+
+html[data-theme="dark"] .nhm-success-theme .success-modal p {
+  color: #cbd5e1;
+}
+
+
+/* Success Modal */
+
+.success-overlay.nhm-success-theme {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: rgba(15, 23, 42, 0.55);
+  backdrop-filter: blur(4px);
+}
+
+.nhm-success-theme .success-modal {
+  width: 100%;
+  max-width: 420px;
+  padding: 36px 28px;
+  text-align: center;
+  background: #fff;
+  border-radius: 18px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+  animation: success-appear 0.25s ease-out;
+}
+
+.nhm-success-theme .success-icon {
+  width: 76px;
+  height: 76px;
+  margin: 0 auto 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  background: #22a65a;
+  border: 7px solid #d9f7e4;
+  border-radius: 50%;
+}
+
+.nhm-success-theme .success-modal h2 {
+  margin: 0 0 12px;
+  color: #172b3f;
+  font-size: 28px;
+  font-weight: 700;
+}
+
+.nhm-success-theme .success-modal p {
+  margin: 0 0 26px;
+  color: #64748b;
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+.nhm-success-theme .success-modal button {
+  min-width: 130px;
+  padding: 12px 30px;
+  color: white;
+  background: #1d9b50;
+  border: none;
+  border-radius: 9px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.nhm-success-theme .success-modal button:hover {
+  background: #16813f;
+}
+
+.nhm-success-theme .success-modal button:focus-visible {
+  outline: 3px solid #86efac;
+  outline-offset: 3px;
+}
+
+@keyframes success-appear {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.97);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@media (max-width: 480px) {
+  .nhm-success-theme .success-modal {
+    padding: 30px 20px;
+  }
+
+  .nhm-success-theme .success-modal h2 {
+    font-size: 24px;
+  }
+}
+
+
+
+
+
+
+
+
+
+/* ==========================================
+   NHM GOVERNMENT PORTAL — FORM DESIGN
+   Uses existing NHMForm.jsx class names
+========================================== */
+
+.nhm-form-theme {
+  --form-bg: #f3f6fa;
+  --form-surface: #ffffff;
+  --form-border: #d5dee9;
+  --form-text: #24364b;
+  --form-muted: #596b80;
+  --form-primary: #155b96;
+  --form-input-bg: #ffffff;
+  --form-focus: #2878bd;
+
+  font-family: inherit;
+  font-size: 14px;
+  line-height: 1.45;
+  color: var(--form-text);
+  min-width: 0;
+}
+
+.nhm-form-theme *,
+.nhm-form-theme *::before,
+.nhm-form-theme *::after {
+  box-sizing: border-box;
+}
+
+/* Main page */
+.nhm-form-theme .page {
+  width: 100%;
+  max-width: 1750px;
+  min-width: 0;
+  margin: 0 auto;
+  padding: 20px 24px 28px;
+  background: var(--form-bg);
+  color: var(--form-text);
+}
+
+/* Page header */
+.nhm-form-theme .pagebar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 16px 20px;
+  margin-bottom: 18px;
+  background: var(--form-surface);
+  border: 1px solid var(--form-border);
+  border-left: 4px solid var(--form-primary);
+  border-radius: 6px;
+}
+
+.nhm-form-theme .pagebar h1 {
+  margin: 0;
+  color: var(--form-text);
+  font-family: inherit;
+  font-size: 21px;
+  font-weight: 700;
+  line-height: 1.35;
+  letter-spacing: 0;
+}
+
+.nhm-form-theme .pagebar small {
+  display: block;
+  margin-top: 4px;
+  color: var(--form-muted);
+  font-size: 12px;
+  font-weight: 400;
+}
+
+/* Individual form sections */
+.nhm-form-theme .section {
+  min-width: 0;
+  margin: 0 0 18px;
+  overflow: visible;
+  background: var(--form-surface);
+  border: 1px solid var(--form-border);
+  border-radius: 6px;
+  box-shadow: 0 2px 5px rgb(25 48 75 / 4%);
+}
+
+/* Section title bars */
+.nhm-form-theme .section-title,
+.nhm-form-theme .section-heading,
+.nhm-form-theme .section-header {
+  padding: 10px 14px;
+  margin: 0;
+  background: #c5d9ee;
+  border-bottom: 1px solid #cbdced;
+  color: #174c7b;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+/* Numbered section headings */
+.nhm-form-theme .section legend {
+  padding: 9px 13px;
+  margin: 0;
+  color: #174c7b;
+  background: #e8f1fb;
+  border: 0;
+  border-bottom: 1px solid #cbdced;
+  border-radius: 5px 5px 0 0;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+/* Color accents for section variants */
+.nhm-form-theme .section.blue legend,
+.nhm-form-theme .section.blue .section-title {
+  background: #e8f1fb;
+  color: #174c7b;
+}
+
+.nhm-form-theme .section.green legend,
+.nhm-form-theme .section.green .section-title {
+  background: #e7f5ed;
+  color: #216545;
+  border-color: #c8e5d4;
+}
+
+.nhm-form-theme .section.yellow legend,
+.nhm-form-theme .section.yellow .section-title {
+  background: #fff4d6;
+  color: #795b13;
+  border-color: #efdfaa;
+}
+
+.nhm-form-theme .section.cyan legend,
+.nhm-form-theme .section.cyan .section-title {
+  background: #e2f5f8;
+  color: #17636d;
+  border-color: #c5e7ec;
+}
+
+/* Section contents */
+.nhm-form-theme .section-body {
+  padding: 16px;
+  min-width: 0;
+}
+
+/* Field grid layouts */
+.nhm-form-theme .row {
+  display: grid;
+  gap: 16px 20px;
+  align-items: start;
+  width: 100%;
+  min-width: 0;
+  margin: 0 0 16px;
+}
+
+.nhm-form-theme .row:last-child {
+  margin-bottom: 0;
+}
+
+.nhm-form-theme .row.four {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.nhm-form-theme .row.six {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.nhm-form-theme .row.three {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.nhm-form-theme .row.seven {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+/* Fields must stay inside their grid cells */
+.nhm-form-theme .field,
+.nhm-form-theme .form-field {
+  min-width: 0;
+  width: 100%;
+  margin: 0;
+}
+
+/* Field labels */
+.nhm-form-theme .field label,
+.nhm-form-theme .form-field label {
+  display: block;
+  margin: 0 0 6px;
+  color: #34475c;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+}
+
+/* Inputs, selects and textareas */
+.nhm-form-theme input:not([type="checkbox"]):not([type="radio"]),
+.nhm-form-theme select,
+.nhm-form-theme textarea {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+  min-height: 38px;
+  padding: 8px 10px;
+  margin: 0;
+  background: var(--form-input-bg);
+  border: 1px solid #c5d0dd;
+  border-radius: 4px;
+  color: var(--form-text);
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 1.4;
+  box-shadow: none;
+  box-sizing: border-box;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.nhm-form-theme textarea {
+  min-height: 76px;
+  resize: vertical;
+}
+
+.nhm-form-theme input:focus,
+.nhm-form-theme select:focus,
+.nhm-form-theme textarea:focus {
+  outline: none;
+  border-color: var(--form-focus);
+  box-shadow: 0 0 0 3px rgb(40 120 189 / 13%);
+}
+
+.nhm-form-theme input::placeholder,
+.nhm-form-theme textarea::placeholder {
+  color: #78899b;
+  opacity: 1;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 400;
+}
+
+.nhm-form-theme input:disabled,
+.nhm-form-theme select:disabled,
+.nhm-form-theme textarea:disabled,
+.nhm-form-theme input[readonly] {
+  background: #f0f3f7;
+  color: #53657a;
+  cursor: not-allowed;
+}
+
+/* Read-only calculated values */
+.nhm-form-theme .readonly,
+.nhm-form-theme .read-only,
+.nhm-form-theme .calculated-value {
+  background: #f1f5f9;
+  color: #354b63;
+  font-weight: 600;
+}
+
+/* Summary and expenditure panels */
+.nhm-form-theme .summary {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  min-width: 0;
+  margin-top: 8px;
+}
+
+.nhm-form-theme .summary>*,
+.nhm-form-theme .summary .card {
+  min-width: 0;
+  padding: 13px;
+  background: #f8fafc;
+  border: 1px solid var(--form-border);
+  border-radius: 5px;
+}
+
+.nhm-form-theme .summary label,
+.nhm-form-theme .summary .label {
+  display: block;
+  margin-bottom: 6px;
+  color: var(--form-muted);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.nhm-form-theme .summary strong,
+.nhm-form-theme .summary .value {
+  color: var(--form-text);
+  font-size: 14px;
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+
+/* Bottom actions */
+.nhm-form-theme .actions,
+.nhm-form-theme .bottom {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.nhm-form-theme .actions button,
+.nhm-form-theme .bottom button {
+  min-height: 38px;
+  padding: 9px 18px;
+  border-radius: 4px;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.4;
+  cursor: pointer;
+  transition: filter 0.15s ease, box-shadow 0.15s ease;
+}
+
+.nhm-form-theme .actions button:hover,
+.nhm-form-theme .bottom button:hover {
+  filter: brightness(0.96);
+}
+
+/* Tablet */
+@media (max-width: 1100px) {
+  .nhm-form-theme .page {
+    padding: 16px;
+  }
+
+  .nhm-form-theme .row.four,
+  .nhm-form-theme .row.six,
+  .nhm-form-theme .row.three,
+  .nhm-form-theme .row.seven {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .nhm-form-theme .summary {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* Mobile */
+@media (max-width: 600px) {
+  .nhm-form-theme .page {
+    padding: 10px;
+  }
+
+  .nhm-form-theme .pagebar {
+    align-items: flex-start;
+    padding: 13px;
+  }
+
+  .nhm-form-theme .pagebar h1 {
+    font-size: 18px;
+  }
+
+  .nhm-form-theme .section-body {
+    padding: 12px;
+  }
+
+  .nhm-form-theme .row.four,
+  .nhm-form-theme .row.six,
+  .nhm-form-theme .row.three,
+  .nhm-form-theme .row.seven,
+  .nhm-form-theme .summary {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 13px;
+  }
+
+  .nhm-form-theme .actions,
+  .nhm-form-theme .bottom {
+    justify-content: stretch;
+  }
+
+  .nhm-form-theme .actions button,
+  .nhm-form-theme .bottom button {
+    flex: 1 1 120px;
+  }
+}
+
+/* ==========================================
+   NHM FORM — DARK THEME FIX
+   Keep this at the END of style.css
+========================================== */
+
+html[data-theme="dark"] .nhm-form-theme {
+  --form-bg: #111827;
+  --form-surface: #1e293b;
+  --form-border: #3b4b61;
+  --form-text: #e5edf7;
+  --form-muted: #a8b7ca;
+  --form-input-bg: #111827;
+  --form-primary: #60a5fa;
+  color: var(--form-text);
+}
+
+/* Main form background */
+html[data-theme="dark"] .nhm-form-theme .page {
+  background: var(--form-bg);
+  color: var(--form-text);
+}
+
+/* Page header */
+html[data-theme="dark"] .nhm-form-theme .pagebar {
+  background: #1e293b;
+  border-color: #3b4b61;
+  border-left-color: #60a5fa;
+}
+
+html[data-theme="dark"] .nhm-form-theme .pagebar h1 {
+  color: #f1f5f9;
+}
+
+html[data-theme="dark"] .nhm-form-theme .pagebar small {
+  color: #a8b7ca;
+}
+
+/* Section cards */
+html[data-theme="dark"] .nhm-form-theme .section {
+  background: #1e293b;
+  border-color: #3b4b61;
+  box-shadow: 0 2px 6px rgb(0 0 0 / 12%);
+}
+
+/* Section headings */
+html[data-theme="dark"] .nhm-form-theme .section-title,
+html[data-theme="dark"] .nhm-form-theme .section-heading,
+html[data-theme="dark"] .nhm-form-theme .section-header,
+html[data-theme="dark"] .nhm-form-theme .section legend {
+  background: #263b54;
+  border-color: #405875;
+  color: #dbeafe;
+}
+
+/* Green section heading */
+html[data-theme="dark"] .nhm-form-theme .section.green legend,
+html[data-theme="dark"] .nhm-form-theme .section.green .section-title {
+  background: #1d4038;
+  border-color: #326556;
+  color: #a7f3d0;
+}
+
+/* Yellow section heading */
+html[data-theme="dark"] .nhm-form-theme .section.yellow legend,
+html[data-theme="dark"] .nhm-form-theme .section.yellow .section-title {
+  background: #493c22;
+  border-color: #6b5830;
+  color: #fde68a;
+}
+
+/* Cyan section heading */
+html[data-theme="dark"] .nhm-form-theme .section.cyan legend,
+html[data-theme="dark"] .nhm-form-theme .section.cyan .section-title {
+  background: #173b46;
+  border-color: #285967;
+  color: #a5f3fc;
+}
+
+/* Field labels */
+html[data-theme="dark"] .nhm-form-theme .field label,
+html[data-theme="dark"] .nhm-form-theme .form-field label {
+  color: #cbd5e1;
+}
+
+/* Inputs, dropdowns and textareas */
+html[data-theme="dark"] .nhm-form-theme input:not([type="checkbox"]):not([type="radio"]),
+html[data-theme="dark"] .nhm-form-theme select,
+html[data-theme="dark"] .nhm-form-theme textarea {
+  background-color: #111827;
+  border-color: #465970;
+  color: #e5edf7;
+  color-scheme: dark;
+}
+
+html[data-theme="dark"] .nhm-form-theme input::placeholder,
+html[data-theme="dark"] .nhm-form-theme textarea::placeholder {
+  color: #94a3b8;
+}
+
+html[data-theme="dark"] .nhm-form-theme input:focus,
+html[data-theme="dark"] .nhm-form-theme select:focus,
+html[data-theme="dark"] .nhm-form-theme textarea:focus {
+  border-color: #60a5fa;
+  box-shadow: 0 0 0 3px rgb(96 165 250 / 15%);
+}
+
+/* Disabled and readonly fields */
+html[data-theme="dark"] .nhm-form-theme input:disabled,
+html[data-theme="dark"] .nhm-form-theme select:disabled,
+html[data-theme="dark"] .nhm-form-theme textarea:disabled,
+html[data-theme="dark"] .nhm-form-theme input[readonly],
+html[data-theme="dark"] .nhm-form-theme .readonly,
+html[data-theme="dark"] .nhm-form-theme .read-only,
+html[data-theme="dark"] .nhm-form-theme .calculated-value {
+  background: #263449;
+  border-color: #3b4b61;
+  color: #cbd5e1;
+}
+
+/* Summary panels */
+html[data-theme="dark"] .nhm-form-theme .summary>*,
+html[data-theme="dark"] .nhm-form-theme .summary .card {
+  background: #172336;
+  border-color: #3b4b61;
+}
+
+html[data-theme="dark"] .nhm-form-theme .summary label,
+html[data-theme="dark"] .nhm-form-theme .summary .label {
+  color: #a8b7ca;
+}
+
+html[data-theme="dark"] .nhm-form-theme .summary strong,
+html[data-theme="dark"] .nhm-form-theme .summary .value {
+  color: #f1f5f9;
+}
+
+
+/* Full-width NHM section title bars */
+.nhm-form-theme .section > legend,
+.nhm-form-theme .section > .section-title,
+.nhm-form-theme .section > .section-heading,
+.nhm-form-theme .section > .section-header {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  margin: 0;
+  padding: 10px 14px;
+  box-sizing: border-box;
+  border-radius: 5px 5px 0 0;
+}
+
+/* If the section uses a fieldset */
+.nhm-form-theme fieldset.section {
+  padding: 0 16px 16px;
+  min-width: 0;
+}
+
+.nhm-form-theme fieldset.section > legend {
+  float: none;
+  width: calc(100% + 32px);
+  max-width: none;
+  margin: 0 0 16px -16px;
+  padding: 10px 14px;
+  box-sizing: border-box;
+}
+
