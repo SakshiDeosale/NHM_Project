@@ -106,6 +106,14 @@ const formatColumnName = (column) => {
         .trim();
 };
 
+const getColumnLabel = (key) => {
+    const priorityColumn = priorityColumns.find(
+        (column) => column.key === key
+    );
+
+    return priorityColumn?.label || formatColumnName(key);
+};
+
 export default function SchemeReports() {
     const { category, scheme } = useParams();
 
@@ -151,8 +159,45 @@ export default function SchemeReports() {
     const [optionsLoading, setOptionsLoading] = useState(true);
     const [reportData, setReportData] = useState([]);
     const [loading, setLoading] = useState(false);
+    const [page, setPage] = useState(1);
+    const [pageSize, setPageSize] = useState(10);
+    const [totalRecords, setTotalRecords] = useState(0);
+    const [totalPages, setTotalPages] = useState(0);
     const [error, setError] = useState('');
     const [hasSearched, setHasSearched] = useState(false);
+    const [showColumnSelector, setShowColumnSelector] = useState(false);
+    // null means every database column is selected (except SrNo).
+    const [selectedColumns, setSelectedColumns] = useState(null);
+    const [allColumns, setAllColumns] = useState([]);
+
+    // Fallback labels/priority columns appear while the backend columns load.
+    const availableColumns = allColumns.length > 0
+        ? allColumns
+        : [...new Set([
+            ...priorityColumns.map((column) => column.key),
+            ...Object.keys(columnLabels)
+        ])].filter((column) => column !== 'SrNo');
+
+    const visibleColumns = availableColumns.filter(
+        (column) => selectedColumns === null || selectedColumns.includes(column)
+    );
+
+    const handleColumnToggle = (column) => {
+        const currentlySelected = selectedColumns === null
+            ? availableColumns
+            : selectedColumns;
+
+        const updatedSelection = currentlySelected.includes(column)
+            ? currentlySelected.filter((item) => item !== column)
+            : [...currentlySelected, column];
+
+        setSelectedColumns(updatedSelection);
+    };
+
+    const handleSelectAllColumns = () => setSelectedColumns(null);
+
+    // Reset Default also shows every available database column.
+    const handleResetColumns = () => setSelectedColumns(null);
 
     useEffect(() => {
         const controller = new AbortController();
@@ -162,9 +207,10 @@ export default function SchemeReports() {
             setError('');
 
             try {
-                const response = await fetch(`${API_BASE_URL}/options`, {
-                    signal: controller.signal
-                });
+                const response = await fetch(
+                    `${API_BASE_URL}/options?scheme=${encodeURIComponent(scheme)}`,
+                    { signal: controller.signal }
+                );
 
                 if (!response.ok) {
                     throw new Error('Could not load dropdown options from the database.');
@@ -187,6 +233,45 @@ export default function SchemeReports() {
         return () => controller.abort();
     }, []);
 
+    useEffect(() => {
+        const controller = new AbortController();
+
+        const loadColumns = async () => {
+            try {
+                const response = await fetch(`${API_BASE_URL}/columns`, {
+                    signal: controller.signal
+                });
+
+                if (!response.ok) {
+                    throw new Error('Could not load report columns from the database.');
+                }
+
+                const data = await response.json();
+                // Supports either ['ProjectID', ...] or { columns: ['ProjectID', ...] }.
+                const columns = Array.isArray(data) ? data : data.columns;
+
+                if (Array.isArray(columns)) {
+                    const cleanedColumns = [...new Set(
+                        columns.filter((column) => typeof column === 'string' && column !== 'SrNo')
+                    )];
+                    setAllColumns(cleanedColumns);
+                    // null keeps all columns selected by default.
+                    setSelectedColumns(null);
+                } else {
+                    throw new Error('The report columns endpoint returned an invalid response.');
+                }
+            } catch (err) {
+                if (err.name !== 'AbortError') {
+                    // Keep the fallback columns visible; report data can still load.
+                    console.error('Unable to load report columns:', err);
+                }
+            }
+        };
+
+        loadColumns();
+        return () => controller.abort();
+    }, []);
+
     const handleChange = (field, value) => {
         setFilters((prev) => ({
             ...prev,
@@ -194,7 +279,11 @@ export default function SchemeReports() {
         }));
     };
 
-    const handleFilter = async (field) => {
+    const fetchReport = async (
+        currentPage = 1,
+        currentPageSize = pageSize,
+        selectedFilters = filters
+    ) => {
         setLoading(true);
         setError('');
         setHasSearched(true);
@@ -202,28 +291,78 @@ export default function SchemeReports() {
         try {
             const params = new URLSearchParams();
 
-            // Send all currently selected filters so each OK button can
-            // narrow the results using the selections made so far.
-            Object.entries(filters).forEach(([key, value]) => {
+            params.set('page', String(currentPage));
+            params.set('pageSize', String(currentPageSize));
+            params.set('scheme', scheme);
+
+            Object.entries(selectedFilters).forEach(([key, value]) => {
                 if (value !== '' && value !== null && value !== undefined) {
                     params.set(key, String(value));
                 }
             });
 
-            const response = await fetch(`${API_BASE_URL}/filter?${params.toString()}`);
+            const response = await fetch(
+                `${API_BASE_URL}/filter?${params.toString()}`
+            );
+
             if (!response.ok) {
                 const body = await response.json().catch(() => ({}));
-                throw new Error(body.message || 'Failed to retrieve report records.');
+
+                throw new Error(
+                    body.message || 'Failed to retrieve report records.'
+                );
             }
 
-            const data = await response.json();
-            setReportData(data);
+            const result = await response.json();
+
+            setReportData(Array.isArray(result.data) ? result.data : []);
+            // If /columns is not available, include all fields returned by the report.
+            if (!allColumns.length && Array.isArray(result.data) && result.data.length) {
+                const dataColumns = [...new Set([
+                    ...priorityColumns.map((column) => column.key),
+                    ...Object.keys(result.data[0]).filter((column) => column !== 'SrNo')
+                ])];
+                setAllColumns(dataColumns);
+            }
+            setTotalRecords(result.total);
+            setPage(result.page);
+            setPageSize(result.pageSize);
+            setTotalPages(result.totalPages);
+
         } catch (err) {
             setError(err.message || 'Failed to retrieve report records.');
             setReportData([]);
+            setTotalRecords(0);
+            setTotalPages(0);
         } finally {
             setLoading(false);
         }
+    };
+
+    const handleFilter = () => {
+        setPage(1);
+        fetchReport(1, pageSize);
+    };
+
+    const handlePageChange = (newPage) => {
+        if (
+            newPage < 1 ||
+            newPage > totalPages ||
+            loading
+        ) {
+            return;
+        }
+
+        fetchReport(newPage, pageSize);
+    };
+
+    const handlePageSizeChange = (event) => {
+        const newPageSize = Number(event.target.value);
+
+        setPageSize(newPageSize);
+        setPage(1);
+
+        fetchReport(1, newPageSize);
     };
 
     const filterFields = [
@@ -338,6 +477,9 @@ export default function SchemeReports() {
                             setReportData([]);
                             setHasSearched(false);
                             setError('');
+                            setPage(1);
+                            setTotalRecords(0);
+                            setTotalPages(0);
                         }}
                     >
                         <i className="bi bi-arrow-counterclockwise me-2" />
@@ -364,106 +506,187 @@ export default function SchemeReports() {
                         Records matching the selected filter values.
                     </p>
                 </div>
+                <div className="column-selector-wrapper">
+                    <button
+                        type="button"
+                        className="btn btn-outline-primary column-selector-toggle"
+                        onClick={() => setShowColumnSelector((prev) => !prev)}
+                        aria-expanded={showColumnSelector}
+                    >
+                        <i className="bi bi-layout-three-columns me-2" />
+                        Select Columns
+                        <i
+                            className={`bi ms-2 ${showColumnSelector
+                                ? 'bi-chevron-up'
+                                : 'bi-chevron-down'
+                                }`}
+                        />
+                    </button>
+
+                    {showColumnSelector && (
+                        <div className="column-selector-panel">
+                            <div className="column-selector-header">
+                                <strong>Choose Visible Columns</strong>
+
+                                <div className="column-selector-actions">
+                                    <button
+                                        type="button"
+                                        className="btn btn-sm btn-outline-primary"
+                                        onClick={handleSelectAllColumns}
+                                    >
+                                        Select All
+                                    </button>
+
+                                    <button
+                                        type="button"
+                                        className="btn btn-sm btn-outline-secondary"
+                                        onClick={handleResetColumns}
+                                    >
+                                        Reset Default
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div className="column-checkbox-grid">
+                                {availableColumns.map((column) => (
+                                    <label
+                                        key={column}
+                                        className="column-checkbox-item"
+                                    >
+                                        <input
+                                            type="checkbox"
+                                            checked={
+                                                selectedColumns === null ||
+                                                selectedColumns.includes(column)
+                                            }
+                                            onChange={() => handleColumnToggle(column)}
+                                        />
+
+                                        <span>{getColumnLabel(column)}</span>
+                                    </label>
+                                ))}
+                            </div>
+                        </div>
+                    )}
+                </div>
 
                 {error && <div className="alert alert-danger m-3">{error}</div>}
 
                 {loading ? (
                     <div className="p-4 text-center">Loading records...</div>
                 ) : (
-                        <div className="table-responsive p-3">
-                            <table className="table table-bordered table-hover align-middle nhm-report-table">
-                                <thead>
+                    <div className="table-responsive p-3">
+                        <table className="table table-bordered table-hover align-middle nhm-report-table">
+                            <thead>
+                                <tr>
+                                    {visibleColumns.map((column) => (
+                                        <th key={column} className="text-nowrap">
+                                            {getColumnLabel(column)}
+                                        </th>
+                                    ))}
+                                </tr>
+                            </thead>
+
+
+                            <tbody>
+                                {!hasSearched ? (
                                     <tr>
-                                        {priorityColumns.map((column) => (
-                                            <th key={column.key} className="text-nowrap">
-                                                {column.label}
-                                            </th>
-                                        ))}
-
-                                        {reportData.length > 0 &&
-                                            Object.keys(reportData[0])
-                                                .filter(
-                                                    (column) =>
-                                                        column !== 'SrNo' &&
-                                                        !priorityColumns.some(
-                                                            (item) => item.key === column
-                                                        )
-                                                )
-                                                .map((column) => (
-                                                    <th key={column} className="text-nowrap">
-                                                        {formatColumnName(column)}
-                                                    </th>
-                                                ))}
+                                        <td
+                                            colSpan={Math.max(visibleColumns.length, 1)}
+                                            className="text-center py-4"
+                                        >
+                                            Select a filter and click OK to view records.
+                                        </td>
                                     </tr>
-                                </thead>
-
-                                <tbody>
-                                    {!hasSearched ? (
-                                        <tr>
-                                            <td
-                                                colSpan={73}
-                                                className="text-center py-4"
-                                            >
-                                                Select a filter and click OK to view records.
-                                            </td>
+                                ) : reportData.length === 0 ? (
+                                    <tr>
+                                        <td
+                                            colSpan={Math.max(visibleColumns.length, 1)}
+                                            className="text-center py-4"
+                                        >
+                                            No matching records found.
+                                        </td>
+                                    </tr>
+                                ) : visibleColumns.length === 0 ? (
+                                    <tr>
+                                        <td className="text-center py-4">
+                                            Select at least one column to display report data.
+                                        </td>
+                                    </tr>
+                                ) : (
+                                    reportData.map((row, index) => (
+                                        <tr key={row.ProjectID ?? index}>
+                                            {visibleColumns.map((column) => (
+                                                <td key={column} className="text-nowrap">
+                                                    {row[column] == null || row[column] === ''
+                                                        ? '-'
+                                                        : String(row[column])}
+                                                </td>
+                                            ))}
                                         </tr>
-                                    ) : reportData.length === 0 ? (
-                                        <tr>
-                                            <td
-                                                colSpan={73}
-                                                className="text-center py-4"
-                                            >
-                                                No matching records found.
-                                            </td>
-                                        </tr>
-                                    ) : (
-                                        reportData.map((row, index) => {
-                                            const remainingColumns = Object.keys(row).filter(
-                                                (column) =>
-                                                    column !== 'SrNo' &&
-                                                    !priorityColumns.some(
-                                                        (item) => item.key === column
-                                                    )
-                                            );
+                                    ))
+                                )}
+                            </tbody>
+                        </table>
 
-                                            return (
-                                                <tr key={row.ProjectID ?? index}>
-                                                    {priorityColumns.map((column) => (
-                                                        <td
-                                                            key={column.key}
-                                                            className="text-nowrap"
-                                                        >
-                                                            {row[column.key] == null ||
-                                                                row[column.key] === ''
-                                                                ? '-'
-                                                                : String(row[column.key])}
-                                                        </td>
-                                                    ))}
+                        {hasSearched && (
+                            <div className="report-pagination">
+                                <div className="pagination-info">
+                                    Showing{' '}
+                                    {totalRecords === 0
+                                        ? 0
+                                        : (page - 1) * pageSize + 1}
+                                    {' - '}
+                                    {Math.min(page * pageSize, totalRecords)}
+                                    {' of '}
+                                    {totalRecords} records
+                                </div>
 
-                                                    {remainingColumns.map((column) => (
-                                                        <td
-                                                            key={column}
-                                                            className="text-nowrap"
-                                                        >
-                                                            {row[column] == null ||
-                                                                row[column] === ''
-                                                                ? '-'
-                                                                : String(row[column])}
-                                                        </td>
-                                                    ))}
-                                                </tr>
-                                            );
-                                        })
-                                    )}
-                                </tbody>
-                            </table>
+                                <div className="pagination-controls">
+                                    <label htmlFor="reportPageSize">
+                                        Rows per page:
+                                    </label>
 
-                            {hasSearched && (
-                                <p className="text-muted mb-0">
-                                    Total records: {reportData.length}
-                                </p>
-                            )}
-                        </div>
+                                    <select
+                                        id="reportPageSize"
+                                        className="form-select"
+                                        value={pageSize}
+                                        onChange={handlePageSizeChange}
+                                        disabled={loading}
+                                    >
+                                        <option value={10}>10</option>
+                                        <option value={25}>25</option>
+                                        <option value={50}>50</option>
+                                        <option value={100}>100</option>
+                                    </select>
+
+                                    <button
+                                        type="button"
+                                        className="btn btn-outline-primary"
+                                        disabled={page <= 1 || loading}
+                                        onClick={() => handlePageChange(page - 1)}
+                                    >
+                                        <i className="bi bi-chevron-left me-1" />
+                                        Previous
+                                    </button>
+
+                                    <span className="pagination-page">
+                                        Page {totalRecords === 0 ? 0 : page} of {totalPages}
+                                    </span>
+
+                                    <button
+                                        type="button"
+                                        className="btn btn-outline-primary"
+                                        disabled={page >= totalPages || loading}
+                                        onClick={() => handlePageChange(page + 1)}
+                                    >
+                                        Next
+                                        <i className="bi bi-chevron-right ms-1" />
+                                    </button>
+                                </div>
+                            </div>
+                        )}
+                    </div>
                 )}
             </section>
 

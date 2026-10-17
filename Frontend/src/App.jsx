@@ -81,7 +81,7 @@ export default function App() {
                 element={<SchemeReports />}
               />
               <Route path="forms" element={<Forms />} />
-              <Route path="forms/nhm" element={<NHMForm />} />
+              <Route path="/forms/:scheme" element={<NHMForm />} />
               <Route
                 path="organization-structure"
                 element={<OrganizationStructure />}

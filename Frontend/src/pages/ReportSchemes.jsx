@@ -5,34 +5,13 @@ export default function ReportSchemes() {
     const { category } = useParams();
 
     const schemes = [
-        {
-            name: 'NHM',
-            icon: 'bi-heart-pulse'
-        },
-        {
-            name: '15th Finance',
-            icon: 'bi-bank'
-        },
-        {
-            name: 'PM-ABHIM',
-            icon: 'bi-hospital'
-        },
-        {
-            name: 'PMJVK',
-            icon: 'bi-building'
-        },
-        {
-            name: 'AYUSH',
-            icon: 'bi-flower1'
-        },
-        {
-            name: 'ADB',
-            icon: 'bi-globe2'
-        },
-        {
-            name: 'NDB',
-            icon: 'bi-database'
-        }
+        { name: 'NHM', value: 'nhm', icon: 'bi-heart-pulse' },
+        { name: '15th Finance', value: '15th-finance', icon: 'bi-bank' },
+        { name: 'PM-ABHIM', value: 'pm-abhim', icon: 'bi-hospital' },
+        { name: 'PMJVK', value: 'pmjvk', icon: 'bi-building' },
+        { name: 'AYUSH', value: 'ayush', icon: 'bi-flower1' },
+        { name: 'ADB', value: 'adb', icon: 'bi-globe2' },
+        { name: 'NDB', value: 'ndb', icon: 'bi-database' }
     ];
 
     const categoryName = {
@@ -44,13 +23,13 @@ export default function ReportSchemes() {
 
     return (
         <>
-            {/* Page Heading */}
-
             <div className="page-heading">
                 <div className="page-heading-copy">
-
                     <span className="page-icon">
-                        <i className="bi bi-file-earmark-bar-graph" />
+                        <i
+                            className="bi bi-file-earmark-bar-graph"
+                            aria-hidden="true"
+                        />
                     </span>
 
                     <div>
@@ -62,41 +41,29 @@ export default function ReportSchemes() {
                             Select a scheme to view its reports.
                         </p>
                     </div>
-
                 </div>
             </div>
 
-
-            {/* Schemes */}
-
             <section className="panel">
-
                 <div className="panel-header">
-
                     <h2 className="h5 mb-1 section-title">
-                        <i className="bi bi-folder2-open" aria-hidden="true" />
-
-                        <span>
-                            Schemes
-                        </span>
+                        <i
+                            className="bi bi-folder2-open"
+                            aria-hidden="true"
+                        />
+                        <span>Schemes</span>
                     </h2>
 
                     <p className="text-muted mb-0">
                         Select a scheme to continue.
                     </p>
-
                 </div>
 
-
                 <div className="scheme-grid">
-
-                    
                     {schemes.map((scheme) => (
                         <NavLink
-                            key={scheme.name}
-                            to={`/report/${category}/${scheme.name
-                                .toLowerCase()
-                                .replace(/\s+/g, '-')}`}
+                            key={scheme.value}
+                            to={`/report/${category}/${scheme.value}`}
                             className="scheme-card"
                         >
                             <span className="scheme-icon">
@@ -111,14 +78,14 @@ export default function ReportSchemes() {
                             </span>
 
                             <span className="scheme-arrow">
-                                <i className="bi bi-arrow-right" aria-hidden="true" />
+                                <i
+                                    className="bi bi-arrow-right"
+                                    aria-hidden="true"
+                                />
                             </span>
                         </NavLink>
                     ))}
-                
-
                 </div>
-
             </section>
         </>
     );

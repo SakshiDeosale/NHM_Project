@@ -19,7 +19,7 @@ const schemes = [
     description: "15th Finance Commission",
     logo: "/assets/images/Finance Commision of India.jpeg",
     color: "finance",
-    route: "/scheme/15th-fc",
+    route: "/forms/15th-fc",
     icon: "₹",
   },
   {
@@ -29,7 +29,7 @@ const schemes = [
       "Pradhan Mantri Ayushman Bharat Health Infrastructure Mission",
     logo: "/assets/images/PM-Abhyan.jpeg",
     color: "abhim",
-    route: "/scheme/pm-abhim",
+    route: "/forms/pm-abhim",
     icon: "✚",
   },
   {
@@ -38,7 +38,7 @@ const schemes = [
     description: "Pradhan Mantri Jan Vikas Karyakram",
     logo: "/assets/images/PMJVK.jpeg",
     color: "pmjvk",
-    route: "/scheme/pmjvk",
+    route: "/forms/pmjvk",
     icon: "◉",
   },
   {
@@ -47,7 +47,7 @@ const schemes = [
     description: "AYUSH Scheme",
     logo: "/assets/images/National Ayush Mission.jpeg",
     color: "ayush",
-    route: "/scheme/ayush",
+    route: "/forms/ayush",
     icon: "✿",
   },
   {
@@ -56,7 +56,7 @@ const schemes = [
     description: "Asian Development Bank",
     logo: "/assets/images/ADB.jpeg",
     color: "adb",
-    route: "/scheme/adb",
+    route: "/forms/adb",
     icon: "▤",
   },
   {
@@ -65,7 +65,7 @@ const schemes = [
     description: "New Development Bank",
     logo: "/assets/images/NDB.jpeg",
     color: "ndb",
-    route: "/scheme/ndb",
+    route: "/forms/ndb",
     icon: "▥",
   },
 ];
@@ -85,11 +85,7 @@ export default function Forms({ onSelectScheme }) {
   }, [search]);
 
   const handleSelect = (scheme) => {
-    if (onSelectScheme) {
-      onSelectScheme(scheme);
-    } else {
-      navigate(scheme.route);
-    }
+    navigate(scheme.route);
   };
 
   return (

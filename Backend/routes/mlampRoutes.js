@@ -157,36 +157,36 @@ router.put('/:id', async (req, res) => {
 });
 
 // DELETE: Soft-delete record
-router.delete('/:id', async (req, res) => {
-    try {
-        const id = Number(req.params.id);
+// router.delete('/:id', async (req, res) => {
+//     try {
+//         const id = Number(req.params.id);
 
-        if (!Number.isInteger(id) || id <= 0) {
-            return res.status(400).json({ message: 'Invalid MLA/MP ID.' });
-        }
+//         if (!Number.isInteger(id) || id <= 0) {
+//             return res.status(400).json({ message: 'Invalid MLA/MP ID.' });
+//         }
 
-        const pool = await getPool();
-        const result = await pool.request()
-            .input('ID', sql.Int, id)
-            .query(`
-                UPDATE dbo.MaharashtraMLA
-                SET IsActive = 0
-                WHERE ID = @ID AND IsActive = 1;
+//         const pool = await getPool();
+//         const result = await pool.request()
+//             .input('ID', sql.Int, id)
+//             .query(`
+//                 UPDATE dbo.MaharashtraMLA
+//                 SET IsActive = 0
+//                 WHERE ID = @ID AND IsActive = 1;
 
-                SELECT @@ROWCOUNT AS affectedCount;
-            `);
+//                 SELECT @@ROWCOUNT AS affectedCount;
+//             `);
 
-        if (result.recordset[0].affectedCount === 0) {
-            return res.status(404).json({
-                message: 'Active MLA/MP record not found.',
-            });
-        }
+//         if (result.recordset[0].affectedCount === 0) {
+//             return res.status(404).json({
+//                 message: 'Active MLA/MP record not found.',
+//             });
+//         }
 
-        res.json({ message: 'MLA/MP deactivated successfully.' });
-    } catch (error) {
-        console.error('Deactivate MLA/MP error:', error.message);
-        res.status(500).json({ message: 'Failed to deactivate MLA/MP.' });
-    }
-});
+//         res.json({ message: 'MLA/MP deactivated successfully.' });
+//     } catch (error) {
+//         console.error('Deactivate MLA/MP error:', error.message);
+//         res.status(500).json({ message: 'Failed to deactivate MLA/MP.' });
+//     }
+// });
 
 export default router;

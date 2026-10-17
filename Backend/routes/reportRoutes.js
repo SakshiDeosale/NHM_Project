@@ -1,11 +1,37 @@
+
 import express from 'express';
 import { getPool, sql } from '../config/db.js';
 
 const router = express.Router();
 
+// Map each URL scheme identifier to its SQL Server table.
+// Replace the five placeholder names with your actual table names.
+const schemeTables = {
+    nhm: 'NHM',
+    '15th-finance': '15th_Finance',
+    'pm-abhim': 'PM-ABHIM',
+    pmjvk: 'PMJVK',
+    ayush: 'AYUSH',
+    adb: 'ADB',
+    ndb: 'NDB'
+};
 
-// Map frontend filter keys to real SQL columns.
-// Never accept SQL column names directly from the request.
+// Only allow predefined table names.
+function getSchemeTable(scheme) {
+    const tableName = schemeTables[scheme];
+
+    if (!tableName || tableName.startsWith('REPLACE_')) {
+        const error = new Error(
+            `Database table is not configured for scheme: ${scheme || 'missing'}`
+        );
+        error.statusCode = 400;
+        throw error;
+    }
+
+    return `[dbo].[${tableName}]`;
+}
+
+// Frontend filter keys mapped to SQL columns.
 const filterColumns = {
     circle: 'Circle',
     budgetYear: 'YearOfApproval',
@@ -24,9 +50,10 @@ const filterColumns = {
     workStatus: 'ActualStatus'
 };
 
-// GET: dropdown options from NHM table
+// GET: dropdown options for the selected scheme.
 router.get('/options', async (req, res) => {
     try {
+        const table = getSchemeTable(req.query.scheme);
         const pool = await getPool();
 
         const optionColumns = {
@@ -51,12 +78,14 @@ router.get('/options', async (req, res) => {
 
         for (const [key, column] of Object.entries(optionColumns)) {
             const result = await pool.request().query(`
-        SELECT DISTINCT [${column}] AS value
-        FROM dbo.NHM
-        WHERE [${column}] IS NOT NULL
-          AND LTRIM(RTRIM(CONVERT(NVARCHAR(500), [${column}]))) <> ''
-        ORDER BY value;
-      `);
+                SELECT DISTINCT [${column}] AS value
+                FROM ${table}
+                WHERE [${column}] IS NOT NULL
+                  AND LTRIM(RTRIM(
+                      CONVERT(NVARCHAR(500), [${column}])
+                  )) <> ''
+                ORDER BY value;
+            `);
 
             options[key] = result.recordset.map(row => row.value);
         }
@@ -64,21 +93,37 @@ router.get('/options', async (req, res) => {
         res.json(options);
     } catch (error) {
         console.error('Report options error:', error);
-        res.status(500).json({
-            message: 'Failed to load report filter options.'
+
+        res.status(error.statusCode || 500).json({
+            message: error.statusCode
+                ? error.message
+                : 'Failed to load report filter options.'
         });
     }
 });
 
-
-// GET: filter project records and return all NHM columns
+// GET: filter and paginate records for the selected scheme.
 router.get('/filter', async (req, res) => {
     try {
+        const table = getSchemeTable(req.query.scheme);
         const pool = await getPool();
-        const request = pool.request();
+
+        const page = Math.max(
+            1,
+            parseInt(req.query.page, 10) || 1
+        );
+
+        const pageSize = Math.min(
+            100,
+            Math.max(1, parseInt(req.query.pageSize, 10) || 10)
+        );
+
+        const offset = (page - 1) * pageSize;
         const conditions = [];
+        const request = pool.request();
         let index = 0;
 
+        // Apply selected filters using parameterized values.
         for (const [key, column] of Object.entries(filterColumns)) {
             const rawValue = req.query[key];
 
@@ -86,42 +131,60 @@ router.get('/filter', async (req, res) => {
                 typeof rawValue === 'string' &&
                 rawValue.trim() !== ''
             ) {
-                const parameter = `value${ index++ } `;
+                const parameter = `value${index++}`;
 
-                conditions.push(`[${ column }] LIKE @${ parameter } `);
+                conditions.push(`[${column}] LIKE @${parameter}`);
 
                 request.input(
                     parameter,
                     sql.NVarChar,
-                    `% ${ rawValue.trim() }% `
+                    `%${rawValue.trim()}%`
                 );
             }
         }
 
-        // Add WHERE only when filters are selected
         const whereClause = conditions.length
-            ? `WHERE ${ conditions.join(' AND ') } `
+            ? `WHERE ${conditions.join(' AND ')}`
             : '';
 
-        // Retrieve every column from dbo.NHM
-        const query = `
-SELECT *
-    FROM dbo.NHM
-            ${ whereClause }
-            ORDER BY ProjectID DESC;
-`;
+        // Count matching records.
+        const countResult = await request.query(`
+            SELECT COUNT(*) AS total
+            FROM ${table}
+            ${whereClause};
+        `);
 
-        const result = await request.query(query);
+        const total = countResult.recordset[0].total;
 
-        res.json(result.recordset);
+        // Fetch the requested page.
+        const dataResult = await request
+            .input('offset', sql.Int, offset)
+            .input('pageSize', sql.Int, pageSize)
+            .query(`
+                SELECT *
+                FROM ${table}
+                ${whereClause}
+                ORDER BY ProjectID DESC
+                OFFSET @offset ROWS
+                FETCH NEXT @pageSize ROWS ONLY;
+            `);
+
+        res.json({
+            data: dataResult.recordset,
+            total,
+            page,
+            pageSize,
+            totalPages: Math.ceil(total / pageSize)
+        });
     } catch (error) {
-        console.error('Report filtering error:', error);
+        console.error('Report pagination error:', error);
 
-        res.status(500).json({
-            message: 'Failed to retrieve filtered reports.'
+        res.status(error.statusCode || 500).json({
+            message: error.statusCode
+                ? error.message
+                : 'Failed to retrieve report records.'
         });
     }
 });
-
 
 export default router;
