@@ -1,6 +1,17 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 
+const circles = [
+  { id: "konkan", name: "Konkan", role: "EE", color: "circle-konkan", icon: "bi-water" },
+  { id: "pune", name: "Pune", role: "EE", color: "circle-pune", icon: "bi-building" },
+  { id: "nashik", name: "Nashik", role: "EE", color: "circle-nashik", icon: "bi-geo-alt-fill" },
+  { id: "latur", name: "Latur", role: "EE", color: "circle-latur", icon: "bi-tools" },
+  { id: "aurangabad", name: "Aurangabad", role: "EE", color: "circle-aurangabad", icon: "bi-bank" },
+  { id: "akola", name: "Akola", role: "EE", color: "circle-akola", icon: "bi-hospital" },
+  { id: "nagpur", name: "Nagpur", role: "EE", color: "circle-nagpur", icon: "bi-buildings" },
+  { id: "nagpur-ele", name: "Nagpur (Ele)", role: "EE", color: "circle-nagpur-ele", icon: "bi-lightning-charge-fill" },
+];
+
 export default function Dashboard() {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -53,88 +64,33 @@ export default function Dashboard() {
 
       {/* Matric */}
 
-      <section className="row g-3 mt-1" aria-label="Cities">
-        <div className="col-12 col-sm-6 col-xl-3">
-          <article className="metric-card metric-primary">
-            <div className="metric-label">
-              Kokan
-              <br />
-              EE
-            </div>
-          </article>
-        </div>
+      <section className="circle-grid" aria-label="Engineering circles">
+        {circles.map((circle) => (
+          <button
+            type="button"
+            key={circle.id}
+            className={`circle-card ${circle.color}`}
+            onClick={() => {
+              // Add circle-specific navigation or filtering here later.
+            }}
+            aria-label={`${circle.name} ${circle.role}`}
+          >
+            <span className="circle-copy">
+              <strong>{circle.name}</strong>
+              <span>{circle.role}</span>
+            </span>
 
-        <div className="col-12 col-sm-6 col-xl-3">
-          <article className="metric-card metric-success">
-            <div className="metric-label">
-              Pune
-              <br />
-              EE
-            </div>
-          </article>
-        </div>
+            <span className="circle-arrow" aria-hidden="true">
+              →
+            </span>
 
-        <div className="col-12 col-sm-6 col-xl-3">
-          <article className="metric-card metric-warning">
-            <div className="metric-label">
-              Nashik
-              <br />
-              EE
-            </div>
-          </article>
-        </div>
-
-        <div className="col-12 col-sm-6 col-xl-3">
-          <article className="metric-card metric-danger">
-            <div className="metric-label">
-              Latur
-              <br />
-              EE
-            </div>
-          </article>
-        </div>
-
-        <div className="col-12 col-sm-6 col-xl-3">
-          <article className="metric-card metric-primary">
-            <div className="metric-label">
-              Aurangabad
-              <br />
-              EE
-            </div>
-          </article>
-        </div>
-
-        <div className="col-12 col-sm-6 col-xl-3">
-          <article className="metric-card metric-success">
-            <div className="metric-label">
-              Akola
-              <br />
-              EE
-            </div>
-          </article>
-        </div>
-
-        <div className="col-12 col-sm-6 col-xl-3">
-          <article className="metric-card metric-warning">
-            <div className="metric-label">
-              {" "}
-              Nagpur
-              <br />
-              EE
-            </div>
-          </article>
-        </div>
-
-        <div className="col-12 col-sm-6 col-xl-3">
-          <article className="metric-card metric-danger">
-            <div className="metric-label">
-              Nagpur(Ele)
-              <br />
-              EE
-            </div>
-          </article>
-        </div>
+            <span className="circle-decoration" aria-hidden="true">
+              <i className={`bi ${circle.icon}`} />
+            </span>
+          </button>
+        ))}
       </section>
+
 
       {/* Scheme wise bar charts */}
       <section className="row g-3 mt-1">
