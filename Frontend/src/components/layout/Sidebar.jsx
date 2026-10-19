@@ -7,13 +7,12 @@ export default function Sidebar() {
 
   const navItems = [
     { to: '/', label: 'Dashboard', icon: 'bi-speedometer2' },
+    { to: '/profile', label: 'Profile', icon: 'bi-person-badge' },
+    { to: '/forms', label: 'Master Forms', icon: 'bi-ui-checks-grid' },
+    { to: '/report', label: 'Report', icon: 'bi-file-earmark-text' },
+    { to: '/charts', label: 'Charts', icon: 'bi-bar-chart-line' },
     { to: '/users', label: 'Users', icon: 'bi-people' },
     // { to: '/add-user', label: 'Add Admin', icon: 'bi-person-plus' },
-    { to: '/profile', label: 'Profile', icon: 'bi-person-badge' },
-    { to: '/charts', label: 'Charts', icon: 'bi-bar-chart-line' },
-    { to: '/report', label: 'Report', icon: 'bi-file-earmark-text' },
-    { to: '/forms', label: 'Master Forms', icon: 'bi-ui-checks-grid' },
-
     { to: '/settings', label: 'Settings', icon: 'bi-gear' },
     { to: '/privacy-policy', label: 'Privacy Policy', icon: 'bi-shield-lock' },
     { to: '/terms-conditions', label: 'Terms & Conditions', icon: 'bi-file-earmark-text' },

@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import SuccessModal from "./SuccessModal";
 
 
@@ -313,22 +313,9 @@ export default function NHMForm() {
     const [mlaNames, setMlaNames] = useState([]);
 
     const [mpNames, setMpNames] = useState([]);
-    const { scheme } = useParams();
-
-    // Route name -> backend API name and page heading.
-    // Supports both /forms/15th-fc and /scheme/15th-fc route styles.
-    const schemeConfig = {
-        nhm: { api: "nhm", title: "National Health Mission" },
-        "15th-fc": { api: "15th-finance", title: "15th Finance Commission" },
-        "15th-finance": { api: "15th-finance", title: "15th Finance Commission" },
-        "pm-abhim": { api: "pm-abhim", title: "PM-ABHIM" },
-        pmjvk: { api: "pmjvk", title: "PMJVK" },
-        ayush: { api: "ayush", title: "AYUSH" },
-        adb: { api: "adb", title: "ADB" },
-        ndb: { api: "ndb", title: "NDB" },
-    };
-    const selectedScheme = schemeConfig[String(scheme || "nhm").toLowerCase()] || schemeConfig.nhm;
-    const schemeApiUrl = `http://localhost:5000/api/${selectedScheme.api}`;
+    const selectedScheme = { api: "nhm", title: "National Health Mission" };
+    const schemeApiUrl = "http://localhost:5000/api/forms";
+    const schemeQuery = `?scheme=${encodeURIComponent(selectedScheme.api)}`;
 
     useEffect(() => {
 
@@ -376,7 +363,7 @@ export default function NHMForm() {
 
                 const response = await fetch(
 
-                    `${schemeApiUrl}/next-sr-no`,
+                    `${schemeApiUrl}/next-sr-no${schemeQuery}`,
 
                 );
 
@@ -530,7 +517,7 @@ export default function NHMForm() {
 
             setMessage("Saving project...");
 
-            const response = await fetch(schemeApiUrl, {
+            const response = await fetch(`${schemeApiUrl}${schemeQuery}`, {
 
                 method: "POST",
 

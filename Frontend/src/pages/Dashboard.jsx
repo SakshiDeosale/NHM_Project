@@ -1,72 +1,38 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 
 export default function Dashboard() {
-  const users = [
-    {
-      id: 1,
-      name: "NHM",
-      COMPLETE: 1,
-      PROGRESS: 0,
-      "NOT STARTED": 0,
-      CANCELLED: 0,
-      TOTAL: 1,
-    },
-    {
-      id: 2,
-      name: "15th Finance",
-      COMPLETE: 0,
-      PROGRESS: 1,
-      "NOT STARTED": 0,
-      CANCELLED: 0,
-      TOTAL: 1,
-    },
-    {
-      id: 3,
-      name: "PM-ABHIM",
-      COMPLETE: 0,
-      PROGRESS: 0,
-      "NOT STARTED": 1,
-      CANCELLED: 0,
-      TOTAL: 1,
-    },
-    {
-      id: 4,
-      name: "PMJVK",
-      COMPLETE: 0,
-      PROGRESS: 0,
-      "NOT STARTED": 0,
-      CANCELLED: 1,
-      TOTAL: 1,
-    },
-    {
-      id: 5,
-      name: "AYUSH",
-      COMPLETE: 1,
-      PROGRESS: 0,
-      "NOT STARTED": 0,
-      CANCELLED: 0,
-      TOTAL: 1,
-    },
-    {
-      id: 6,
-      name: "ADB",
-      COMPLETE: 0,
-      PROGRESS: 0,
-      "NOT STARTED": 0,
-      CANCELLED: 1,
-      TOTAL: 1,
-    },
-    {
-      id: 7,
-      name: "NDB",
-      COMPLETE: 1,
-      PROGRESS: 1,
-      "NOT STARTED": 0,
-      CANCELLED: 0,
-      TOTAL: 0,
-    },
-  ];
+  const [users, setUsers] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    const fetchSchemeStatus = async () => {
+      try {
+        setLoading(true);
+        setError("");
+
+        const response = await fetch(
+          "http://localhost:5000/api/dashboard/scheme-status"
+        );
+
+        const result = await response.json();
+
+        if (!response.ok || !result.success) {
+          throw new Error(result.message || "Failed to fetch scheme status");
+        }
+
+        setUsers(result.data);
+      } catch (err) {
+        console.error("Failed to fetch scheme status:", err);
+        setError(err.message || "Unable to load scheme status.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchSchemeStatus();
+  }, []);
 
   return (
     <>
@@ -296,29 +262,42 @@ export default function Dashboard() {
               </tr>
             </thead>
 
+
             <tbody>
-              {users.map((u) => (
-                <tr key={u.id}>
-                  <td>
-                    <div className="d-flex align-items-center gap-2">
-                      <div>
-                        <p className="fw-semibold mb-0">{u.name}</p>
-                      </div>
-                    </div>
+              {loading ? (
+                <tr>
+                  <td colSpan={6} className="text-center py-4">
+                    Loading scheme status...
                   </td>
-
-                  <td>{u.COMPLETE}</td>
-
-                  <td>{u.PROGRESS}</td>
-
-                  <td>{u["NOT STARTED"]}</td>
-
-                  <td>{u.CANCELLED}</td>
-
-                  <td>{u.TOTAL}</td>
                 </tr>
-              ))}
+              ) : error ? (
+                <tr>
+                  <td colSpan={6} className="text-center text-danger py-4">
+                    {error}
+                  </td>
+                </tr>
+              ) : users.length === 0 ? (
+                <tr>
+                  <td colSpan={6} className="text-center py-4">
+                    No scheme data available.
+                  </td>
+                </tr>
+              ) : (
+                users.map((u) => (
+                  <tr key={u.id}>
+                    <td>
+                      <p className="fw-semibold mb-0">{u.name}</p>
+                    </td>
+                    <td>{u.COMPLETE}</td>
+                    <td>{u.PROGRESS}</td>
+                    <td>{u["NOT STARTED"]}</td>
+                    <td>{u.CANCELLED}</td>
+                    <td>{u.TOTAL}</td>
+                  </tr>
+                ))
+              )}
             </tbody>
+
           </table>
         </div>
       </section>

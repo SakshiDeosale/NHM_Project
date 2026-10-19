@@ -3,6 +3,7 @@ import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import { getPool } from './config/db.js';
+import dashboardRoutes from "./routes/dashboardRoutes.js";
 import circleRoutes from './routes/circleRoutes.js';
 import districtRoutes from './routes/districtRoutes.js';
 import schemeRoutes from './routes/schemeRoutes.js';
@@ -11,7 +12,7 @@ import mlampRoutes from './routes/mlampRoutes.js';
 import userRoutes from "./routes/userRoutes.js";
 import authRoutes from "./routes/authRoutes.js";
 import reportRoutes from './routes/reportRoutes.js';
-import nhmRoutes from './routes/nhmRoutes.js';
+import formsRoutes from './routes/formsRoutes.js';
 
 
 dotenv.config();
@@ -23,6 +24,7 @@ app.use(cors({
 }));
 
 app.use(express.json());
+app.use("/api/dashboard", dashboardRoutes);
 app.use('/api/circles', circleRoutes);
 app.use('/api/districts', districtRoutes);
 app.use('/api/schemes', schemeRoutes);
@@ -31,7 +33,7 @@ app.use('/api/mlamps', mlampRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/auth", authRoutes);
 app.use('/api/reports', reportRoutes);
-app.use('/api/nhm', nhmRoutes);
+app.use('/api/forms', formsRoutes);
 
 app.post("/api/test-route", (req, res) => {
     res.json({

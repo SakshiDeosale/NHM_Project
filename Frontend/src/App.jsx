@@ -22,8 +22,14 @@ import Charts from './pages/Charts';
 import Report from './pages/Report';
 import ReportSchemes from './pages/ReportSchemes';
 import SchemeReports from './pages/SchemeReports';
-import Forms from "./pages/Master_Form/Forms.jsx";
-import NHMForm from "./pages/Master_Form/NHMForm.jsx";
+import Forms from "./pages/Master_Form/Forms";
+import NHMForm from "./pages/Master_Form/NHMForm";
+import FifteenthFinanceForm from "./pages/Master_Form/FifteenthFinanceForm";
+import PMABHIMForm from "./pages/Master_Form/PMABHIMForm";
+import PMJVKForm from "./pages/Master_Form/PMJVKForm";
+import AYUSHForm from "./pages/Master_Form/AYUSHForm";
+import ADBForm from "./pages/Master_Form/ADBForm";
+import NDBForm from "./pages/Master_Form/NDBForm";
 // import ComponentsPage from './pages/ComponentsPage';
 import Help from './pages/Help';
 import PrivacyPolicy from './pages/PrivacyPolicy';
@@ -81,7 +87,24 @@ export default function App() {
                 element={<SchemeReports />}
               />
               <Route path="forms" element={<Forms />} />
-              <Route path="/forms/:scheme" element={<NHMForm />} />
+              <Route path="forms/nhm" element={<NHMForm />} />
+              <Route
+                path="forms/15th-fc"
+                element={<FifteenthFinanceForm />}
+              />
+
+              <Route
+                path="forms/pm-abhim"
+                element={<PMABHIMForm />}
+              />
+
+              <Route path="forms/pmjvk" element={<PMJVKForm />} />
+
+              <Route path="forms/ayush" element={<AYUSHForm />} />
+
+              <Route path="forms/adb" element={<ADBForm />} />
+
+              <Route path="forms/ndb" element={<NDBForm />} />
               <Route
                 path="organization-structure"
                 element={<OrganizationStructure />}
