@@ -2825,7 +2825,7 @@ html[data-theme="dark"] .report-filter-control .form-control::placeholder {
   text-align: center;
 }
 
-.scheme-page
+
 /* =========================
    TABLET
 ========================= */
@@ -2878,7 +2878,7 @@ html[data-theme="dark"] .report-filter-control .form-control::placeholder {
   }
 }
 
-.scheme-page
+
 /* =========================
    MOBILE
 ========================= */
@@ -2948,7 +2948,7 @@ html[data-theme="dark"] .report-filter-control .form-control::placeholder {
   }
 }
 
-.scheme-page
+
 /* Very small phones */
 
 @media (max-width: 360px) {
@@ -2971,7 +2971,7 @@ html[data-theme="dark"] .report-filter-control .form-control::placeholder {
     font-size: 15px;
   }
 
-  scheme-card.ndb {
+  .scheme-card.ndb {
     grid-column: 1 / span 2;
   }
 
@@ -2980,7 +2980,7 @@ html[data-theme="dark"] .report-filter-control .form-control::placeholder {
   }
 }
 
-.scheme-page
+
 /* Accessibility */
 
 @media (prefers-reduced-motion: reduce) {
@@ -2997,10 +2997,10 @@ html[data-theme="dark"] .report-filter-control .form-control::placeholder {
   min-height: 100vh;
 }
 
-.nhm-form-theme
+
 
 /* nhmform  2743*/
-.page {
+.nhm-form-theme .page {
   padding: 12px 16px 30px;
   max-width: 1750px;
   margin: auto;
