@@ -4,12 +4,11 @@ import { ThemeProvider } from './context/ThemeContext';
 import { SidebarProvider } from './context/SidebarContext';
 
 import AdminLayout from './components/layout/AdminLayout';
+import ProtectedRoute from './components/layout/ProtectedRoute';
 import AuthLayout from './components/layout/AuthLayout';
 
 import Dashboard from './pages/Dashboard';
 import Users from './pages/Users';
-import UserDetails from './pages/UserDetails';
-import CreateAgent from './pages/CreateAgent';
 import Profile from './pages/Profile';
 import Settings from "./pages/Settings/Settings.jsx";
 import CircleSettings from './pages/Settings/CircleSettings';
@@ -30,14 +29,13 @@ import PMJVKForm from "./pages/Master_Form/PMJVKForm";
 import AYUSHForm from "./pages/Master_Form/AYUSHForm";
 import ADBForm from "./pages/Master_Form/ADBForm";
 import NDBForm from "./pages/Master_Form/NDBForm";
-// import ComponentsPage from './pages/ComponentsPage';
+
 import Help from './pages/Help';
 import PrivacyPolicy from './pages/PrivacyPolicy';
 import TermsConditions from './pages/TermsConditions'; 
 import Logout from './pages/Logout.jsx';
 import Login from './pages/Login';
-import Register from './pages/Register';
-import ForgotPassword from './pages/ForgotPassword';
+
 import NotFound from './pages/NotFound';
 import ServerError from './pages/ServerError';
 import OrganizationStructure from "./pages/OrganizationStructure.jsx";
@@ -49,12 +47,10 @@ export default function App() {
         <BrowserRouter>
           <Routes>
             {/* Protected Admin Shell */}
-            <Route path="/" element={<AdminLayout />}>
+            <Route path="/" element={<ProtectedRoute> <AdminLayout /> </ProtectedRoute>}>
               <Route index element={<Dashboard />} />
               <Route path="users" element={<Users />} />
              
-              <Route path="user-details" element={<UserDetails />} />
-              <Route path="create-agent" element={<CreateAgent />} />
               <Route path="profile" element={<Profile />} />
               <Route path="settings" element={<Settings />} />
               <Route path="setting/circle" element={<CircleSettings />} />
@@ -118,8 +114,8 @@ export default function App() {
             {/* Auth Shell */}
             <Route element={<AuthLayout />}>
               <Route path="login" element={<Login />} />
-              <Route path="register" element={<Register />} />
-              <Route path="forgot-password" element={<ForgotPassword />} />
+              {/* <Route path="register" element={<Register />} />
+              <Route path="forgot-password" element={<ForgotPassword />} /> */}
             </Route>
 
             {/* Errors */}

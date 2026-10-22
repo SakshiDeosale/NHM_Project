@@ -1,22 +1,67 @@
-import React from 'react';
 
-export default function Blank() {
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+
+export default function Logout() {
+  const [showPopup, setShowPopup] = useState(true);
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+
+    sessionStorage.removeItem('token');
+    sessionStorage.removeItem('user');
+
+    navigate('/login', { replace: true });
+  };
+
+  const handleCancel = () => {
+    setShowPopup(false);
+    navigate(-1);
+  };
+
   return (
     <>
-      <div className="page-heading">
-        <div className="page-heading-copy">
-          <span className="page-icon"><i className="bi bi-file-earmark" aria-hidden="true" /></span>
-          <div>
-            <p className="eyebrow mb-1">Starter</p>
-            <h1 className="h3 mb-1">Blank Page</h1>
-            <p className="text-muted mb-0">Use this starter template to construct custom features.</p>
+      {showPopup && (
+        <div
+          className="logout-overlay"
+          role="presentation"
+        >
+          <div
+            className="logout-modal"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="logout-title"
+          >
+            <div className="logout-icon">
+              <i className="bi bi-box-arrow-right"></i>
+            </div>
+
+            <h5 id="logout-title">Confirm Logout</h5>
+
+            <p>Are you sure you want to log out of your account?</p>
+
+            <div className="logout-actions">
+              <button
+                type="button"
+                className="btn btn-secondary"
+                onClick={handleCancel}
+              >
+                Cancel
+              </button>
+
+              <button
+                type="button"
+                className="btn btn-danger"
+                onClick={handleLogout}
+              >
+                Yes, Logout
+              </button>
+            </div>
           </div>
         </div>
-      </div>
-
-      <div className="panel p-4 mt-2">
-        <p className="text-muted mb-0">Start building your new React components here.</p>
-      </div>
+      )}
     </>
   );
 }

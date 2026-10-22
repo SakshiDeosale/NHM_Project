@@ -4557,3 +4557,58 @@ html[data-theme="dark"] .nhm-form-theme .summary .value {
     min-height: 105px;
   }
 }
+
+.logout-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: rgba(0, 0, 0, 0.55);
+}
+
+.logout-modal {
+  width: 100%;
+  max-width: 400px;
+  padding: 28px;
+  text-align: center;
+  background: var(--bs-body-bg, #fff);
+  color: var(--bs-body-color, #212529);
+  border-radius: 14px;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2);
+}
+
+.logout-icon {
+  width: 58px;
+  height: 58px;
+  margin: 0 auto 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: rgba(220, 53, 69, 0.12);
+  color: #dc3545;
+  font-size: 26px;
+}
+
+.logout-modal h5 {
+  margin-bottom: 10px;
+  font-weight: 700;
+}
+
+.logout-modal p {
+  margin-bottom: 24px;
+  color: var(--bs-secondary-color, #6c757d);
+}
+
+.logout-actions {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+}
+
+.logout-actions .btn {
+  min-width: 120px;
+}

@@ -23,14 +23,37 @@ export default function Dashboard() {
         setLoading(true);
         setError("");
 
+        const token =
+          localStorage.getItem("token") ||
+          sessionStorage.getItem("token");
+
+        if (!token) {
+          throw new Error("Please log in to access the dashboard.");
+        }
+
         const response = await fetch(
-          "http://localhost:5000/api/dashboard/scheme-status"
+          "http://localhost:5000/api/dashboard/scheme-status",
+          {
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+            cache: "no-store",
+          }
         );
 
         const result = await response.json();
 
+        if (response.status === 401) {
+          throw new Error(
+            "Your session is invalid or expired. Please log in again."
+          );
+        }
+
         if (!response.ok || !result.success) {
-          throw new Error(result.message || "Failed to fetch scheme status");
+          throw new Error(
+            result.message || "Failed to fetch scheme status."
+          );
         }
 
         setUsers(result.data);
@@ -44,7 +67,7 @@ export default function Dashboard() {
 
     fetchSchemeStatus();
   }, []);
-
+  
   return (
     <>
       <div className="page-heading">

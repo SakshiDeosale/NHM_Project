@@ -2,6 +2,17 @@
 import React, { useEffect, useMemo, useState } from "react";
 
 const API_URL = "http://localhost:5000/api/users";
+const getAuthToken = () =>
+    localStorage.getItem("token") ||
+    sessionStorage.getItem("token");
+
+const getAuthHeaders = () => {
+    const token = getAuthToken();
+
+    return token
+        ? { Authorization: `Bearer ${token}` }
+        : {};
+};
 const CIRCLES_URL = "http://localhost:5000/api/circles";
 const DISTRICTS_URL = "http://localhost:5000/api/districts";
 
@@ -45,6 +56,7 @@ export default function UserSettings() {
     const [loadingLocations, setLoadingLocations] = useState(false);
     const [saving, setSaving] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
+    const [photoUrls, setPhotoUrls] = useState({});
 
     const selectedCircle = circles.find(
         (circle) => String(circle.CircleID) === String(circleID)
@@ -131,7 +143,9 @@ export default function UserSettings() {
         try {
             setLoadingUsers(true);
 
-            const response = await fetch(API_URL);
+            const response = await fetch(API_URL, {
+                headers: getAuthHeaders(),
+            });
             const data = await response.json();
 
             if (!response.ok) {
@@ -236,6 +250,7 @@ export default function UserSettings() {
 
             const response = await fetch(url, {
                 method: isEditing ? "PUT" : "POST",
+                headers: getAuthHeaders(),
                 body: formData,
             });
 
@@ -293,35 +308,37 @@ export default function UserSettings() {
         window.scrollTo({ top: 0, behavior: "smooth" });
     };
 
-    const handleDelete = async (user) => {
-        const confirmed = window.confirm(
-            `Are you sure you want to delete ${user.FirstName} ${user.Surname}?`
-        );
+    // const handleDelete = async (user) => {
+    //     const confirmed = window.confirm(
+    //         `Are you sure you want to delete ${user.FirstName} ${user.Surname}?`
+    //     );
 
-        if (!confirmed) return;
+    //     if (!confirmed) return;
 
-        try {
-            const response = await fetch(`${API_URL}/${user.UserID}`, {
-                method: "DELETE",
-            });
+    //     try {
+    //         const response = await fetch(`${API_URL}/${user.UserID}`, {
+    //             method: "DELETE",
+    //         });
 
-            const result = await response.json();
+    //         const result = await response.json();
 
-            if (!response.ok) {
-                throw new Error(result.message || "Unable to delete user.");
-            }
+    //         if (!response.ok) {
+    //             throw new Error(result.message || "Unable to delete user.");
+    //         }
 
-            if (editingId === user.UserID) {
-                resetForm();
-            }
+    //         if (editingId === user.UserID) {
+    //             resetForm();
+    //         }
 
-            alert("User deleted successfully.");
-            await fetchUsers();
-        } catch (error) {
-            console.error("Delete user error:", error);
-            alert(error.message || "Unable to delete user.");
-        }
-    };
+    //         alert("User deleted successfully.");
+    //         await fetchUsers();
+    //     } catch (error) {
+    //         console.error("Delete user error:", error);
+    //         alert(error.message || "Unable to delete user.");
+    //     }
+    // };
+
+
 
     return (
         <>
@@ -650,7 +667,7 @@ export default function UserSettings() {
                                                 <td>
                                                     {user.HasPhoto ? (
                                                         <img
-                                                            src={`${API_URL}/${user.UserID}/photo`}
+                                                            src={photoUrls[user.UserID] || ""}
                                                             alt={`${user.FirstName} ${user.Surname}`}
                                                             width="48"
                                                             height="48"

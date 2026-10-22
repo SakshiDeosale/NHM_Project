@@ -1,11 +1,12 @@
-
 import express from "express";
 import multer from "multer";
 import bcrypt from "bcrypt";
 import { randomUUID } from "node:crypto";
 import { getPool, sql } from "../config/db.js";
+import { authenticateToken } from "../middleware/authMiddleware.js";
 
 const router = express.Router();
+router.use(authenticateToken);
 
 const upload = multer({
     storage: multer.memoryStorage(),
