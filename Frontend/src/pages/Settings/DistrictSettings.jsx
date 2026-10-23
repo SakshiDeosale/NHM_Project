@@ -1,5 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
+import { apiFetch } from "../../utils/api";
 
 const DISTRICT_API = 'http://localhost:5000/api/districts';
 const CIRCLE_API = 'http://localhost:5000/api/circles';
@@ -21,8 +22,8 @@ export default function DistrictSettings() {
             setError('');
 
             const [circleResponse, districtResponse] = await Promise.all([
-                fetch(CIRCLE_API),
-                fetch(DISTRICT_API),
+                apiFetch(CIRCLE_API),
+                apiFetch(DISTRICT_API),
             ]);
 
             if (!circleResponse.ok || !districtResponse.ok) {
@@ -66,7 +67,7 @@ export default function DistrictSettings() {
 
             const isEditing = editingId !== null;
 
-            const response = await fetch(
+            const response = await apiFetch(
                 isEditing ? `${DISTRICT_API}/${editingId}` : DISTRICT_API,
                 {
                     method: isEditing ? 'PUT' : 'POST',
@@ -126,7 +127,7 @@ export default function DistrictSettings() {
             setError('');
             setMessage('');
 
-            const response = await fetch(
+            const response = await apiFetch(
                 `${DISTRICT_API}/${item.DistrictID}`,
                 { method: 'DELETE' }
             );
@@ -321,14 +322,14 @@ export default function DistrictSettings() {
                                                     Edit
                                                 </button>
 
-                                                <button
+                                                {/* <button
                                                     type="button"
                                                     className="btn btn-sm btn-danger"
                                                     onClick={() => handleDelete(item)}
                                                 >
                                                     <i className="bi bi-trash me-1"></i>
                                                     Delete
-                                                </button>
+                                                </button> */}
                                             </td>
                                         </tr>
                                     ))

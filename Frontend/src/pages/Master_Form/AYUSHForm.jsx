@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 
 import { useNavigate } from "react-router-dom";
 import SuccessModal from "./SuccessModal";
+import { apiFetch } from "../../utils/api";
 
 
 const districts = [
@@ -319,7 +320,7 @@ export default function AYUSHForm() {
 
     useEffect(() => {
 
-        fetch("http://localhost:5000/api/mlamps")
+        apiFetch("http://localhost:5000/api/mlamps")
             .then((res) => {
                 if (!res.ok) throw new Error("Failed to load MLA/MP records");
                 return res.json();
@@ -361,7 +362,7 @@ export default function AYUSHForm() {
 
             try {
 
-                const response = await fetch(
+                const response = await apiFetch(
 
                     `${schemeApiUrl}/next-sr-no${schemeQuery}`,
 
@@ -399,7 +400,7 @@ export default function AYUSHForm() {
 
             try {
 
-                const response = await fetch("http://localhost:5000/api/contractors");
+                const response = await apiFetch("http://localhost:5000/api/contractors");
 
                 if (!response.ok) {
 
@@ -517,7 +518,7 @@ export default function AYUSHForm() {
 
             setMessage("Saving project...");
 
-            const response = await fetch(`${schemeApiUrl}${schemeQuery}`, {
+            const response = await apiFetch(`${schemeApiUrl}${schemeQuery}`, {
 
                 method: "POST",
 

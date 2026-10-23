@@ -1,4 +1,3 @@
-
 import express from "express";
 import jwt from "jsonwebtoken";
 import { getPool, sql } from "../config/db.js";

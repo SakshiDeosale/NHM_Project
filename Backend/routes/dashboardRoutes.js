@@ -1,4 +1,3 @@
-
 import express from "express";
 import { getPool } from "../config/db.js";
 import { authenticateToken } from "../middleware/authMiddleware.js";

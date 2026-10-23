@@ -1,5 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
+import { apiFetch } from "../../utils/api";
 
 const API_URL = 'http://localhost:5000/api/circles';
 
@@ -14,12 +15,12 @@ export default function CircleSettings() {
 
     const fetchCircles = async () => {
         try {
-            const response = await fetch(API_URL);
+            const response = await apiFetch(API_URL);
             if (!response.ok) throw new Error('Failed to fetch circles.');
 
             setCircles(await response.json());
         } catch (err) {
-            setError('Unable to load circles. Check whether the backend is running.');
+            setError('Unable to load circles.');
         } finally {
             setLoading(false);
         }
@@ -43,7 +44,7 @@ export default function CircleSettings() {
             setMessage('');
 
             const isEditing = editingId !== null;
-            const response = await fetch(
+            const response = await apiFetch(
                 isEditing ? `${API_URL}/${editingId}` : API_URL,
                 {
                     method: isEditing ? 'PUT' : 'POST',
@@ -91,7 +92,7 @@ export default function CircleSettings() {
             setError('');
             setMessage('');
 
-            const response = await fetch(`${API_URL}/${item.CircleID}`, {
+            const response = await apiFetch(`${API_URL}/${item.CircleID}`, {
                 method: 'DELETE',
             });
 

@@ -9,8 +9,10 @@ import pmjvkConfig from "../scheme-config/pmjvkConfig.js";
 import ayushConfig from "../scheme-config/ayushConfig.js";
 import adbConfig from "../scheme-config/adbConfig.js";
 import ndbConfig from "../scheme-config/ndbConfig.js";
+import { authenticateToken } from "../middleware/authMiddleware.js";
 
 const router = express.Router();
+router.use(authenticateToken);
 
 // Only these configured schemes can be accessed.
 const schemeConfigs = {

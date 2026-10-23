@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
+import { apiFetch } from "../../utils/api";
 
 const API_URL = 'http://localhost:5000/api/mlamps';
 
@@ -28,7 +29,7 @@ export default function MLASettings() {
     const fetchMembers = useCallback(async () => {
         try {
             setError('');
-            const response = await fetch(API_URL);
+            const response = await apiFetch(API_URL);
             const data = await response.json();
 
             if (!response.ok) {
@@ -76,7 +77,7 @@ export default function MLASettings() {
             setMessage('');
 
             const isEditing = editingId !== null;
-            const response = await fetch(
+            const response = await apiFetch(
                 isEditing ? `${API_URL}/${editingId}` : API_URL,
                 {
                     method: isEditing ? 'PUT' : 'POST',
@@ -140,7 +141,7 @@ export default function MLASettings() {
             setError('');
             setMessage('');
 
-            const response = await fetch(`${API_URL}/${item.ID}`, {
+            const response = await apiFetch(`${API_URL}/${item.ID}`, {
                 method: 'DELETE',
             });
             const data = await response.json();

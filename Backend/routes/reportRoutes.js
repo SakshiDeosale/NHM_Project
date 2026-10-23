@@ -1,8 +1,9 @@
-
 import express from 'express';
 import { getPool, sql } from '../config/db.js';
+import { authenticateToken } from '../middleware/authMiddleware.js';
 
 const router = express.Router();
+router.use(authenticateToken);
 
 // Map each URL scheme identifier to its SQL Server table.
 // Replace the five placeholder names with your actual table names.

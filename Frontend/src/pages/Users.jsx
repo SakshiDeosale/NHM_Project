@@ -1,7 +1,72 @@
-
 import React, { useEffect, useState } from 'react';
-
+import { apiFetch } from "../utils/api";
 const API_URL = 'http://localhost:5000/api/users';
+
+function UserPhoto({ userId, apiUrl }) {
+  const [photoUrl, setPhotoUrl] = useState("");
+
+  useEffect(() => {
+    let cancelled = false;
+    let objectUrl;
+
+    const loadPhoto = async () => {
+      try {
+        const response = await apiFetch(
+          `${apiUrl}/${userId}/photo`
+        );
+
+        if (!response.ok) {
+          console.error(
+            `Photo request failed for user ${userId}:`,
+            response.status
+          );
+          return;
+        }
+
+        const blob = await response.blob();
+        objectUrl = URL.createObjectURL(blob);
+
+        if (!cancelled) {
+          setPhotoUrl(objectUrl);
+        } else {
+          URL.revokeObjectURL(objectUrl);
+        }
+      } catch (error) {
+        console.error("Error loading profile photo:", error);
+      }
+    };
+
+    loadPhoto();
+
+    return () => {
+      cancelled = true;
+      if (objectUrl) URL.revokeObjectURL(objectUrl);
+    };
+  }, [userId, apiUrl]);
+
+  if (!photoUrl) {
+    return (
+      <span className="text-muted small">
+        Loading photo...
+      </span>
+    );
+  }
+
+  return (
+    <img
+      src={photoUrl}
+      alt="User profile"
+      width="42"
+      height="42"
+      style={{
+        objectFit: "cover",
+        borderRadius: "50%",
+        border: "2px solid #dee2e6",
+      }}
+    />
+  );
+}
+
 
 export default function Users() {
   const [users, setUsers] = useState([]);
@@ -12,7 +77,7 @@ export default function Users() {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const response = await fetch(API_URL);
+        const response = await apiFetch(API_URL);
         const data = await response.json();
 
         if (!response.ok) {
@@ -131,16 +196,9 @@ export default function Users() {
 
                     <td>
                       {user.HasPhoto ? (
-                        <img
-                          src={`${API_URL}/${user.UserID}/photo`}
-                          alt="User profile"
-                          width="42"
-                          height="42"
-                          style={{
-                            objectFit: 'cover',
-                            borderRadius: '50%',
-                            border: '2px solid #dee2e6',
-                          }}
+                        <UserPhoto
+                          userId={user.UserID}
+                          apiUrl={API_URL}
                         />
                       ) : (
                         <span className="text-muted small">

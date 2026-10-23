@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
+import { apiFetch } from "../utils/api";
 
 const API_BASE_URL = 'http://localhost:5000/api/reports';
 
@@ -207,7 +208,7 @@ export default function SchemeReports() {
             setError('');
 
             try {
-                const response = await fetch(
+                const response = await apiFetch(
                     `${API_BASE_URL}/options?scheme=${encodeURIComponent(scheme)}`,
                     { signal: controller.signal }
                 );
@@ -238,7 +239,7 @@ export default function SchemeReports() {
 
         const loadColumns = async () => {
             try {
-                const response = await fetch(`${API_BASE_URL}/columns`, {
+                const response = await apiFetch(`${API_BASE_URL}/columns`, {
                     signal: controller.signal
                 });
 
@@ -301,7 +302,7 @@ export default function SchemeReports() {
                 }
             });
 
-            const response = await fetch(
+            const response = await apiFetch(
                 `${API_BASE_URL}/filter?${params.toString()}`
             );
 
@@ -500,7 +501,7 @@ export default function SchemeReports() {
                 <div className="panel-header">
                     <h2 className="h5 mb-1 section-title">
                         <i className="bi bi-table me-2" aria-hidden="true" />
-                        NHM Report Results
+                        {schemeName} Report Results
                     </h2>
                     <p className="text-muted mb-0">
                         Records matching the selected filter values.

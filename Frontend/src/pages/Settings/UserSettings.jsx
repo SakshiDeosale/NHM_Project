@@ -1,18 +1,19 @@
-
 import React, { useEffect, useMemo, useState } from "react";
+import { apiFetch } from "../../utils/api";
 
 const API_URL = "http://localhost:5000/api/users";
-const getAuthToken = () =>
-    localStorage.getItem("token") ||
-    sessionStorage.getItem("token");
 
-const getAuthHeaders = () => {
-    const token = getAuthToken();
+// const getAuthToken = () =>
+//     localStorage.getItem("token") ||
+//     sessionStorage.getItem("token");
 
-    return token
-        ? { Authorization: `Bearer ${token}` }
-        : {};
-};
+// const getAuthHeaders = () => {
+//     const token = getAuthToken();
+
+//     return token
+//         ? { Authorization: `Bearer ${token}` }
+//         : {};
+// };
 const CIRCLES_URL = "http://localhost:5000/api/circles";
 const DISTRICTS_URL = "http://localhost:5000/api/districts";
 
@@ -112,8 +113,8 @@ export default function UserSettings() {
             setLoadingLocations(true);
 
             const [circleResponse, districtResponse] = await Promise.all([
-                fetch(CIRCLES_URL),
-                fetch(DISTRICTS_URL),
+                apiFetch(CIRCLES_URL),
+                apiFetch(DISTRICTS_URL),
             ]);
 
             const circleData = await circleResponse.json();
@@ -143,9 +144,7 @@ export default function UserSettings() {
         try {
             setLoadingUsers(true);
 
-            const response = await fetch(API_URL, {
-                headers: getAuthHeaders(),
-            });
+            const response = await apiFetch(API_URL);
             const data = await response.json();
 
             if (!response.ok) {
@@ -160,6 +159,59 @@ export default function UserSettings() {
             setLoadingUsers(false);
         }
     };
+
+
+    useEffect(() => {
+        let cancelled = false;
+        const objectUrls = [];
+
+        const loadPhotos = async () => {
+            const usersWithPhotos = users.filter((user) => user.HasPhoto);
+
+            const entries = await Promise.all(
+                usersWithPhotos.map(async (user) => {
+                    try {
+                        const response = await apiFetch(
+                            `${API_URL}/${user.UserID}/photo`
+                        );
+
+                        if (!response.ok) {
+                            console.error(
+                                `Photo failed for user ${user.UserID}:`,
+                                response.status
+                            );
+                            return [user.UserID, ""];
+                        }
+
+                        const blob = await response.blob();
+                        const objectUrl = URL.createObjectURL(blob);
+                        objectUrls.push(objectUrl);
+
+                        return [user.UserID, objectUrl];
+                    } catch (error) {
+                        console.error("Unable to load user photo:", error);
+                        return [user.UserID, ""];
+                    }
+                })
+            );
+
+            if (!cancelled) {
+                setPhotoUrls(Object.fromEntries(entries));
+            }
+        };
+
+        if (users.length > 0) {
+            loadPhotos();
+        } else {
+            setPhotoUrls({});
+        }
+
+        return () => {
+            cancelled = true;
+            objectUrls.forEach((url) => URL.revokeObjectURL(url));
+        };
+    }, [users]);
+
 
     useEffect(() => {
         fetchLocations();
@@ -248,9 +300,8 @@ export default function UserSettings() {
         try {
             setSaving(true);
 
-            const response = await fetch(url, {
+            const response = await apiFetch(url, {
                 method: isEditing ? "PUT" : "POST",
-                headers: getAuthHeaders(),
                 body: formData,
             });
 
