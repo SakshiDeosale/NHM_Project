@@ -1,6 +1,7 @@
 import express from 'express';
 import { getPool, sql } from '../config/db.js';
 import { authenticateToken } from "../middleware/authMiddleware.js";
+import { requireSE } from "../middleware/requireSE.js";
 
 const router = express.Router();
 router.use(authenticateToken);
@@ -28,7 +29,7 @@ router.get('/', async (req, res) => {
 });
 
 // POST: Add a new circle
-router.post('/', async (req, res) => {
+router.post('/', requireSE, async (req, res) => {
     try {
         const circleName = req.body.circleName?.trim();
 
@@ -76,7 +77,7 @@ router.post('/', async (req, res) => {
 
 
 /* PUT: Update an existing circle */
-router.put('/:id', async (req, res) => {
+router.put('/:id', requireSE, async (req, res) => {
     try {
         const id = Number(req.params.id);
         const circleName = req.body.circleName?.trim();
@@ -123,7 +124,7 @@ router.put('/:id', async (req, res) => {
 });
 
 /* DELETE: Delete a circle */
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', requireSE, async (req, res) => {
     try {
         const id = Number(req.params.id);
 

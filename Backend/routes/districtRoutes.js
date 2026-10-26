@@ -1,6 +1,7 @@
 import express from 'express';
 import { getPool, sql } from '../config/db.js';
 import { authenticateToken } from "../middleware/authMiddleware.js";
+import { requireSE } from "../middleware/requireSE.js";
 
 const router = express.Router();
 router.use(authenticateToken);
@@ -33,7 +34,7 @@ router.get('/', async (req, res) => {
 });
 
 // POST: Add a district
-router.post('/', async (req, res) => {
+router.post('/', requireSE, async (req, res) => {
     try {
         const districtName = req.body.districtName?.trim();
         const circleID = Number(req.body.circleID);
@@ -83,7 +84,7 @@ router.post('/', async (req, res) => {
 });
 
 // PUT: Edit a district
-router.put('/:id', async (req, res) => {
+router.put('/:id', requireSE, async (req, res) => {
     try {
         const id = Number(req.params.id);
         const districtName = req.body.districtName?.trim();
@@ -144,34 +145,34 @@ router.put('/:id', async (req, res) => {
 });
 
 // DELETE: Delete a district
-router.delete('/:id', async (req, res) => {
-    try {
-        const id = Number(req.params.id);
+// router.delete('/:id', async (req, res) => {
+//     try {
+//         const id = Number(req.params.id);
 
-        if (!Number.isInteger(id) || id <= 0) {
-            return res.status(400).json({ message: 'Invalid district ID.' });
-        }
+//         if (!Number.isInteger(id) || id <= 0) {
+//             return res.status(400).json({ message: 'Invalid district ID.' });
+//         }
 
-        const pool = await getPool();
+//         const pool = await getPool();
 
-        const result = await pool.request()
-            .input('DistrictID', sql.Int, id)
-            .query(`
-                DELETE FROM Districts
-                WHERE DistrictID = @DistrictID;
+//         const result = await pool.request()
+//             .input('DistrictID', sql.Int, id)
+//             .query(`
+//                 DELETE FROM Districts
+//                 WHERE DistrictID = @DistrictID;
 
-                SELECT @@ROWCOUNT AS deletedCount;
-            `);
+//                 SELECT @@ROWCOUNT AS deletedCount;
+//             `);
 
-        if (result.recordset[0].deletedCount === 0) {
-            return res.status(404).json({ message: 'District not found.' });
-        }
+//         if (result.recordset[0].deletedCount === 0) {
+//             return res.status(404).json({ message: 'District not found.' });
+//         }
 
-        res.json({ message: 'District deleted successfully.' });
-    } catch (error) {
-        console.error('Delete district error:', error.message);
-        res.status(500).json({ message: 'Failed to delete district.' });
-    }
-});
+//         res.json({ message: 'District deleted successfully.' });
+//     } catch (error) {
+//         console.error('Delete district error:', error.message);
+//         res.status(500).json({ message: 'Failed to delete district.' });
+//     }
+// });
 
 export default router;

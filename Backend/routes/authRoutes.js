@@ -38,6 +38,8 @@ router.post("/login", async (req, res) => {
                     UserID,
                     Username,
                     Designation,
+                    Circle,
+                    District,
                     PasswordHash,
                     IsActive
                 FROM dbo.Users
@@ -94,18 +96,26 @@ router.post("/login", async (req, res) => {
 });
 
 
+
+
 router.get("/me", authenticateToken, async (req, res) => {
     try {
         const pool = await getPool();
 
-        const result = await pool
-            .request()
+        const result = await pool.request()
             .input("UserID", sql.Int, req.user.userId)
             .query(`
                 SELECT
                     UserID,
+                    FirstName,
+                    MiddleName,
+                    Surname,
                     Username,
+                    Mobile,
+                    Email,
                     Designation,
+                    Circle,
+                    District,
                     IsActive
                 FROM dbo.Users
                 WHERE UserID = @UserID;
@@ -113,9 +123,9 @@ router.get("/me", authenticateToken, async (req, res) => {
 
         const user = result.recordset[0];
 
-        if (!user || !user.IsActive) {
+        if (!user || user.IsActive !== true) {
             return res.status(401).json({
-                message: "Account is inactive or no longer exists.",
+                message: "Account is inactive or no longer exists."
             });
         }
 
@@ -123,15 +133,31 @@ router.get("/me", authenticateToken, async (req, res) => {
             message: "Authenticated successfully.",
             user: {
                 userId: user.UserID,
+                firstName: user.FirstName,
+                middleName: user.MiddleName,
+                surname: user.Surname,
+                fullName: [
+                    user.FirstName,
+                    user.MiddleName,
+                    user.Surname
+                ]
+                    .filter(value => value && String(value).trim())
+                    .map(value => String(value).trim())
+                    .join(" "),
                 username: user.Username,
+                mobile: user.Mobile,
+                email: user.Email,
                 designation: user.Designation,
-            },
+                circle: user.Circle,
+                district: user.District,
+                status: user.IsActive ? "Active" : "Inactive"
+            }
         });
     } catch (error) {
         console.error("Current user error:", error.message);
 
         return res.status(500).json({
-            message: "Unable to verify the current user.",
+            message: "Unable to retrieve profile information."
         });
     }
 });

@@ -1,10 +1,10 @@
 import express from 'express';
 import { getPool, sql } from '../config/db.js';
 import { authenticateToken } from "../middleware/authMiddleware.js";
+import { requireSE } from "../middleware/requireSE.js";
 
 const router = express.Router();
 router.use(authenticateToken);
-
 
 const categoryOptions = {
     Amdar: ['VidhanSabha MLA', 'Vidhan Parishad MLA'],
@@ -72,7 +72,7 @@ router.get('/', async (req, res) => {
 });
 
 // POST: Add record
-router.post('/', async (req, res) => {
+router.post('/', requireSE, async (req, res) => {
     try {
         const body = req.body;
         const validationError = validateMember(body);
@@ -106,7 +106,7 @@ router.post('/', async (req, res) => {
 });
 
 // PUT: Update record
-router.put('/:id', async (req, res) => {
+router.put('/:id', requireSE, async (req, res) => {
     try {
         const id = Number(req.params.id);
         const body = req.body;

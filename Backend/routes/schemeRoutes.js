@@ -1,6 +1,7 @@
 import express from 'express';
 import { getPool, sql } from '../config/db.js';
 import { authenticateToken } from "../middleware/authMiddleware.js";
+import { requireSE } from "../middleware/requireSE.js";
 
 const router = express.Router();
 router.use(authenticateToken);
@@ -25,7 +26,7 @@ router.get('/', async (req, res) => {
 });
 
 // POST: Add a scheme and sub-scheme
-router.post('/', async (req, res) => {
+router.post('/', requireSE, async (req, res) => {
     try {
         const schemeName = req.body.scheme?.trim();
         const subScheme = req.body.subScheme?.trim();
@@ -69,7 +70,7 @@ router.post('/', async (req, res) => {
 });
 
 // PUT: Update a scheme and sub-scheme
-router.put('/:id', async (req, res) => {
+router.put('/:id', requireSE, async (req, res) => {
     try {
         const id = Number(req.params.id);
         const schemeName = req.body.scheme?.trim();
@@ -121,35 +122,35 @@ router.put('/:id', async (req, res) => {
     }
 });
 
-// DELETE: Delete a scheme
-router.delete('/:id', async (req, res) => {
-    try {
-        const id = Number(req.params.id);
+// // DELETE: Delete a scheme
+// router.delete('/:id', async (req, res) => {
+//     try {
+//         const id = Number(req.params.id);
 
-        if (!Number.isInteger(id) || id <= 0) {
-            return res.status(400).json({ message: 'Invalid scheme ID.' });
-        }
+//         if (!Number.isInteger(id) || id <= 0) {
+//             return res.status(400).json({ message: 'Invalid scheme ID.' });
+//         }
 
-        const pool = await getPool();
+//         const pool = await getPool();
 
-        const result = await pool.request()
-            .input('SchemeID', sql.Int, id)
-            .query(`
-                DELETE FROM Schemes
-                WHERE SchemeID = @SchemeID;
+//         const result = await pool.request()
+//             .input('SchemeID', sql.Int, id)
+//             .query(`
+//                 DELETE FROM Schemes
+//                 WHERE SchemeID = @SchemeID;
 
-                SELECT @@ROWCOUNT AS deletedCount;
-            `);
+//                 SELECT @@ROWCOUNT AS deletedCount;
+//             `);
 
-        if (result.recordset[0].deletedCount === 0) {
-            return res.status(404).json({ message: 'Scheme not found.' });
-        }
+//         if (result.recordset[0].deletedCount === 0) {
+//             return res.status(404).json({ message: 'Scheme not found.' });
+//         }
 
-        res.json({ message: 'Scheme deleted successfully.' });
-    } catch (error) {
-        console.error('Delete scheme error:', error.message);
-        res.status(500).json({ message: 'Failed to delete scheme.' });
-    }
-});
+//         res.json({ message: 'Scheme deleted successfully.' });
+//     } catch (error) {
+//         console.error('Delete scheme error:', error.message);
+//         res.status(500).json({ message: 'Failed to delete scheme.' });
+//     }
+// });
 
 export default router;

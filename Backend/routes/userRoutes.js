@@ -4,6 +4,7 @@ import bcrypt from "bcrypt";
 import { randomUUID } from "node:crypto";
 import { getPool, sql } from "../config/db.js";
 import { authenticateToken } from "../middleware/authMiddleware.js";
+import { requireSE } from "../middleware/requireSE.js";
 
 const router = express.Router();
 router.use(authenticateToken);
@@ -108,7 +109,7 @@ router.get("/", async (req, res) => {
 });
 
 // POST: Add a user
-router.post("/", upload.single("photo"), async (req, res) => {
+router.post("/", requireSE, upload.single("photo"), async (req, res) => {
     let transaction;
 
     try {
@@ -248,7 +249,7 @@ router.post("/", upload.single("photo"), async (req, res) => {
 });
 
 // PUT: Edit an existing user
-router.put("/:id", upload.single("photo"), async (req, res) => {
+router.put("/:id", requireSE, upload.single("photo"), async (req, res) => {
     try {
         const userID = Number(req.params.id);
 

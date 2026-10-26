@@ -1,6 +1,7 @@
 import express from 'express';
 import { getPool, sql } from '../config/db.js';
 import { authenticateToken } from "../middleware/authMiddleware.js";
+import { requireSE } from "../middleware/requireSE.js";
 
 const router = express.Router();
 router.use(authenticateToken);
@@ -74,7 +75,7 @@ router.get('/', async (req, res) => {
 });
 
 // POST: Add contractor
-router.post('/', async (req, res) => {
+router.post('/', requireSE, async (req, res) => {
     const value = validate(req.body);
     if (typeof value === 'string') {
         return res.status(400).json({ message: value });
@@ -105,7 +106,7 @@ router.post('/', async (req, res) => {
 });
 
 // PUT: Update contractor
-router.put('/:id', async (req, res) => {
+router.put('/:id', requireSE, async (req, res) => {
     const id = Number(req.params.id);
     const value = validate(req.body);
 

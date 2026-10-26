@@ -42,6 +42,8 @@ export function authenticateToken(req, res, next) {
             userId: decoded.userId,
             username: decoded.username,
             designation: decoded.designation,
+            circle: decoded.circle ?? null,
+            district: decoded.district ?? null,
         };
 
         next();
