@@ -3126,1169 +3126,9 @@ html[data-theme="dark"] .report-filter-control .form-control::placeholder {
   }
 }
 
-/* =========================================================
-   NHM FORM CSS — isolated from dashboard CSS
-   ========================================================= */
 
-.nhm-form-theme {
-  min-height: 100vh;
-}
 
 
-
-/* nhmform  2743*/
-.nhm-form-theme .page {
-  padding: 12px 16px 30px;
-  max-width: 1750px;
-  margin: auto;
-}
-
-.nhm-form-theme .breadcrumb {
-  font-size: 11px;
-  color: #61768a;
-  margin-bottom: 8px;
-}
-
-.nhm-form-theme .breadcrumb i {
-  padding: 0 8px;
-  color: #a0adb8;
-}
-
-.nhm-form-theme .pagebar {
-  background: #075b9e;
-  color: white;
-  min-height: 50px;
-  border-radius: 6px 6px 0 0;
-  padding: 8px 12px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.nhm-form-theme .pagebar h1 {
-  font-size: 16px;
-  margin: 0;
-}
-
-.nhm-form-theme .pagebar small {
-  font-size: 9px;
-  opacity: 0.8;
-}
-
-.nhm-form-theme .actions,
-.nhm-form-theme .bottom {
-  display: flex;
-  gap: 6px;
-}
-
-.nhm-form-theme .actions button,
-.nhm-form-theme .bottom button {
-  border: 0;
-  border-radius: 4px;
-  padding: 8px 13px;
-  color: #fff;
-  font-size: 11px;
-  font-weight: bold;
-}
-
-.nhm-form-theme .save {
-  background: #147de5;
-}
-
-.nhm-form-theme .update {
-  background: #13a55b;
-}
-
-.nhm-form-theme .reset {
-  background: #ed3b3b;
-}
-
-.nhm-form-theme .back {
-  background: #435365;
-}
-
-.nhm-form-theme .message {
-  padding: 8px 10px;
-  background: #e6f7ed;
-  border: 1px solid #b5dfc5;
-  color: #17673a;
-  font-size: 11px;
-}
-
-.nhm-form-theme .section {
-  background: #fff;
-  border: 1px solid #d3dfe8;
-  border-radius: 5px;
-  margin-top: 7px;
-  overflow: hidden;
-}
-
-.nhm-form-theme .section-title {
-  padding: 6px 11px;
-  font-size: 12px;
-  font-weight: bold;
-  border-bottom: 1px solid #d5e0e8;
-}
-
-.nhm-form-theme .blue .section-title {
-  background: #dceeff;
-  color: #0a4779;
-}
-
-.nhm-form-theme .green .section-title {
-  background: #dff6e7;
-  color: #14623b;
-}
-
-.nhm-form-theme .purple .section-title {
-  background: #e9e1ff;
-  color: #503986;
-}
-
-.nhm-form-theme .yellow .section-title {
-  background: #fff0bd;
-  color: #775900;
-}
-
-.nhm-form-theme .pink .section-title {
-  background: #ffe0e9;
-  color: #8d2a50;
-}
-
-.nhm-form-theme .cyan .section-title {
-  background: #d9f4fa;
-  color: #176278;
-}
-
-.nhm-form-theme .section-body {
-  padding: 9px;
-}
-
-.nhm-form-theme .row {
-  display: grid;
-  gap: 8px 13px;
-  margin-bottom: 8px;
-}
-
-.nhm-form-theme .row.three {
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-}
-
-.nhm-form-theme .row.four {
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-}
-
-.nhm-form-theme .row.six {
-  grid-template-columns: repeat(6, minmax(0, 1fr));
-}
-
-.nhm-form-theme .row.seven {
-  grid-template-columns: repeat(7, minmax(0, 1fr));
-}
-
-.nhm-form-theme .field {
-  min-width: 0;
-}
-
-.nhm-form-theme .field label {
-  display: block;
-  font-size: 9px;
-  font-weight: bold;
-  color: #4b6174;
-  margin-bottom: 3px;
-}
-
-.nhm-form-theme .field em {
-  color: #df2e2e;
-  font-style: normal;
-}
-
-.nhm-form-theme input:focus,
-.nhm-form-theme select:focus,
-.nhm-form-theme textarea:focus {
-  border-color: #4599d8;
-  box-shadow: 0 0 0 2px #4599d81c;
-}
-
-.nhm-form-theme input:disabled {
-  background: #edf2f5;
-}
-
-.nhm-form-theme .tender {
-  display: grid;
-  grid-template-columns: 1fr 65px;
-  gap: 3px;
-}
-
-/* Fees summary panel — supports both themes */
-.nhm-form-theme .auto-box {
-  background: var(--form-surface, #ffffff);
-  border: 1px solid var(--form-border, #d5dee9);
-  border-radius: 6px;
-  color: var(--form-text, #24364b);
-  padding: 12px;
-}
-
-/* Calculated fee fields */
-.nhm-form-theme .auto-box .readonly {
-  background: var(--form-bg, #f3f6fa);
-  border-color: var(--form-border, #d5dee9);
-  color: var(--form-text, #24364b);
-}
-
-/* Fee labels */
-.nhm-form-theme .auto-box .field label {
-  color: var(--form-muted, #596b80);
-}
-
-/* Fees Paid input */
-.nhm-form-theme .auto-box input {
-  background-color: var(--form-input-bg, #ffffff);
-  border-color: var(--form-border, #d5dee9);
-  color: var(--form-text, #24364b);
-}
-
-.nhm-form-theme .readonly {
-  min-height: 30px;
-  padding: 7px;
-  background: #edf3f7;
-  border: 1px solid #c6d3dc;
-  border-radius: 3px;
-  font-size: 11px;
-  font-weight: bold;
-}
-
-.nhm-form-theme .summary {
-  display: grid;
-  grid-template-columns: 1.2fr 1fr 1.2fr 1.25fr;
-  gap: 8px;
-}
-
-.nhm-form-theme .card {
-  border: 1px solid #d4dfe7;
-  border-radius: 4px;
-  background: #fbfdff;
-  overflow: hidden;
-  color: #1d3449;
-}
-
-.nhm-form-theme .card h3 {
-  margin: 0;
-  padding: 6px 8px;
-  background: #edf5fa;
-  border-bottom: 1px solid #d8e3ea;
-  font-size: 11px;
-  font-weight: 600;
-  color: #315a78;
-}
-
-.nhm-form-theme .sum {
-  display: flex;
-  justify-content: space-between;
-  padding: 4px 8px;
-  border-bottom: 1px solid #edf1f4;
-  font-size: 9px;
-}
-
-.nhm-form-theme .sum b {
-  font-size: 9px;
-}
-
-.nhm-form-theme .sum.total {
-  background: #fff2be;
-  font-weight: bold;
-}
-
-.nhm-form-theme .progress-head {
-  display: flex;
-  justify-content: space-between;
-  padding: 8px 8px 3px;
-  font-size: 9px;
-}
-
-.nhm-form-theme .progress {
-  height: 8px;
-  background: #e2eaf0;
-  border-radius: 10px;
-  margin: 0 8px 9px;
-  overflow: hidden;
-}
-
-.nhm-form-theme .progress span {
-  height: 100%;
-  display: block;
-  background: #1683dd;
-  border-radius: 10px;
-}
-
-.nhm-form-theme .remarks label {
-  display: block;
-  padding: 7px 8px 3px;
-  font-size: 9px;
-  color: #4b6174;
-  font-weight: bold;
-}
-
-.nhm-form-theme .remarks textarea {
-  width: calc(100% - 16px);
-  margin: 0 8px 8px;
-}
-
-.nhm-form-theme .bottom {
-  justify-content: center;
-  padding-top: 10px;
-}
-
-.nhm-form-theme .bottom button {
-  padding: 8px 16px;
-}
-
-@media (max-width: 1250px) {
-  .nhm-form-theme .row.seven {
-    grid-template-columns: repeat(4, 1fr);
-  }
-
-  .nhm-form-theme .summary {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-@media (max-width: 900px) {
-
-  .nhm-form-theme .row.six,
-  .nhm-form-theme .row.four,
-  .nhm-form-theme .row.three {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-@media (max-width: 600px) {
-  .nhm-form-theme .page {
-    padding: 8px;
-  }
-
-  .nhm-form-theme .pagebar {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 8px;
-  }
-
-  .nhm-form-theme .pagebar>div>h6 {
-    font-size: 9px !important;
-    font-weight: 700 !important;
-    margin: 0 !important;
-  }
-
-  .nhm-form-theme .row.seven,
-  .nhm-form-theme .row.six,
-  .nhm-form-theme .row.four,
-  .nhm-form-theme .row.three,
-  .nhm-form-theme .summary {
-    grid-template-columns: 1fr;
-  }
-
-  .nhm-form-theme .actions {
-    width: 100%;
-    flex-wrap: wrap;
-  }
-
-  .nhm-form-theme .actions button {
-    flex: 1;
-  }
-
-  .nhm-form-theme .bottom {
-    flex-wrap: wrap;
-  }
-
-  .nhm-form-theme .bottom button {
-    flex: 1;
-  }
-}
-
-
-/* =========================================================
-   NHM FORM — isolated styling
-   Uses the dashboard's existing html[data-theme="dark"] switch.
-   ========================================================= */
-.nhm-form-theme {
-  --nhm-bg: #edf3f8;
-  --nhm-surface: #f8fcff;
-  --nhm-card: #ffffff;
-  --nhm-border: #cbd9e5;
-  --nhm-text: #1d3449;
-  --nhm-muted: #60778b;
-  --nhm-input: #ffffff;
-  min-width: 0;
-  color: var(--nhm-text);
-  font-family: Arial, Helvetica, sans-serif;
-}
-
-html[data-theme="dark"] .nhm-form-theme {
-  --nhm-bg: #111827;
-  --nhm-surface: #1f2937;
-  --nhm-card: #1f2937;
-  --nhm-border: #374151;
-  --nhm-text: #e5e7eb;
-  --nhm-muted: #aab7c7;
-  --nhm-input: #111827;
-}
-
-.nhm-form-theme,
-.nhm-form-theme * {
-  box-sizing: border-box;
-}
-
-.nhm-form-theme .page {
-  background: var(--nhm-bg);
-  color: var(--nhm-text);
-}
-
-.nhm-form-theme .pagebar,
-.nhm-form-theme .section,
-.nhm-form-theme .card,
-.nhm-form-theme .summary {
-  color: var(--nhm-text);
-}
-
-.nhm-form-theme .pagebar {
-  background: var(--nhm-surface);
-  border-color: var(--nhm-border);
-}
-
-.nhm-form-theme .section {
-  background: var(--nhm-card);
-  border-color: var(--nhm-border);
-}
-
-.nhm-form-theme .section-body {
-  background: var(--nhm-card);
-}
-
-.nhm-form-theme .field label,
-.nhm-form-theme .field em,
-.nhm-form-theme .breadcrumb,
-.nhm-form-theme .pagebar small,
-.nhm-form-theme .progress-head {
-  color: var(--nhm-muted);
-}
-
-.nhm-form-theme input,
-.nhm-form-theme select,
-.nhm-form-theme textarea {
-  color: var(--nhm-text);
-  background-color: var(--nhm-input);
-  border-color: var(--nhm-border);
-}
-
-.nhm-form-theme input::placeholder,
-.nhm-form-theme textarea::placeholder {
-  color: var(--nhm-muted);
-}
-
-.nhm-form-theme input:focus,
-.nhm-form-theme select:focus,
-.nhm-form-theme textarea:focus {
-  outline-color: #60a5fa;
-  border-color: #60a5fa;
-}
-
-.nhm-form-theme input:disabled,
-.nhm-form-theme input[readonly] {
-  color: var(--nhm-muted);
-  background-color: var(--nhm-bg);
-}
-
-.nhm-form-theme .summary .card,
-.nhm-form-theme .card {
-  background: var(--nhm-card);
-  border-color: var(--nhm-border);
-}
-
-.nhm-form-theme .message {
-  color: var(--nhm-text);
-}
-
-html[data-theme="dark"] .nhm-form-theme .success-modal {
-  background: #1f2937;
-  color: #e5e7eb;
-}
-
-html[data-theme="dark"] .nhm-form-theme .success-modal h2 {
-  color: #f9fafb;
-}
-
-html[data-theme="dark"] .nhm-form-theme .success-modal p {
-  color: #cbd5e1;
-}
-
-.nhm-success-theme {
-  color-scheme: light;
-}
-
-html[data-theme="dark"] .nhm-success-theme .success-modal {
-  background: #1f2937;
-  color: #e5e7eb;
-}
-
-html[data-theme="dark"] .nhm-success-theme .success-modal h2 {
-  color: #f9fafb;
-}
-
-html[data-theme="dark"] .nhm-success-theme .success-modal p {
-  color: #cbd5e1;
-}
-
-
-/* Success Modal */
-
-.success-overlay.nhm-success-theme {
-  position: fixed;
-  inset: 0;
-  z-index: 9999;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 20px;
-  background: rgba(15, 23, 42, 0.55);
-  backdrop-filter: blur(4px);
-}
-
-.nhm-success-theme .success-modal {
-  width: 100%;
-  max-width: 420px;
-  padding: 36px 28px;
-  text-align: center;
-  background: #fff;
-  border-radius: 18px;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
-  animation: success-appear 0.25s ease-out;
-}
-
-.nhm-success-theme .success-icon {
-  width: 76px;
-  height: 76px;
-  margin: 0 auto 18px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #fff;
-  background: #22a65a;
-  border: 7px solid #d9f7e4;
-  border-radius: 50%;
-}
-
-.nhm-success-theme .success-modal h2 {
-  margin: 0 0 12px;
-  color: #172b3f;
-  font-size: 28px;
-  font-weight: 700;
-}
-
-.nhm-success-theme .success-modal p {
-  margin: 0 0 26px;
-  color: #64748b;
-  font-size: 15px;
-  line-height: 1.6;
-}
-
-.nhm-success-theme .success-modal button {
-  min-width: 130px;
-  padding: 12px 30px;
-  color: white;
-  background: #1d9b50;
-  border: none;
-  border-radius: 9px;
-  font-size: 16px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background 0.2s ease;
-}
-
-.nhm-success-theme .success-modal button:hover {
-  background: #16813f;
-}
-
-.nhm-success-theme .success-modal button:focus-visible {
-  outline: 3px solid #86efac;
-  outline-offset: 3px;
-}
-
-@keyframes success-appear {
-  from {
-    opacity: 0;
-    transform: translateY(10px) scale(0.97);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-}
-
-@media (max-width: 480px) {
-  .nhm-success-theme .success-modal {
-    padding: 30px 20px;
-  }
-
-  .nhm-success-theme .success-modal h2 {
-    font-size: 24px;
-  }
-}
-
-
-
-
-
-
-
-
-
-/* ==========================================
-   NHM GOVERNMENT PORTAL — FORM DESIGN
-   Uses existing NHMForm.jsx class names
-========================================== */
-
-.nhm-form-theme {
-  --form-bg: #f3f6fa;
-  --form-surface: #ffffff;
-  --form-border: #d5dee9;
-  --form-text: #24364b;
-  --form-muted: #596b80;
-  --form-primary: #155b96;
-  --form-input-bg: #ffffff;
-  --form-focus: #2878bd;
-
-  font-family: inherit;
-  font-size: 14px;
-  line-height: 1.45;
-  color: var(--form-text);
-  min-width: 0;
-}
-
-.nhm-form-theme *,
-.nhm-form-theme *::before,
-.nhm-form-theme *::after {
-  box-sizing: border-box;
-}
-
-/* Main page */
-.nhm-form-theme .page {
-  width: 100%;
-  max-width: 1750px;
-  min-width: 0;
-  margin: 0 auto;
-  padding: 20px 24px 28px;
-  background: var(--form-bg);
-  color: var(--form-text);
-}
-
-/* Page header */
-.nhm-form-theme .pagebar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-  padding: 16px 20px;
-  margin-bottom: 18px;
-  background: var(--form-surface);
-  border: 1px solid var(--form-border);
-  border-left: 4px solid var(--form-primary);
-  border-radius: 6px;
-}
-
-.nhm-form-theme .pagebar h1 {
-  margin: 0;
-  color: var(--form-text);
-  font-family: inherit;
-  font-size: 21px;
-  font-weight: 700;
-  line-height: 1.35;
-  letter-spacing: 0;
-}
-
-.nhm-form-theme .pagebar small {
-  display: block;
-  margin-top: 4px;
-  color: var(--form-muted);
-  font-size: 12px;
-  font-weight: 400;
-}
-
-/* Individual form sections */
-.nhm-form-theme .section {
-  min-width: 0;
-  margin: 0 0 18px;
-  overflow: visible;
-  background: var(--form-surface);
-  border: 1px solid var(--form-border);
-  border-radius: 6px;
-  box-shadow: 0 2px 5px rgb(25 48 75 / 4%);
-}
-
-/* Section title bars */
-.nhm-form-theme .section-title,
-.nhm-form-theme .section-heading,
-.nhm-form-theme .section-header {
-  padding: 10px 14px;
-  margin: 0;
-  background: #c5d9ee;
-  border-bottom: 1px solid #cbdced;
-  color: #174c7b;
-  font-family: inherit;
-  font-size: 14px;
-  font-weight: 700;
-  line-height: 1.4;
-}
-
-/* Numbered section headings */
-.nhm-form-theme .section legend {
-  padding: 9px 13px;
-  margin: 0;
-  color: #174c7b;
-  background: #e8f1fb;
-  border: 0;
-  border-bottom: 1px solid #cbdced;
-  border-radius: 5px 5px 0 0;
-  font-family: inherit;
-  font-size: 14px;
-  font-weight: 700;
-}
-
-/* Color accents for section variants */
-.nhm-form-theme .section.blue legend,
-.nhm-form-theme .section.blue .section-title {
-  background: #e8f1fb;
-  color: #174c7b;
-}
-
-.nhm-form-theme .section.green legend,
-.nhm-form-theme .section.green .section-title {
-  background: #e7f5ed;
-  color: #216545;
-  border-color: #c8e5d4;
-}
-
-.nhm-form-theme .section.yellow legend,
-.nhm-form-theme .section.yellow .section-title {
-  background: #fff4d6;
-  color: #795b13;
-  border-color: #efdfaa;
-}
-
-.nhm-form-theme .section.cyan legend,
-.nhm-form-theme .section.cyan .section-title {
-  background: #e2f5f8;
-  color: #17636d;
-  border-color: #c5e7ec;
-}
-
-/* Section contents */
-.nhm-form-theme .section-body {
-  padding: 16px;
-  min-width: 0;
-}
-
-/* Field grid layouts */
-.nhm-form-theme .row {
-  display: grid;
-  gap: 16px 20px;
-  align-items: start;
-  width: 100%;
-  min-width: 0;
-  margin: 0 0 16px;
-}
-
-.nhm-form-theme .row:last-child {
-  margin-bottom: 0;
-}
-
-.nhm-form-theme .row.four {
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-}
-
-.nhm-form-theme .row.six {
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-}
-
-.nhm-form-theme .row.three {
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-}
-
-.nhm-form-theme .row.seven {
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-}
-
-/* Fields must stay inside their grid cells */
-.nhm-form-theme .field,
-.nhm-form-theme .form-field {
-  min-width: 0;
-  width: 100%;
-  margin: 0;
-}
-
-/* Field labels */
-.nhm-form-theme .field label,
-.nhm-form-theme .form-field label {
-  display: block;
-  margin: 0 0 6px;
-  color: #34475c;
-  font-family: inherit;
-  font-size: 12px;
-  font-weight: 600;
-  line-height: 1.45;
-  overflow-wrap: anywhere;
-}
-
-/* Inputs, selects and textareas */
-.nhm-form-theme input:not([type="checkbox"]):not([type="radio"]),
-.nhm-form-theme select,
-.nhm-form-theme textarea {
-  display: block;
-  width: 100%;
-  min-width: 0;
-  max-width: 100%;
-  min-height: 38px;
-  padding: 8px 10px;
-  margin: 0;
-  background: var(--form-input-bg);
-  border: 1px solid #c5d0dd;
-  border-radius: 4px;
-  color: var(--form-text);
-  font-family: inherit;
-  font-size: 13px;
-  font-weight: 400;
-  line-height: 1.4;
-  box-shadow: none;
-  box-sizing: border-box;
-  transition: border-color 0.15s ease, box-shadow 0.15s ease;
-}
-
-.nhm-form-theme textarea {
-  min-height: 76px;
-  resize: vertical;
-}
-
-.nhm-form-theme input:focus,
-.nhm-form-theme select:focus,
-.nhm-form-theme textarea:focus {
-  outline: none;
-  border-color: var(--form-focus);
-  box-shadow: 0 0 0 3px rgb(40 120 189 / 13%);
-}
-
-.nhm-form-theme input::placeholder,
-.nhm-form-theme textarea::placeholder {
-  color: #78899b;
-  opacity: 1;
-  font-family: inherit;
-  font-size: 13px;
-  font-weight: 400;
-}
-
-.nhm-form-theme input:disabled,
-.nhm-form-theme select:disabled,
-.nhm-form-theme textarea:disabled,
-.nhm-form-theme input[readonly] {
-  background: #f0f3f7;
-  color: #53657a;
-  cursor: not-allowed;
-}
-
-/* Read-only calculated values */
-.nhm-form-theme .readonly,
-.nhm-form-theme .read-only,
-.nhm-form-theme .calculated-value {
-  background: #f1f5f9;
-  color: #354b63;
-  font-weight: 600;
-}
-
-/* Summary and expenditure panels */
-.nhm-form-theme .summary {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 12px;
-  min-width: 0;
-  margin-top: 8px;
-}
-
-.nhm-form-theme .summary>*,
-.nhm-form-theme .summary .card {
-  min-width: 0;
-  padding: 13px;
-  background: #f8fafc;
-  border: 1px solid var(--form-border);
-  border-radius: 5px;
-}
-
-.nhm-form-theme .summary label,
-.nhm-form-theme .summary .label {
-  display: block;
-  margin-bottom: 6px;
-  color: var(--form-muted);
-  font-size: 12px;
-  font-weight: 600;
-}
-
-.nhm-form-theme .summary strong,
-.nhm-form-theme .summary .value {
-  color: var(--form-text);
-  font-size: 14px;
-  font-weight: 700;
-  overflow-wrap: anywhere;
-}
-
-/* Bottom actions */
-.nhm-form-theme .actions,
-.nhm-form-theme .bottom {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin-top: 20px;
-}
-
-.nhm-form-theme .actions button,
-.nhm-form-theme .bottom button {
-  min-height: 38px;
-  padding: 9px 18px;
-  border-radius: 4px;
-  font-family: inherit;
-  font-size: 13px;
-  font-weight: 600;
-  line-height: 1.4;
-  cursor: pointer;
-  transition: filter 0.15s ease, box-shadow 0.15s ease;
-}
-
-.nhm-form-theme .actions button:hover,
-.nhm-form-theme .bottom button:hover {
-  filter: brightness(0.96);
-}
-
-/* Tablet */
-@media (max-width: 1100px) {
-  .nhm-form-theme .page {
-    padding: 16px;
-  }
-
-  .nhm-form-theme .row.four,
-  .nhm-form-theme .row.six,
-  .nhm-form-theme .row.three,
-  .nhm-form-theme .row.seven {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  .nhm-form-theme .summary {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-}
-
-/* Mobile */
-@media (max-width: 600px) {
-  .nhm-form-theme .page {
-    padding: 10px;
-  }
-
-  .nhm-form-theme .pagebar {
-    align-items: flex-start;
-    padding: 13px;
-  }
-
-  .nhm-form-theme .pagebar h1 {
-    font-size: 18px;
-  }
-
-  .nhm-form-theme .section-body {
-    padding: 12px;
-  }
-
-  .nhm-form-theme .row.four,
-  .nhm-form-theme .row.six,
-  .nhm-form-theme .row.three,
-  .nhm-form-theme .row.seven,
-  .nhm-form-theme .summary {
-    grid-template-columns: minmax(0, 1fr);
-    gap: 13px;
-  }
-
-  .nhm-form-theme .actions,
-  .nhm-form-theme .bottom {
-    justify-content: stretch;
-  }
-
-  .nhm-form-theme .actions button,
-  .nhm-form-theme .bottom button {
-    flex: 1 1 120px;
-  }
-}
-
-/* ==========================================
-   NHM FORM — DARK THEME FIX
-   Keep this at the END of style.css
-========================================== */
-
-html[data-theme="dark"] .nhm-form-theme {
-  --form-bg: #111827;
-  --form-surface: #1e293b;
-  --form-border: #3b4b61;
-  --form-text: #e5edf7;
-  --form-muted: #a8b7ca;
-  --form-input-bg: #111827;
-  --form-primary: #60a5fa;
-  color: var(--form-text);
-}
-
-/* Main form background */
-html[data-theme="dark"] .nhm-form-theme .page {
-  background: var(--form-bg);
-  color: var(--form-text);
-}
-
-/* Page header */
-html[data-theme="dark"] .nhm-form-theme .pagebar {
-  background: #1e293b;
-  border-color: #3b4b61;
-  border-left-color: #60a5fa;
-}
-
-html[data-theme="dark"] .nhm-form-theme .pagebar h1 {
-  color: #f1f5f9;
-}
-
-html[data-theme="dark"] .nhm-form-theme .pagebar small {
-  color: #a8b7ca;
-}
-
-/* Section cards */
-html[data-theme="dark"] .nhm-form-theme .section {
-  background: #1e293b;
-  border-color: #3b4b61;
-  box-shadow: 0 2px 6px rgb(0 0 0 / 12%);
-}
-
-/* Section headings */
-html[data-theme="dark"] .nhm-form-theme .section-title,
-html[data-theme="dark"] .nhm-form-theme .section-heading,
-html[data-theme="dark"] .nhm-form-theme .section-header,
-html[data-theme="dark"] .nhm-form-theme .section legend {
-  background: #263b54;
-  border-color: #405875;
-  color: #dbeafe;
-}
-
-/* Green section heading */
-html[data-theme="dark"] .nhm-form-theme .section.green legend,
-html[data-theme="dark"] .nhm-form-theme .section.green .section-title {
-  background: #1d4038;
-  border-color: #326556;
-  color: #a7f3d0;
-}
-
-/* Yellow section heading */
-html[data-theme="dark"] .nhm-form-theme .section.yellow legend,
-html[data-theme="dark"] .nhm-form-theme .section.yellow .section-title {
-  background: #493c22;
-  border-color: #6b5830;
-  color: #fde68a;
-}
-
-/* Cyan section heading */
-html[data-theme="dark"] .nhm-form-theme .section.cyan legend,
-html[data-theme="dark"] .nhm-form-theme .section.cyan .section-title {
-  background: #173b46;
-  border-color: #285967;
-  color: #a5f3fc;
-}
-
-/* Field labels */
-html[data-theme="dark"] .nhm-form-theme .field label,
-html[data-theme="dark"] .nhm-form-theme .form-field label {
-  color: #cbd5e1;
-}
-
-/* Inputs, dropdowns and textareas */
-html[data-theme="dark"] .nhm-form-theme input:not([type="checkbox"]):not([type="radio"]),
-html[data-theme="dark"] .nhm-form-theme select,
-html[data-theme="dark"] .nhm-form-theme textarea {
-  background-color: #111827;
-  border-color: #465970;
-  color: #e5edf7;
-  color-scheme: dark;
-}
-
-html[data-theme="dark"] .nhm-form-theme input::placeholder,
-html[data-theme="dark"] .nhm-form-theme textarea::placeholder {
-  color: #94a3b8;
-}
-
-html[data-theme="dark"] .nhm-form-theme input:focus,
-html[data-theme="dark"] .nhm-form-theme select:focus,
-html[data-theme="dark"] .nhm-form-theme textarea:focus {
-  border-color: #60a5fa;
-  box-shadow: 0 0 0 3px rgb(96 165 250 / 15%);
-}
-
-/* Disabled and readonly fields */
-html[data-theme="dark"] .nhm-form-theme input:disabled,
-html[data-theme="dark"] .nhm-form-theme select:disabled,
-html[data-theme="dark"] .nhm-form-theme textarea:disabled,
-html[data-theme="dark"] .nhm-form-theme input[readonly],
-html[data-theme="dark"] .nhm-form-theme .readonly,
-html[data-theme="dark"] .nhm-form-theme .read-only,
-html[data-theme="dark"] .nhm-form-theme .calculated-value {
-  background: #263449;
-  border-color: #3b4b61;
-  color: #cbd5e1;
-}
-
-/* Summary panels */
-html[data-theme="dark"] .nhm-form-theme .summary>*,
-html[data-theme="dark"] .nhm-form-theme .summary .card {
-  background: #172336;
-  border-color: #3b4b61;
-}
-
-html[data-theme="dark"] .nhm-form-theme .summary label,
-html[data-theme="dark"] .nhm-form-theme .summary .label {
-  color: #a8b7ca;
-}
-
-html[data-theme="dark"] .nhm-form-theme .summary strong,
-html[data-theme="dark"] .nhm-form-theme .summary .value {
-  color: #f1f5f9;
-}
-
-
-/* Full-width NHM section title bars */
-.nhm-form-theme .section > legend,
-.nhm-form-theme .section > .section-title,
-.nhm-form-theme .section > .section-heading,
-.nhm-form-theme .section > .section-header {
-  display: block;
-  width: 100%;
-  max-width: 100%;
-  margin: 0;
-  padding: 10px 14px;
-  box-sizing: border-box;
-  border-radius: 5px 5px 0 0;
-}
-
-/* If the section uses a fieldset */
-.nhm-form-theme fieldset.section {
-  padding: 0 16px 16px;
-  min-width: 0;
-}
-
-.nhm-form-theme fieldset.section > legend {
-  float: none;
-  width: calc(100% + 32px);
-  max-width: none;
-  margin: 0 0 16px -16px;
-  padding: 10px 14px;
-  box-sizing: border-box;
-}
 
 
 /* Pagination footer */
@@ -4329,7 +3169,7 @@ html[data-theme="dark"] .nhm-form-theme .summary .value {
   font-size: 13px;
   white-space: nowrap;
   margin: 0;
-}
+} 
 
 /* Rows per page dropdown */
 .pagination-controls select {
@@ -4748,4 +3588,719 @@ html[data-theme="dark"] .nhm-form-theme .summary .value {
 
 .logout-actions .btn {
   min-width: 120px;
+}
+
+/* =====================================================
+   ADB FORM — GOVERNMENT PORTAL THEME
+   Scoped styles: does not redesign other pages
+   ===================================================== */
+
+.nhm-form-theme {
+  --adb-primary: #123b63;
+  --adb-primary-hover: #0b2c4b;
+  --adb-teal: #087f8c;
+  --adb-saffron: #d97706;
+
+  --adb-page: #f1f5f9;
+  --adb-card: #ffffff;
+  --adb-soft: #f8fafc;
+  --adb-border: #d7e1eb;
+  --adb-text: #1e293b;
+  --adb-muted: #64748b;
+  --adb-input: #ffffff;
+  --adb-focus: rgba(8, 127, 140, 0.17);
+
+  min-width: 0;
+  padding-bottom: 28px;
+  color: var(--adb-text);
+  font-family: "Segoe UI", Arial, sans-serif;
+  font-size: 14px;
+}
+
+html[data-theme="dark"] .nhm-form-theme {
+  --adb-primary: #183e60;
+  --adb-primary-hover: #24547a;
+  --adb-teal: #21a6a8;
+  --adb-saffron: #f0ad4e;
+
+  --adb-page: #111827;
+  --adb-card: #1e293b;
+  --adb-soft: #172333;
+  --adb-border: #37475b;
+  --adb-text: #e5edf6;
+  --adb-muted: #a7b6c9;
+  --adb-input: #111c2b;
+  --adb-focus: rgba(45, 212, 191, 0.19);
+}
+
+.nhm-form-theme,
+.nhm-form-theme * {
+  box-sizing: border-box;
+}
+
+/* Page background and spacing */
+
+.nhm-form-theme .main,
+.nhm-form-theme .page {
+  min-width: 0;
+  color: var(--adb-text);
+}
+
+.nhm-form-theme .page {
+  max-width: 1800px;
+  margin: 0 auto;
+  padding: 24px;
+  background: var(--adb-page);
+  border-radius: 12px;
+  transition: background-color 0.25s ease;
+}
+
+/* Main page heading */
+
+.nhm-form-theme .pagebar {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  min-height: 92px;
+  padding: 22px 26px;
+  margin-bottom: 22px;
+  overflow: hidden;
+
+  color: #ffffff;
+  background: linear-gradient(115deg,
+      #102f50 0%,
+      #164e72 58%,
+      #087f8c 100%);
+
+  border: 1px solid rgba(255, 255, 255, 0.13);
+  border-left: 5px solid #e5a54b;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(15, 45, 72, 0.16);
+}
+
+.nhm-form-theme .pagebar h1 {
+  margin: 0;
+  color: #ffffff;
+  font-size: clamp(23px, 2vw, 30px);
+  font-weight: 750;
+  letter-spacing: 0.2px;
+}
+
+.nhm-form-theme .pagebar small {
+  display: inline-block;
+  margin-top: 7px;
+  color: #d7e8f5;
+  font-size: 13px;
+  letter-spacing: 0.4px;
+}
+
+/* Form sections */
+
+.nhm-form-theme .section {
+  margin-top: 18px;
+  overflow: hidden;
+  background: var(--adb-card);
+  border: 1px solid var(--adb-border);
+  border-radius: 12px;
+  box-shadow: 0 3px 12px rgba(15, 23, 42, 0.045);
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    transform 0.2s ease,
+    background-color 0.2s ease;
+}
+
+.nhm-form-theme .section:hover {
+  border-color: var(--adb-teal);
+  box-shadow: 0 8px 22px rgba(15, 55, 80, 0.09);
+}
+
+html[data-theme="dark"] .nhm-form-theme .section:hover {
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.22);
+}
+
+.nhm-form-theme .section-title {
+  display: flex;
+  align-items: center;
+  min-height: 48px;
+  padding: 13px 18px;
+  margin: 0;
+  font-size: 15px;
+  font-weight: 750;
+  letter-spacing: 0.15px;
+  border-bottom: 1px solid var(--adb-border);
+}
+
+/* Restrained, accessible section color accents */
+
+.nhm-form-theme .blue .section-title {
+  color: #164e72;
+  background: #eaf3fc;
+  border-left: 4px solid #2563a6;
+}
+
+.nhm-form-theme .green .section-title {
+  color: #17664b;
+  background: #eaf7f0;
+  border-left: 4px solid #21865b;
+}
+
+.nhm-form-theme .purple .section-title {
+  color: #5b4392;
+  background: #f1edfc;
+  border-left: 4px solid #8063bd;
+}
+
+.nhm-form-theme .yellow .section-title {
+  color: #80530a;
+  background: #fff6df;
+  border-left: 4px solid #d99a21;
+}
+
+.nhm-form-theme .pink .section-title {
+  color: #913c60;
+  background: #fff0f5;
+  border-left: 4px solid #c65b83;
+}
+
+.nhm-form-theme .cyan .section-title {
+  color: #126574;
+  background: #e8f7f9;
+  border-left: 4px solid #168b9b;
+}
+
+html[data-theme="dark"] .nhm-form-theme .blue .section-title {
+  color: #b9dafa;
+  background: #1b344e;
+  border-left-color: #60a5fa;
+}
+
+html[data-theme="dark"] .nhm-form-theme .green .section-title {
+  color: #a7e8c5;
+  background: #193a32;
+  border-left-color: #4ade80;
+}
+
+html[data-theme="dark"] .nhm-form-theme .purple .section-title {
+  color: #d2c2ff;
+  background: #302849;
+  border-left-color: #a78bfa;
+}
+
+html[data-theme="dark"] .nhm-form-theme .yellow .section-title {
+  color: #f6d68c;
+  background: #3a3020;
+  border-left-color: #fbbf24;
+}
+
+html[data-theme="dark"] .nhm-form-theme .pink .section-title {
+  color: #f4bdd0;
+  background: #3c2533;
+  border-left-color: #f472b6;
+}
+
+html[data-theme="dark"] .nhm-form-theme .cyan .section-title {
+  color: #a9eaf0;
+  background: #19353e;
+  border-left-color: #22d3ee;
+}
+
+.nhm-form-theme .section-body {
+  padding: 22px;
+}
+
+/* Responsive form grids */
+
+.nhm-form-theme .row {
+  display: grid;
+  gap: 20px 18px;
+  margin: 0 0 20px;
+}
+
+.nhm-form-theme .row:last-child {
+  margin-bottom: 0;
+}
+
+.nhm-form-theme .row.three {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.nhm-form-theme .row.four {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.nhm-form-theme .row.six {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.nhm-form-theme .row.seven {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+/* Labels */
+
+.nhm-form-theme .field {
+  min-width: 0;
+}
+
+.nhm-form-theme .field label,
+.nhm-form-theme .remarks label {
+  display: block;
+  margin-bottom: 8px;
+  color: var(--adb-text);
+  font-size: 13px;
+  font-weight: 650;
+  line-height: 1.45;
+}
+
+.nhm-form-theme .field em {
+  margin-left: 3px;
+  color: #dc3545;
+  font-style: normal;
+}
+
+/* Inputs, select boxes and textareas */
+
+.nhm-form-theme input:not([type="checkbox"]):not([type="radio"]),
+.nhm-form-theme select,
+.nhm-form-theme textarea {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  min-height: 44px;
+  padding: 10px 12px;
+
+  color: var(--adb-text);
+  background: var(--adb-input);
+  border: 1px solid var(--adb-border);
+  border-radius: 8px;
+
+  font-family: inherit;
+  font-size: 13px;
+  line-height: 1.45;
+
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.025);
+  transition:
+    border-color 0.18s ease,
+    box-shadow 0.18s ease,
+    background-color 0.18s ease,
+    transform 0.18s ease;
+}
+
+.nhm-form-theme textarea {
+  min-height: 86px;
+  resize: vertical;
+}
+
+.nhm-form-theme input::placeholder,
+.nhm-form-theme textarea::placeholder {
+  color: var(--adb-muted);
+  opacity: 0.8;
+}
+
+.nhm-form-theme input:hover:not(:disabled):not([readonly]),
+.nhm-form-theme select:hover:not(:disabled),
+.nhm-form-theme textarea:hover:not(:disabled) {
+  border-color: #8ba9bf;
+}
+
+.nhm-form-theme input:focus,
+.nhm-form-theme select:focus,
+.nhm-form-theme textarea:focus {
+  outline: none;
+  border-color: var(--adb-teal);
+  box-shadow: 0 0 0 4px var(--adb-focus);
+}
+
+.nhm-form-theme input:disabled,
+.nhm-form-theme select:disabled,
+.nhm-form-theme textarea:disabled,
+.nhm-form-theme input[readonly] {
+  color: var(--adb-muted);
+  background: var(--adb-soft);
+  cursor: not-allowed;
+  opacity: 0.95;
+}
+
+/* Calculated and read-only values */
+
+.nhm-form-theme .auto-box {
+  padding: 18px;
+  margin-bottom: 20px;
+  color: var(--adb-text);
+  background: var(--adb-soft);
+  border: 1px solid var(--adb-border);
+  border-radius: 10px;
+}
+
+.nhm-form-theme .readonly {
+  display: flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 10px 12px;
+  color: var(--adb-text);
+  background: var(--adb-soft);
+  border: 1px solid var(--adb-border);
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+
+.nhm-form-theme .auto-box .field label {
+  color: var(--adb-muted);
+}
+
+/* Tender controls */
+
+.nhm-form-theme .tender {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 105px;
+  gap: 8px;
+}
+
+/* Summary cards */
+
+.nhm-form-theme .summary {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
+  margin-top: 22px;
+}
+
+.nhm-form-theme .card {
+  min-width: 0;
+  overflow: hidden;
+  color: var(--adb-text);
+  background: var(--adb-card);
+  border: 1px solid var(--adb-border);
+  border-radius: 10px;
+  box-shadow: 0 3px 10px rgba(15, 23, 42, 0.04);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.nhm-form-theme .card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 9px 22px rgba(15, 23, 42, 0.11);
+}
+
+.nhm-form-theme .card h3 {
+  padding: 13px 15px;
+  margin: 0;
+  color: var(--adb-text);
+  background: var(--adb-soft);
+  border-bottom: 1px solid var(--adb-border);
+  font-size: 14px;
+  font-weight: 750;
+}
+
+.nhm-form-theme .sum {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 11px 15px;
+  color: var(--adb-muted);
+  border-bottom: 1px solid var(--adb-border);
+  font-size: 12px;
+}
+
+.nhm-form-theme .sum b {
+  color: var(--adb-text);
+  font-size: 13px;
+}
+
+.nhm-form-theme .sum.total {
+  color: var(--adb-text);
+  background: rgba(217, 154, 33, 0.12);
+  font-weight: 750;
+}
+
+.nhm-form-theme .progress-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px 15px 8px;
+  color: var(--adb-muted);
+  font-size: 12px;
+}
+
+.nhm-form-theme .progress {
+  height: 9px;
+  margin: 0 15px 16px;
+  overflow: hidden;
+  background: var(--adb-border);
+  border-radius: 99px;
+}
+
+.nhm-form-theme .progress span {
+  display: block;
+  height: 100%;
+  background: linear-gradient(90deg, var(--adb-teal), #45b5a7);
+  border-radius: inherit;
+  transition: width 0.3s ease;
+}
+
+.nhm-form-theme .remarks textarea {
+  width: calc(100% - 30px);
+  margin: 0 15px 15px;
+}
+
+/* Feedback and action buttons */
+
+.nhm-form-theme .message {
+  padding: 14px 16px;
+  margin-bottom: 16px;
+  border: 1px solid var(--adb-border);
+  border-radius: 8px;
+  font-size: 13px;
+}
+
+.nhm-form-theme .error-message {
+  color: #b42318;
+  background: #fff1f0;
+  border-color: #f1b6b1;
+}
+
+html[data-theme="dark"] .nhm-form-theme .error-message {
+  color: #ffb4ab;
+  background: #3b2024;
+  border-color: #784148;
+}
+
+.nhm-form-theme .bottom {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding: 26px 0 8px;
+}
+
+.nhm-form-theme .bottom button {
+  min-width: 130px;
+  min-height: 44px;
+  padding: 11px 20px;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  color: #ffffff;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(15, 23, 42, 0.12);
+  transition:
+    transform 0.18s ease,
+    box-shadow 0.18s ease,
+    filter 0.18s ease;
+}
+
+.nhm-form-theme .bottom button:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.06);
+  box-shadow: 0 8px 17px rgba(15, 23, 42, 0.18);
+}
+
+.nhm-form-theme .bottom button:active {
+  transform: translateY(0);
+}
+
+.nhm-form-theme .bottom button:focus-visible {
+  outline: 3px solid var(--adb-teal);
+  outline-offset: 3px;
+}
+
+.nhm-form-theme .save {
+  background: #145da0;
+}
+
+.nhm-form-theme .update {
+  background: #147d64;
+}
+
+.nhm-form-theme .reset {
+  background: #b93838;
+}
+
+.nhm-form-theme .back {
+  background: #475569;
+}
+
+/* Dark theme for all form surfaces */
+
+html[data-theme="dark"] .nhm-form-theme .pagebar {
+  background: linear-gradient(115deg, #10253b, #153e58 60%, #075b62);
+  border-color: #354a60;
+  border-left-color: #e5a54b;
+}
+
+html[data-theme="dark"] .nhm-form-theme .card,
+html[data-theme="dark"] .nhm-form-theme .section {
+  background: var(--adb-card);
+  border-color: var(--adb-border);
+}
+
+html[data-theme="dark"] .nhm-form-theme .card h3,
+html[data-theme="dark"] .nhm-form-theme .auto-box {
+  color: var(--adb-text);
+  background: var(--adb-soft);
+  border-color: var(--adb-border);
+}
+
+html[data-theme="dark"] .nhm-form-theme input,
+html[data-theme="dark"] .nhm-form-theme select,
+html[data-theme="dark"] .nhm-form-theme textarea {
+  color: var(--adb-text);
+  background-color: var(--adb-input);
+  border-color: var(--adb-border);
+  color-scheme: dark;
+}
+
+html[data-theme="dark"] .nhm-form-theme input:disabled,
+html[data-theme="dark"] .nhm-form-theme select:disabled,
+html[data-theme="dark"] .nhm-form-theme textarea:disabled,
+html[data-theme="dark"] .nhm-form-theme input[readonly] {
+  color: var(--adb-muted);
+  background: #202d3e;
+}
+
+html[data-theme="dark"] .nhm-form-theme .readonly {
+  color: var(--adb-text);
+  background: #202d3e;
+  border-color: var(--adb-border);
+}
+
+html[data-theme="dark"] .nhm-form-theme .sum,
+html[data-theme="dark"] .nhm-form-theme .sum b,
+html[data-theme="dark"] .nhm-form-theme .progress-head,
+html[data-theme="dark"] .nhm-form-theme .card h3 {
+  color: var(--adb-text);
+  border-color: var(--adb-border);
+}
+
+html[data-theme="dark"] .nhm-form-theme .sum.total {
+  background: #3b3322;
+}
+
+/* Responsive layout */
+
+@media (max-width: 1200px) {
+
+  .nhm-form-theme .row.six,
+  .nhm-form-theme .row.seven {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .nhm-form-theme .summary {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 900px) {
+  .nhm-form-theme .page {
+    padding: 16px;
+  }
+
+  .nhm-form-theme .section-body {
+    padding: 16px;
+  }
+
+  .nhm-form-theme .row.three,
+  .nhm-form-theme .row.four,
+  .nhm-form-theme .row.six,
+  .nhm-form-theme .row.seven {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 560px) {
+  .nhm-form-theme .page {
+    padding: 10px;
+  }
+
+  .nhm-form-theme .pagebar {
+    min-height: 76px;
+    padding: 16px;
+  }
+
+  .nhm-form-theme .pagebar h1 {
+    font-size: 22px;
+  }
+
+  .nhm-form-theme .section {
+    margin-top: 14px;
+    border-radius: 9px;
+  }
+
+  .nhm-form-theme .section-body {
+    padding: 13px;
+  }
+
+  .nhm-form-theme .row.three,
+  .nhm-form-theme .row.four,
+  .nhm-form-theme .row.six,
+  .nhm-form-theme .row.seven,
+  .nhm-form-theme .summary {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .nhm-form-theme .row {
+    gap: 15px;
+    margin-bottom: 15px;
+  }
+
+  .nhm-form-theme .bottom button {
+    flex: 1 1 100%;
+  }
+
+  .nhm-form-theme .tender {
+    grid-template-columns: minmax(0, 1fr) 90px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+  .nhm-form-theme *,
+  .nhm-form-theme *::before,
+  .nhm-form-theme *::after {
+    transition: none !important;
+    animation: none !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Darker form field borders */
+.nhm-form-theme input:not([type="checkbox"]):not([type="radio"]),
+.nhm-form-theme select,
+.nhm-form-theme textarea {
+  border: 1px solid #a3b1c2 !important;
+}
+
+/* Hover effect */
+.nhm-form-theme input:not([type="checkbox"]):not([type="radio"]):hover,
+.nhm-form-theme select:hover,
+.nhm-form-theme textarea:hover {
+  border-color: #71869d !important;
+}
+
+/* Focus effect */
+.nhm-form-theme input:focus,
+.nhm-form-theme select:focus,
+.nhm-form-theme textarea:focus {
+  border-color: #0d9488 !important;
+  box-shadow: 0 0 0 3px rgb(13 148 136 / 15%);
+  outline: none;
+}
+
+/* Dark theme */
+html[data-theme="dark"] .nhm-form-theme input,
+html[data-theme="dark"] .nhm-form-theme select,
+html[data-theme="dark"] .nhm-form-theme textarea {
+  border-color: #53657d !important;
+}
+
+html[data-theme="dark"] .nhm-form-theme input:hover,
+html[data-theme="dark"] .nhm-form-theme select:hover,
+html[data-theme="dark"] .nhm-form-theme textarea:hover {
+  border-color: #8196b0 !important;
 }

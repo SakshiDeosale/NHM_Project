@@ -2,12 +2,65 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { useSidebar } from '../../context/SidebarContext';
 import { useTheme } from '../../context/ThemeContext';
-
+import { useEffect, useState } from 'react';
 
 export default function Navbar() {
   const { toggleSidebar } = useSidebar();
   const { theme, toggleTheme } = useTheme();
 
+  const user = JSON.parse(localStorage.getItem('user') || '{}');
+
+  const userName = user.username || 'Admin';
+  const userId = user.userId || user.UserID;
+
+  const [profilePhoto, setProfilePhoto] = useState(
+    '/assets/images/avatar/avatar.jpg'
+  );
+
+  useEffect(() => {
+    let objectUrl;
+
+    const loadProfilePhoto = async () => {
+      if (!userId) return;
+
+      // Use the same storage key your login code uses for the token.
+      const token =
+        localStorage.getItem('token') ||
+        localStorage.getItem('authToken');
+
+      if (!token) {
+        console.error('Authentication token not found in localStorage.');
+        return;
+      }
+
+      try {
+        const response = await fetch(
+          `http://localhost:5000/api/users/${userId}/photo`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        if (!response.ok) {
+          throw new Error(`Photo request failed: ${response.status}`);
+        }
+
+        const blob = await response.blob();
+        objectUrl = URL.createObjectURL(blob);
+        setProfilePhoto(objectUrl);
+      } catch (error) {
+        console.error('Unable to load profile photo:', error);
+      }
+    };
+
+    loadProfilePhoto();
+
+    return () => {
+      if (objectUrl) URL.revokeObjectURL(objectUrl);
+    };
+  }, [userId]);
   return (
     <nav className="navbar admin-navbar navbar-expand bg-white">
       <div className="container-fluid px-3 px-lg-4">
@@ -104,8 +157,8 @@ export default function Navbar() {
               aria-expanded="false"
             >
               <img
-                src="/assets/images/avatar/avatar.jpg"
-                alt="Admin Hasan"
+                src={profilePhoto}
+                alt={userName}
                 className="avatar-img avatar-sm rounded-circle"
                 width="36"
                 height="36"
@@ -113,8 +166,10 @@ export default function Navbar() {
             </button>
             <ul className="dropdown-menu dropdown-menu-end shadow-sm border-0 mt-2">
               <li className="px-3 py-2 border-bottom">
-                <div className="fw-bold profile-name">Admin Hasan</div>
-                <small className="text-muted">admin@example.com</small>
+                <div className="fw-bold profile-name">{userName}</div>
+                <small className="text-muted">
+                  {user.designation || ''}
+                </small>
               </li>
               <li>
                 <Link className="dropdown-item py-2" to="/profile">

@@ -5,6 +5,9 @@ export default function Profile() {
   const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [profilePhoto, setProfilePhoto] = useState(
+    '/assets/images/avatar/avatar.jpg'
+  );
 
   useEffect(() => {
     const controller = new AbortController();
@@ -49,6 +52,36 @@ export default function Profile() {
 
     return () => controller.abort();
   }, []);
+
+  useEffect(() => {
+    if (!profile?.userId) return;
+
+    let objectUrl;
+
+    const loadPhoto = async () => {
+      try {
+        const response = await apiFetch(
+          `http://localhost:5000/api/users/${profile.userId}/photo`
+        );
+
+        if (!response.ok) {
+          throw new Error('Profile photo unavailable');
+        }
+
+        const blob = await response.blob();
+        objectUrl = URL.createObjectURL(blob);
+        setProfilePhoto(objectUrl);
+      } catch (error) {
+        console.error('Unable to load profile photo:', error);
+      }
+    };
+
+    loadPhoto();
+
+    return () => {
+      if (objectUrl) URL.revokeObjectURL(objectUrl);
+    };
+  }, [profile?.userId]);
 
   if (loading) {
     return (
@@ -112,17 +145,22 @@ export default function Profile() {
 
         <div className="p-4">
           <div className="d-flex align-items-center gap-3 mb-4">
-            <div
-              className="rounded-circle bg-light d-flex align-items-center justify-content-center"
+            <img
+              src={profilePhoto}
+              alt={`${fullName}'s profile`}
+              className="rounded-circle"
+              width="80"
+              height="80"
               style={{
-                width: '80px',
-                height: '80px',
                 minWidth: '80px',
+                objectFit: 'cover',
                 border: '2px solid #dee2e6'
               }}
-            >
-              <i className="bi bi-person-fill fs-1 text-secondary" />
-            </div>
+              onError={(e) => {
+                e.currentTarget.onerror = null;
+                e.currentTarget.src = '/assets/images/avatar/avatar.jpg';
+              }}
+            />
 
             <div>
               <h3 className="h5 mb-1">{fullName}</h3>
