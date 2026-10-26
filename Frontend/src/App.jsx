@@ -39,6 +39,7 @@ import Login from './pages/Login';
 import NotFound from './pages/NotFound';
 import ServerError from './pages/ServerError';
 import OrganizationStructure from "./pages/OrganizationStructure.jsx";
+import SEProtectedRoute from './components/layout/SEProtectedRoute';
 
 export default function App() {
   return (
@@ -52,29 +53,70 @@ export default function App() {
               <Route path="users" element={<Users />} />
              
               <Route path="profile" element={<Profile />} />
-              <Route path="settings" element={<Settings />} />
-              <Route path="setting/circle" element={<CircleSettings />} />
+
+              <Route
+                path="settings"
+                element={
+                  <SEProtectedRoute>
+                    <Settings />
+                  </SEProtectedRoute>
+                }
+              />
+
+              <Route
+                path="setting/circle"
+                element={
+                  <SEProtectedRoute>
+                    <CircleSettings />
+                  </SEProtectedRoute>
+                }
+              />
 
               <Route
                 path="setting/district"
-                element={<DistrictSettings />}
+                element={
+                  <SEProtectedRoute>
+                    <DistrictSettings />
+                  </SEProtectedRoute>
+                }
               />
+
               <Route
                 path="setting/scheme"
-                element={<SchemeSettings />}
+                element={
+                  <SEProtectedRoute>
+                    <SchemeSettings />
+                  </SEProtectedRoute>
+                }
               />
+
               <Route
                 path="setting/mla"
-                element={<MLASettings />}
+                element={
+                  <SEProtectedRoute>
+                    <MLASettings />
+                  </SEProtectedRoute>
+                }
               />
+
               <Route
                 path="setting/user"
-                element={<UserSettings />}
+                element={
+                  <SEProtectedRoute>
+                    <UserSettings />
+                  </SEProtectedRoute>
+                }
               />
+
               <Route
                 path="setting/contractor"
-                element={<ContractorSettings />}
+                element={
+                  <SEProtectedRoute>
+                    <ContractorSettings />
+                  </SEProtectedRoute>
+                }
               />
+
               <Route path="charts" element={<Charts />} />
               <Route path="report" element={<Report />} />
               <Route path="report/:category" element={<ReportSchemes />} />

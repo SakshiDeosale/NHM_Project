@@ -1,111 +1,9 @@
 import { useEffect, useMemo, useState } from "react";
+import { apiFetch } from "../../utils/api";
 
 import { useNavigate } from "react-router-dom";
 import SuccessModal from "./SuccessModal";
-import { apiFetch } from "../../utils/api";
 
-
-const districts = [
-
-    "Ahilyanagar",
-
-    "Akola",
-
-    "Amravati",
-
-    "Beed",
-
-    "Bhandara",
-
-    "Buldhana",
-
-    "Chandrapur",
-
-    "Chhatrapati Sambhajinagar",
-
-    "Dharashiv",
-
-    "Dhule",
-
-    "Gadchiroli",
-
-    "Gondia",
-
-    "Hingoli",
-
-    "Jalgaon",
-
-    "Jalna",
-
-    "Kolhapur",
-
-    "Latur",
-
-    "Mumbai City",
-
-    "Mumbai Suburban",
-
-    "Nagpur",
-
-    "Nanded",
-
-    "Nandurbar",
-
-    "Nashik",
-
-    "Palghar",
-
-    "Parbhani",
-
-    "Pune",
-
-    "Raigad",
-
-    "Ratnagiri",
-
-    "Sangli",
-
-    "Satara",
-
-    "Sindhudurg",
-
-    "Solapur",
-
-    "Thane",
-
-    "Wardha",
-
-    "Washim",
-
-    "Yavatmal",
-
-];
-
-const eeNames = ["EE1", "EE2", "EE3", "EE4", "EE5"];
-
-const deNames = ["DE1", "DE2", "DE3", "DE4", "DE5"];
-
-const jeNames = ["JE1", "JE2", "JE3", "JE4", "JE5"];
-
-const circleNames = [
-
-    "Konkan",
-
-    "Pune",
-
-    "Nashik",
-
-    "Latur",
-
-    "Aurangabad",
-
-    "Akola",
-
-    "Nagpur",
-
-    "Nagpur (Electrical)",
-
-];
 
 const initial = {
 
@@ -297,7 +195,7 @@ const validateWorkId = (workId) => {
 
 };
 
-export default function PMJVKForm() {
+export default function ADBForm() {
 
     // success modal state
 
@@ -308,15 +206,108 @@ export default function PMJVKForm() {
     const [form, setForm] = useState(initial);
 
     const [message, setMessage] = useState("");
+    const [circles, setCircles] = useState([]);
+    const [districtOptions, setDistrictOptions] = useState([]);
+    const [engineeringUsers, setEngineeringUsers] = useState([]);
+    const [loadingDropdowns, setLoadingDropdowns] = useState(false);
 
     // MLA data fetched from SQL Server
 
     const [mlaNames, setMlaNames] = useState([]);
 
     const [mpNames, setMpNames] = useState([]);
+
     const selectedScheme = { api: "pmjvk", title: "PMJVK" };
     const schemeApiUrl = "http://localhost:5000/api/forms";
     const schemeQuery = `?scheme=${encodeURIComponent(selectedScheme.api)}`;
+
+    const selectedCircle = circles.find(
+        (circle) =>
+            String(circle.CircleName).trim().toLowerCase() ===
+            String(form.circle).trim().toLowerCase()
+    );
+
+    const filteredDistricts = districtOptions.filter(
+        (district) =>
+            String(district.CircleID) === String(selectedCircle?.CircleID)
+    );
+
+    const eeUsers = engineeringUsers.filter(
+        (user) =>
+            String(user.Designation).trim().toLowerCase() === "executive engineer" &&
+            String(user.Circle || "").trim().toLowerCase() ===
+            String(form.circle).trim().toLowerCase()
+    );
+
+    const deUsers = engineeringUsers.filter(
+        (user) =>
+            String(user.Designation).trim().toLowerCase() === "deputy engineer" &&
+            String(user.Circle || "").trim().toLowerCase() ===
+            String(form.circle).trim().toLowerCase() &&
+            String(user.District || "").trim().toLowerCase() ===
+            String(form.district).trim().toLowerCase()
+    );
+
+    const jeUsers = engineeringUsers.filter(
+        (user) =>
+            String(user.Designation).trim().toLowerCase() === "junior engineer" &&
+            String(user.Circle || "").trim().toLowerCase() ===
+            String(form.circle).trim().toLowerCase() &&
+            String(user.District || "").trim().toLowerCase() ===
+            String(form.district).trim().toLowerCase()
+    );
+
+
+    useEffect(() => {
+        const loadDropdownData = async () => {
+            setLoadingDropdowns(true);
+
+            try {
+                const [circleRes, districtRes, usersRes] = await Promise.all([
+                    apiFetch("http://localhost:5000/api/circles"),
+                    apiFetch("http://localhost:5000/api/districts"),
+                    apiFetch("http://localhost:5000/api/users"),
+                ]);
+
+                if (!circleRes.ok || !districtRes.ok || !usersRes.ok) {
+                    throw new Error("Unable to load Circle, District, or Engineer data.");
+                }
+
+                const [circleData, districtData, usersData] = await Promise.all([
+                    circleRes.json(),
+                    districtRes.json(),
+                    usersRes.json(),
+                ]);
+
+                setCircles(Array.isArray(circleData) ? circleData : []);
+                setDistrictOptions(Array.isArray(districtData) ? districtData : []);
+
+                setEngineeringUsers(
+                    (Array.isArray(usersData) ? usersData : []).filter((user) => {
+                        const designation = String(user.Designation || "").trim().toLowerCase();
+
+                        return [
+                            "executive engineer",
+                            "deputy engineer",
+                            "junior engineer",
+                        ].includes(designation) && (
+                                user.IsActive === true ||
+                                user.IsActive === 1 ||
+                                user.IsActive === "1"
+                            );
+                    })
+                );
+            } catch (error) {
+                console.error("Dropdown data loading error:", error);
+                setMessage(error.message || "Unable to load dropdown data.");
+            } finally {
+                setLoadingDropdowns(false);
+            }
+        };
+
+        loadDropdownData();
+    }, []);
+
 
     useEffect(() => {
 
@@ -656,27 +647,56 @@ export default function PMJVKForm() {
 
                                     </Field>
 
-                                    <Field label="District" required>
 
+                                    <Field label="Circle" required>
                                         <select
-
-                                            value={form.district}
-
-                                            onChange={(e) => set("district", e.target.value)}
-
+                                            value={form.circle}
+                                            onChange={(e) => {
+                                                set("circle", e.target.value);
+                                                set("district", "");
+                                                set("deName", "");
+                                                set("jeName", "");
+                                            }}
+                                            required
+                                            disabled={loadingDropdowns}
                                         >
+                                            <option value="">
+                                                {loadingDropdowns ? "Loading circles..." : "Select Circle"}
+                                            </option>
 
-                                            <option key="district-placeholder" value="">Select District</option>
-
-                                            {districts.map((x) => (
-
-                                                <option key={x} value={x}>{x}</option>
-
+                                            {circles.map((circle) => (
+                                                <option key={circle.CircleID} value={circle.CircleName}>
+                                                    {circle.CircleName}
+                                                </option>
                                             ))}
-
                                         </select>
-
                                     </Field>
+
+                                    <Field label="District" required>
+                                        <select
+                                            value={form.district}
+                                            onChange={(e) => {
+                                                set("district", e.target.value);
+                                                set("deName", "");
+                                                set("jeName", "");
+                                            }}
+                                            required
+                                            disabled={!form.circle || loadingDropdowns}
+                                        >
+                                            <option value="">
+                                                {!form.circle
+                                                    ? "Select Circle First"
+                                                    : "Select District"}
+                                            </option>
+
+                                            {filteredDistricts.map((district) => (
+                                                <option key={district.DistrictID} value={district.DistrictName}>
+                                                    {district.DistrictName}
+                                                </option>
+                                            ))}
+                                        </select>
+                                    </Field>
+
 
                                     <Field label="Year of Approval" required>
 
@@ -816,11 +836,19 @@ export default function PMJVKForm() {
 
                                             <option key="ee-placeholder" value="">Select EE Name</option>
 
-                                            {eeNames.map((x) => (
+                                            {eeUsers.map((user) => {
+                                                const name = [
+                                                    user.FirstName,
+                                                    user.MiddleName,
+                                                    user.Surname,
+                                                ].filter(Boolean).join(" ");
 
-                                                <option key={x} value={x}>{x}</option>
-
-                                            ))}
+                                                return (
+                                                    <option key={user.UserID} value={name}>
+                                                        {name}
+                                                    </option>
+                                                );
+                                            })}
 
                                         </select>
 
@@ -850,11 +878,19 @@ export default function PMJVKForm() {
 
                                             <option key="de-placeholder" value="">Select DE Name</option>
 
-                                            {deNames.map((x) => (
+                                            {deUsers.map((user) => {
+                                                const name = [
+                                                    user.FirstName,
+                                                    user.MiddleName,
+                                                    user.Surname,
+                                                ].filter(Boolean).join(" ");
 
-                                                <option key={x} value={x}>{x}</option>
-
-                                            ))}
+                                                return (
+                                                    <option key={user.UserID} value={name}>
+                                                        {name}
+                                                    </option>
+                                                );
+                                            })}
 
                                         </select>
 
@@ -884,11 +920,19 @@ export default function PMJVKForm() {
 
                                             <option key="je-placeholder" value="">Select JE Name</option>
 
-                                            {jeNames.map((x) => (
+                                            {jeUsers.map((user) => {
+                                                const name = [
+                                                    user.FirstName,
+                                                    user.MiddleName,
+                                                    user.Surname,
+                                                ].filter(Boolean).join(" ");
 
-                                                <option key={x} value={x}>{x}</option>
-
-                                            ))}
+                                                return (
+                                                    <option key={user.UserID} value={name}>
+                                                        {name}
+                                                    </option>
+                                                );
+                                            })}
 
                                         </select>
 
@@ -1039,28 +1083,6 @@ export default function PMJVKForm() {
                                             required
 
                                         />
-
-                                    </Field>
-
-                                    <Field label="Circle" required>
-
-                                        <select
-
-                                            value={form.circle}
-
-                                            onChange={(e) => set("circle", e.target.value)}
-
-                                        >
-
-                                            <option key="circle-placeholder" value="">Select Circle</option>
-
-                                            {circleNames.map((x) => (
-
-                                                <option key={x} value={x}>{x}</option>
-
-                                            ))}
-
-                                        </select>
 
                                     </Field>
 

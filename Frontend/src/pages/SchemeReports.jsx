@@ -200,25 +200,65 @@ export default function SchemeReports() {
     // Reset Default also shows every available database column.
     const handleResetColumns = () => setSelectedColumns(null);
 
+
     useEffect(() => {
         const controller = new AbortController();
 
         const loadOptions = async () => {
             setOptionsLoading(true);
-            setError('');
 
             try {
+                const params = new URLSearchParams();
+                params.set('scheme', scheme);
+
+                // Send all currently selected filters to the backend.
+                Object.entries(filters).forEach(([key, value]) => {
+                    if (value !== '' && value !== null && value !== undefined) {
+                        params.set(key, String(value));
+                    }
+                });
+
                 const response = await apiFetch(
-                    `${API_BASE_URL}/options?scheme=${encodeURIComponent(scheme)}`,
+                    `${API_BASE_URL}/options?${params.toString()}`,
                     { signal: controller.signal }
                 );
 
                 if (!response.ok) {
-                    throw new Error('Could not load dropdown options from the database.');
+                    const body = await response.json().catch(() => ({}));
+                    throw new Error(
+                        body.message || 'Could not load dropdown options.'
+                    );
                 }
 
                 const data = await response.json();
+
+                if (controller.signal.aborted) return;
+
                 setOptions(data);
+
+                // Clear selected values that are no longer valid.
+                setFilters((previous) => {
+                    const updated = { ...previous };
+                    let changed = false;
+
+                    filterFields.forEach((field) => {
+                        const selectedValue = updated[field.key];
+                        const values = data[field.optionsKey] || [];
+
+                        if (
+                            selectedValue &&
+                            !values.some(
+                                (option) =>
+                                    String(option) === String(selectedValue)
+                            )
+                        ) {
+                            updated[field.key] = '';
+                            changed = true;
+                        }
+                    });
+
+                    return changed ? updated : previous;
+                });
             } catch (err) {
                 if (err.name !== 'AbortError') {
                     setError(err.message || 'Failed to load dropdown options.');
@@ -231,17 +271,21 @@ export default function SchemeReports() {
         };
 
         loadOptions();
+
         return () => controller.abort();
-    }, []);
+    }, [filters, scheme]);
+
 
     useEffect(() => {
         const controller = new AbortController();
 
         const loadColumns = async () => {
             try {
-                const response = await apiFetch(`${API_BASE_URL}/columns`, {
-                    signal: controller.signal
-                });
+
+                const response = await apiFetch(
+                    `${API_BASE_URL}/columns?scheme=${encodeURIComponent(scheme)}`,
+                    { signal: controller.signal }
+                );
 
                 if (!response.ok) {
                     throw new Error('Could not load report columns from the database.');
@@ -273,12 +317,19 @@ export default function SchemeReports() {
         return () => controller.abort();
     }, []);
 
+
     const handleChange = (field, value) => {
-        setFilters((prev) => ({
-            ...prev,
+        setFilters((previous) => ({
+            ...previous,
             [field]: value
         }));
+
+        setPage(1);
+        setReportData([]);
+        setHasSearched(false);
+        setError('');
     };
+
 
     const fetchReport = async (
         currentPage = 1,

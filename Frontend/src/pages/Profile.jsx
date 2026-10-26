@@ -1,31 +1,91 @@
-
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { apiFetch } from '../utils/api';
 
 export default function Profile() {
-  // Static sample profile data
-  const profile = {
-    userID: 1,
-    firstName: 'Rahul',
-    middleName: 'Mahesh',
-    surname: 'Patil',
-    username: 'ExecutiveEngineerPune1',
-    mobile: '9876543210',
-    email: 'rahul.patil@example.com',
-    designation: 'Executive Engineer',
-    circle: 'Pune Circle',
-    district: 'Pune',
-    status: 'Active',
-  };
+  const [profile, setProfile] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
 
-  const fullName = [
-    profile.firstName,
-    profile.middleName,
-    profile.surname,
-  ].join(' ');
+  useEffect(() => {
+    const controller = new AbortController();
+
+    const loadProfile = async () => {
+      try {
+        setLoading(true);
+        setError('');
+
+        const response = await apiFetch(
+          'http://localhost:5000/api/auth/me',
+          { signal: controller.signal }
+        );
+
+        if (!response.ok) {
+          const body = await response.json().catch(() => ({}));
+          throw new Error(
+            body.message || 'Failed to load profile.'
+          );
+        }
+
+        const result = await response.json();
+
+        if (!controller.signal.aborted) {
+          setProfile(result.user);
+        }
+      } catch (err) {
+        if (
+          err.name !== 'AbortError' &&
+          !controller.signal.aborted
+        ) {
+          setError(err.message || 'Unable to load profile.');
+        }
+      } finally {
+        if (!controller.signal.aborted) {
+          setLoading(false);
+        }
+      }
+    };
+
+    loadProfile();
+
+    return () => controller.abort();
+  }, []);
+
+  if (loading) {
+    return (
+      <section className="panel p-4">
+        <p className="mb-0">Loading your profile...</p>
+      </section>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="alert alert-danger" role="alert">
+        {error}
+      </div>
+    );
+  }
+
+  if (!profile) {
+    return (
+      <div className="alert alert-warning">
+        Profile information is unavailable.
+      </div>
+    );
+  }
+
+  const fullName =
+    profile.fullName ||
+    [
+      profile.firstName,
+      profile.middleName,
+      profile.surname
+    ].filter(Boolean).join(' ') ||
+    profile.username ||
+    'User';
 
   return (
     <>
-      {/* Page Heading */}
       <div className="page-heading">
         <div className="page-heading-copy">
           <span className="page-icon">
@@ -41,17 +101,16 @@ export default function Profile() {
         </div>
       </div>
 
-      {/* Profile Information */}
       <section className="panel mt-3">
         <div className="panel-header">
           <h2 className="h5 mb-0 section-title">
-            <i className="bi bi-person-vcard me-2" aria-hidden="true" />
+            <i className="bi bi-person-vcard me-2"
+              aria-hidden="true" />
             Profile Information
           </h2>
         </div>
 
         <div className="p-4">
-          {/* Profile Header */}
           <div className="d-flex align-items-center gap-3 mb-4">
             <div
               className="rounded-circle bg-light d-flex align-items-center justify-content-center"
@@ -59,7 +118,7 @@ export default function Profile() {
                 width: '80px',
                 height: '80px',
                 minWidth: '80px',
-                border: '2px solid #dee2e6',
+                border: '2px solid #dee2e6'
               }}
             >
               <i className="bi bi-person-fill fs-1 text-secondary" />
@@ -68,24 +127,27 @@ export default function Profile() {
             <div>
               <h3 className="h5 mb-1">{fullName}</h3>
               <p className="text-muted mb-2">
-                {profile.designation}
+                {profile.designation || '-'}
               </p>
-              <span className="badge text-bg-success">
-                {profile.status}
+
+              <span className={`badge ${profile.status === 'Active'
+                  ? 'text-bg-success'
+                  : 'text-bg-secondary'
+                }`}>
+                {profile.status || 'Unknown'}
               </span>
             </div>
           </div>
 
           <hr />
 
-          {/* Important Details */}
           <div className="row g-4 mt-1">
             <div className="col-12 col-md-6">
               <label className="text-muted small mb-1">
                 User ID
               </label>
               <p className="fw-semibold mb-0">
-                {profile.userID}
+                {profile.userId ?? '-'}
               </p>
             </div>
 
@@ -94,7 +156,7 @@ export default function Profile() {
                 Username
               </label>
               <p className="fw-semibold mb-0">
-                {profile.username}
+                {profile.username || '-'}
               </p>
             </div>
 
@@ -103,7 +165,7 @@ export default function Profile() {
                 Mobile Number
               </label>
               <p className="fw-semibold mb-0">
-                {profile.mobile}
+                {profile.mobile || '-'}
               </p>
             </div>
 
@@ -112,7 +174,7 @@ export default function Profile() {
                 Email Address
               </label>
               <p className="fw-semibold mb-0">
-                {profile.email}
+                {profile.email || '-'}
               </p>
             </div>
 
@@ -121,7 +183,7 @@ export default function Profile() {
                 Designation
               </label>
               <p className="fw-semibold mb-0">
-                {profile.designation}
+                {profile.designation || '-'}
               </p>
             </div>
 
@@ -130,7 +192,7 @@ export default function Profile() {
                 Circle
               </label>
               <p className="fw-semibold mb-0">
-                {profile.circle}
+                {profile.circle || '-'}
               </p>
             </div>
 
@@ -139,7 +201,7 @@ export default function Profile() {
                 District
               </label>
               <p className="fw-semibold mb-0">
-                {profile.district}
+                {profile.district || '-'}
               </p>
             </div>
           </div>
