@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { apiFetch } from "../../utils/api";
+import API_URL, { apiFetch } from "../../utils/api";
 
-const API_URL = 'http://localhost:5000/api/mlamps';
+const MLAMPS_API = `${API_URL}/mlamps`;
 
 const categoryOptions = {
     Amdar: ['VidhanSabha MLA', 'Vidhan Parishad MLA'],
@@ -29,7 +29,7 @@ export default function MLASettings() {
     const fetchMembers = useCallback(async () => {
         try {
             setError('');
-            const response = await apiFetch(API_URL);
+            const response = await apiFetch(MLAMPS_API);
             const data = await response.json();
 
             if (!response.ok) {
@@ -78,7 +78,7 @@ export default function MLASettings() {
 
             const isEditing = editingId !== null;
             const response = await apiFetch(
-                isEditing ? `${API_URL}/${editingId}` : API_URL,
+                isEditing ? `${MLAMPS_API}/${editingId}` : MLAMPS_API,
                 {
                     method: isEditing ? 'PUT' : 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -141,7 +141,7 @@ export default function MLASettings() {
             setError('');
             setMessage('');
 
-            const response = await apiFetch(`${API_URL}/${item.ID}`, {
+            const response = await apiFetch(`${MLAMPS_API}/${item.ID}`, {
                 method: 'DELETE',
             });
             const data = await response.json();

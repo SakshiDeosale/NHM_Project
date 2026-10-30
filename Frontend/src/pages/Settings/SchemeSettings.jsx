@@ -1,8 +1,8 @@
 
 import React, { useState, useEffect } from 'react';
-import { apiFetch } from "../../utils/api";
+import API_URL, { apiFetch } from "../../utils/api";
 
-const API_URL = 'http://localhost:5000/api/schemes';
+const SCHEMES_API = `${API_URL}/schemes`;
 
 export default function SchemeSettings() {
     const [scheme, setScheme] = useState('');
@@ -17,7 +17,7 @@ export default function SchemeSettings() {
     // Fetch schemes from SQL Server
     const fetchSchemes = async () => {
         try {
-            const response = await apiFetch(API_URL);
+            const response = await apiFetch(SCHEMES_API);
 
             if (!response.ok) {
                 throw new Error('Failed to fetch schemes.');
@@ -53,7 +53,7 @@ export default function SchemeSettings() {
             const isEditing = editingId !== null;
 
             const response = await apiFetch(
-                isEditing ? `${API_URL}/${editingId}` : API_URL,
+                isEditing ? `${SCHEMES_API}/${editingId}` : SCHEMES_API,
                 {
                     method: isEditing ? 'PUT' : 'POST',
                     headers: {
@@ -114,7 +114,7 @@ export default function SchemeSettings() {
             setError('');
             setMessage('');
 
-            const response = await apiFetch(`${API_URL}/${item.SchemeID}`, {
+            const response = await apiFetch(`${SCHEMES_API}/${item.SchemeID}`, {
                 method: 'DELETE',
             });
 

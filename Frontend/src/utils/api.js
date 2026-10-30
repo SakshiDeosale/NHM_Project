@@ -1,4 +1,15 @@
 
+const API_BASE_URL = import.meta.env.VITE_API_URL;
+
+if (!API_BASE_URL) {
+    throw new Error("VITE_API_URL is not configured");
+}
+
+export const API_URL =
+    `${API_BASE_URL.replace(/\/+$/, "")}/api`;
+
+export default API_URL;
+
 const getAuthToken = () =>
     localStorage.getItem("token") ||
     sessionStorage.getItem("token");
@@ -15,7 +26,6 @@ export async function apiFetch(url, options = {}) {
     const headers = new Headers(options.headers || {});
     const token = getAuthToken();
 
-    // Attach JWT automatically when available.
     if (token) {
         headers.set("Authorization", `Bearer ${token}`);
     }
@@ -25,7 +35,6 @@ export async function apiFetch(url, options = {}) {
         headers,
     });
 
-    // Expired, invalid, or missing token on a protected endpoint.
     if (response.status === 401) {
         clearAuthData();
 

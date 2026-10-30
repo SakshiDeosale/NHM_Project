@@ -35,7 +35,7 @@ export default function Navbar() {
 
       try {
         const response = await fetch(
-          `http://localhost:5000/api/users/${userId}/photo`,
+          `http://${API_URL}/api/users/${userId}/photo`,
           {
             headers: {
               Authorization: `Bearer ${token}`,

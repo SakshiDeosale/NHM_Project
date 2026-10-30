@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { apiFetch } from "../../utils/api";
+import API_URL, { apiFetch } from "../../utils/api";
 
-const API_URL = 'http://localhost:5000/api/contractors';
+const CONTRACTORS_API = `${API_URL}/contractors`;
 
 const initialForm = {
     sourceSheet: '',
@@ -55,7 +55,7 @@ export default function ContractorSettings() {
     const fetchContractors = useCallback(async () => {
         try {
             setError('');
-            const response = await apiFetch(API_URL);
+            const response = await apiFetch(CONTRACTORS_API);
             const data = await response.json();
             if (!response.ok) {
                 throw new Error(data.message || 'Failed to fetch contractors.');
@@ -111,7 +111,7 @@ export default function ContractorSettings() {
             };
 
             const response = await apiFetch(
-                isEditing ? `${API_URL}/${editingId}` : API_URL,
+                isEditing ? `${CONTRACTORS_API}/${editingId}` : CONTRACTORS_API,
                 {
                     method: isEditing ? 'PUT' : 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -156,7 +156,7 @@ export default function ContractorSettings() {
         try {
             setError('');
             setMessage('');
-            const response = await apiFetch(`${API_URL}/${item.ID}`, { method: 'DELETE' });
+            const response = await apiFetch(`${CONTRACTORS_API}/${item.ID}`, { method: 'DELETE' });
             const data = await response.json();
 
             if (!response.ok) {

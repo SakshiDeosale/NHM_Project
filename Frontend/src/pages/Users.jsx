@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { apiFetch } from "../utils/api";
-const API_URL = 'http://localhost:5000/api/users';
+import API_URL, { apiFetch } from "../utils/api";
+const USERS_API = `${API_URL}/users`;
 
 function UserPhoto({ userId, apiUrl }) {
   const [photoUrl, setPhotoUrl] = useState("");
@@ -77,7 +77,7 @@ export default function Users() {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const response = await apiFetch(API_URL);
+        const response = await apiFetch(USERS_API);
         const data = await response.json();
 
         if (!response.ok) {
@@ -198,7 +198,7 @@ export default function Users() {
                       {user.HasPhoto ? (
                         <UserPhoto
                           userId={user.UserID}
-                          apiUrl={API_URL}
+                          apiUrl={USERS_API}
                         />
                       ) : (
                         <span className="text-muted small">

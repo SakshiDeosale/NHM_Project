@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import API_URL, { apiFetch } from "../utils/api";
 
 export default function Login() {
   const [username, setUsername] = useState('');
@@ -16,8 +17,7 @@ export default function Login() {
     setLoading(true);
 
     try {
-      const response = await fetch(
-        'http://localhost:5000/api/auth/login',
+      const response = await apiFetch(`${API_URL}/auth/login`,
         {
           method: 'POST',
           headers: {
@@ -61,21 +61,19 @@ export default function Login() {
       const role = data.user.designation;
 
       const roleRoutes = {
-        'Superintending Engineer': '/superintending-engineer',
-        'Executive Engineer': '/executive-engineer',
-        'Deputy Engineer': '/deputy-engineer',
-        'Junior Engineer': '/junior-engineer',
-        MLA: '/mla',
-        MP: '/mp',
-        Contractor: '/contractor',
-
-        // Include this only if Senior Clerk is an authorized role.
-        'Senior Clerk': '/unauthorized',
+        'Superintending Engineer': '/',
+        'Executive Engineer': '/',
+        'Deputy Engineer': '/',
+        'Junior Engineer': '/',
+        MLA: '/',
+        MP: '/',
+        Contractor: '/',
+        'Senior Clerk': '/',
       };
 
       const destination = roleRoutes[role] || '/unauthorized';
 
-      navigate('/', { replace: true });
+      navigate(destination, { replace: true });
     } catch (err) {
       console.error('Login error:', err);
       setError('Unable to connect to the server. Please try again.');

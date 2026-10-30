@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { apiFetch } from "../../utils/api";
+import API_URL, { apiFetch } from "../../utils/api";
 
-const API_URL = "http://localhost:5000/api/users";
+const USERS_API = `${API_URL}/users`;
 
 // const getAuthToken = () =>
 //     localStorage.getItem("token") ||
@@ -14,10 +14,11 @@ const API_URL = "http://localhost:5000/api/users";
 //         ? { Authorization: `Bearer ${token}` }
 //         : {};
 // };
-const CIRCLES_URL = "http://localhost:5000/api/circles";
-const DISTRICTS_URL = "http://localhost:5000/api/districts";
+const CIRCLES_URL = `${API_URL}/circles`;
+const DISTRICTS_URL = `${API_URL}/districts`;
 
 const designations = [
+    "Superintending Engineer",
     "Executive Engineer",
     "Deputy Engineer",
     "Junior Engineer",
@@ -144,7 +145,7 @@ export default function UserSettings() {
         try {
             setLoadingUsers(true);
 
-            const response = await apiFetch(API_URL);
+            const response = await apiFetch(USERS_API);
             const data = await response.json();
 
             if (!response.ok) {
@@ -172,7 +173,7 @@ export default function UserSettings() {
                 usersWithPhotos.map(async (user) => {
                     try {
                         const response = await apiFetch(
-                            `${API_URL}/${user.UserID}/photo`
+                            `${USERS_API}/${user.UserID}/photo`
                         );
 
                         if (!response.ok) {
@@ -295,7 +296,7 @@ export default function UserSettings() {
         }
 
         const isEditing = editingId !== null;
-        const url = isEditing ? `${API_URL}/${editingId}` : API_URL;
+        const url = isEditing ? `${USERS_API}/${editingId}` : USERS_API;
 
         try {
             setSaving(true);

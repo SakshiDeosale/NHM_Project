@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { apiFetch } from '../utils/api';
+import API_URL, { apiFetch } from '../utils/api';
 
 export default function Profile() {
   const [profile, setProfile] = useState(null);
@@ -18,7 +18,7 @@ export default function Profile() {
         setError('');
 
         const response = await apiFetch(
-          'http://localhost:5000/api/auth/me',
+          `${API_URL}/auth/me`,
           { signal: controller.signal }
         );
 
@@ -61,7 +61,7 @@ export default function Profile() {
     const loadPhoto = async () => {
       try {
         const response = await apiFetch(
-          `http://localhost:5000/api/users/${profile.userId}/photo`
+          `${API_URL}/users/${profile.userId}/photo`
         );
 
         if (!response.ok) {

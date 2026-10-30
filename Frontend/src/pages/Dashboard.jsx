@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { apiFetch } from "../utils/api";
+import API_URL, { apiFetch } from "../utils/api";
 
 const circles = [
   { id: "konkan", name: "Konkan", role: "EE", color: "circle-konkan", icon: "bi-water" },
@@ -26,7 +26,7 @@ export default function Dashboard() {
         setError("");
 
         const response = await apiFetch(
-          "http://localhost:5000/api/dashboard/scheme-status",
+          `${API_URL}/dashboard/scheme-status`,
           {
             method: "GET",
             cache: "no-store",

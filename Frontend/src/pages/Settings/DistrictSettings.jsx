@@ -1,9 +1,9 @@
 
 import React, { useState, useEffect } from 'react';
-import { apiFetch } from "../../utils/api";
+import API_URL, { apiFetch } from "../../utils/api";
 
-const DISTRICT_API = 'http://localhost:5000/api/districts';
-const CIRCLE_API = 'http://localhost:5000/api/circles';
+const DISTRICT_API = `${API_URL}/districts`;
+const CIRCLE_API = `${API_URL}/circles`;
 
 export default function DistrictSettings() {
     const [district, setDistrict] = useState('');

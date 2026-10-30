@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { apiFetch } from "../../utils/api";
+import API_URL, { apiFetch } from "../../utils/api";
 
 import { useNavigate } from "react-router-dom";
 import SuccessModal from "./SuccessModal";
@@ -219,7 +219,7 @@ export default function ADBForm() {
     const [mpNames, setMpNames] = useState([]);
 
     const selectedScheme = { api: "adb", title: "ADB" };
-    const schemeApiUrl = "http://localhost:5000/api/forms";
+    const schemeApiUrl = `${API_URL}/forms`;
     const schemeQuery = `?scheme=${encodeURIComponent(selectedScheme.api)}`;
 
     const selectedCircle = circles.find(
@@ -265,9 +265,9 @@ export default function ADBForm() {
 
             try {
                 const [circleRes, districtRes, usersRes] = await Promise.all([
-                    apiFetch("http://localhost:5000/api/circles"),
-                    apiFetch("http://localhost:5000/api/districts"),
-                    apiFetch("http://localhost:5000/api/users"),
+                    apiFetch(`${API_URL}/circles`),
+                    apiFetch(`${API_URL}/districts`),
+                    apiFetch(`${API_URL}/users`),
                 ]);
 
                 if (!circleRes.ok || !districtRes.ok || !usersRes.ok) {
@@ -312,7 +312,7 @@ export default function ADBForm() {
 
     useEffect(() => {
 
-        apiFetch("http://localhost:5000/api/mlamps")
+        apiFetch(`${API_URL}/mlamps`)
             .then((res) => {
                 if (!res.ok) throw new Error("Failed to load MLA/MP records");
                 return res.json();
@@ -392,7 +392,7 @@ export default function ADBForm() {
 
             try {
 
-                const response = await apiFetch("http://localhost:5000/api/contractors");
+                const response = await apiFetch(`${API_URL}/contractors`);
 
                 if (!response.ok) {
 

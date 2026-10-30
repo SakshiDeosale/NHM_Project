@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { apiFetch } from "../utils/api";
+import API_URL, { apiFetch } from "../utils/api";
 
-const API_BASE_URL = 'http://localhost:5000/api/reports';
+const API_BASE_URL = `${API_URL}/reports`;
 
 const priorityColumns = [
     { key: 'ProjectID', label: 'Project ID' },

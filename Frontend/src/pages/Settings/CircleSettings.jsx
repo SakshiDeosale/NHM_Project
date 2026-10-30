@@ -1,8 +1,8 @@
 
 import React, { useState, useEffect } from 'react';
-import { apiFetch } from "../../utils/api";
+import API_URL, { apiFetch } from "../../utils/api";
 
-const API_URL = 'http://localhost:5000/api/circles';
+const CIRCLES_API = `${API_URL}/circles`;
 
 export default function CircleSettings() {
     const [circle, setCircle] = useState('');
@@ -15,7 +15,7 @@ export default function CircleSettings() {
 
     const fetchCircles = async () => {
         try {
-            const response = await apiFetch(API_URL);
+            const response = await apiFetch(CIRCLES_API);
             if (!response.ok) throw new Error('Failed to fetch circles.');
 
             setCircles(await response.json());
@@ -45,7 +45,7 @@ export default function CircleSettings() {
 
             const isEditing = editingId !== null;
             const response = await apiFetch(
-                isEditing ? `${API_URL}/${editingId}` : API_URL,
+                isEditing ? `${CIRCLES_API}/${editingId}` : CIRCLES_API,
                 {
                     method: isEditing ? 'PUT' : 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -92,7 +92,7 @@ export default function CircleSettings() {
             setError('');
             setMessage('');
 
-            const response = await apiFetch(`${API_URL}/${item.CircleID}`, {
+            const response = await apiFetch(`${CIRCLES_API}/${item.CircleID}`, {
                 method: 'DELETE',
             });
 
