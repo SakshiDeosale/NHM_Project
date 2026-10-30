@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { useSidebar } from '../../context/SidebarContext';
 import { useTheme } from '../../context/ThemeContext';
 import { useEffect, useState } from 'react';
+import { API_URL } from '../../utils/api';
 
 export default function Navbar() {
   const { toggleSidebar } = useSidebar();
@@ -35,7 +36,7 @@ export default function Navbar() {
 
       try {
         const response = await fetch(
-          `http://${API_URL}/api/users/${userId}/photo`,
+          `${API_URL}/users/${userId}/photo`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
